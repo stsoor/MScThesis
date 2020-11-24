@@ -247,14 +247,14 @@ Az előzőeknek megfelelően sokszor elvárt tulajdonság a folytonos deriválha
 A gyakorlatban használt legtöbb iteratív algoritmus a gradiens leszálláson alapszik. Gradiens leszállás során egy tetszőleges $\theta_0$ kiindulópontot választunk, majd a $\theta_{i+1} = \theta_i - \alpha * \nabla f(\theta_i)$ szabály alapján kiválasztjuk a következő vizsgálandó pontot, ahol $\alpha$ egy hiperparaméter. Az iteráció addig folytatódik, míg a megállási feltétel (például felső korlát az iterációk számára vagy a lépésköz nagyságára) nem teljesül. Fontos tulajdonsága ennek az algoritmusnak, hogy túl nagynak megválasztva $\alpha$-t átugorhatunk minimumhelyeket, míg túl kicsire állításával a keresési időt növeljük meg. Számos módszer született ennek a hiányosságnak az áthidalására, így egyes variációk az iterációk számának növekedésének függvényében csökkentik $\alpha$-t vagy eltérő kiindulópontokból indítják újra a keresést. Bizonyos feltételek mellett az algoritmus garantáltan egy lokális minimumhelyhez konvergál\cite{gradient_convergence}.
 
 
-Nem differenciálható, konvex függvények esetében a szubgradiensmódszerek alkalmazhatók.
+A gradiensalapú módszerekkel rokon jegyeket mutat a - nem feltétlenül differenciálható, de konvex függvények esetében a alkalmazható - szubgradiensmódszer, illetve az általánosabban használható, lokális keresésen alapuló hegymászó algoritmus (hill climbing).
 
 \subsubsection{Sztochasztikus algoritmusok}
 
-Mikor nem tudunk megszorításokat tenni az optimalizálandó költségfüggvényre, akkor 
+Összefoglaló néven sztochasztikus algoritmus névvel illetjük azokat a módszereket, amelyek futásuk során valószínűségi változókat alkalmaznak. A gradiens leszállás során látott véletlen kezdőpont kiválasztása nem része az iterációnak, így annak alapverziója nem számít sztochasztikus algoritmusnak.
 
 % TODO GA, PSO, Hill climbing, simulated annealing
-% 3 oldal, GA + alg, PSO + alg, általános + a többi
+% 3 oldal, GA + alg, PSO + alg, SGD+alg, általános + a többi
 %\subsubsection{Genetikus algoritmus}
 %\subsubsection{Particle Swarm Optimization}
 \subsubsection{Egyéb optimalizációs módszerek}
