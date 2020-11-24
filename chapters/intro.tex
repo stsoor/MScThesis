@@ -289,7 +289,7 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló ge
 Ahol $generateFeasibleSolutions(n)$ $n$ darab megengedett megoldást generál, $evaluateFitness(population)$ kiértékeli az egyes egyedek fitness értékeit, $updateBest(newValues, oldBest, newPositions, oldPosition)$ az új értékek és pozíciók, illetve a korábbi legjobbak segítségével kiválasztja a legjobbat (maximumot és maximumhelyet), $selectFitnessProportionally(population, fitnessValues, num)$ a fitness értékek által implikált valószínűségi eloszlás szerint kiválaszt $num$ darab egyedet, $recombine(population)$ két elemenként egy új egyedet hoz létre, amely a szülei génállományán alapszik, $deleteLast(population, fitnessValues, num)$ törli a $num$ darab legrosszabb fitness értékkel bíró egyedet a populációból, $mutate(population, mutationRate)$ pedig a $mutationRate$ arányában megváltoztatja az egyedek génállományát. A megállási feltétel gyakran iterációs felső korlát vagy alsó korlát a legjobb fitness értékre.
 
 
-A particle swarm optimization (PSO) egy másik biológiailag inspirált algoritmus, amely analóg módon működik egyes rajként együtt dolgozó állat- és rovarfajokkal\cite{non_gradient_optimization, pso, modified_pso}. A módszer alapelve, hogy különböző, részecskéknek nevezett, entitások pozícióiban értékeljük ki az $f$ költségfüggvényt. A részecskék haladási sebességgel rendelkeznek, amelyet minden iterációban úgy frissítünk, hogy figyelembe vesszük a részecske által, illetve a globálisan talált legjobb pozíciót/értéket.
+A particle swarm optimization (PSO) egy másik biológiailag inspirált algoritmus, amely analóg módon működik egyes rajként együtt dolgozó állat- és rovarfajokkal\cite{non_gradient_optimization, pso, modified_pso}. A módszer alapelve, hogy különböző, részecskéknek nevezett, entitások pozícióiban értékeljük ki az $f$ költségfüggvényt. A részecskék haladási iránnyal és sebességgel rendelkeznek, amelyet minden iterációban úgy frissítünk, hogy - véletlenszerű mértékben - figyelembe vesszük magát az irányt/sebességet és a részecske által, illetve a globálisan talált eddigi legjobb pozíciót/értéket.
 
 \begin{algorithm}[H]
 \caption{Particle swarm initialization}
@@ -333,10 +333,10 @@ A particle swarm optimization (PSO) egy másik biológiailag inspirált algoritm
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Egyéb optimalizációs módszerek}
-Számos további megszorítás és függvényosztály létezik, amelyre létezik hozzászabott optimalizációs algoritmus, mint például lineáris egyenlőtlenségrendszerek vagy diszkrét halmazok esetén, azonban ezekre itt nem térünk ki.
+Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecskék számát, illetve a módosítási szabály egyes tagjainak súlyát
 
-% TODO ma
+\subsubsection{Egyéb optimalizációs módszerek}
+Természetesen az áttekintett kategóriákat nem merítettük ki, számos további algoritmus és variáns áttekintésére a dolgozat keretei között nincsen lehetőségem, illetve számos további megszorítás és függvényosztály is ismert, amelyekre létezik optimalizációs algoritmus, mint például lineáris egyenlőtlenségrendszerek vagy diszkrét halmazok esetén.
 
 \subsection{Függvényapproximáció}
 \subsubsection{Lineáris függvényapproximáció}
@@ -352,7 +352,7 @@ Számos további megszorítás és függvényosztály létezik, amelyre létezik
 %TODO neuroevolution (-cikkek)
 \subsubsection{Architektúrák}
 
-% TODO holnap
+% TODO ma
 
 \subsection{Gráf konvolúciós neurális hálózatok}
 %TODO áttekintés (jellemzően shallow, a bigyókára használatos, ahol vannak címkézett mintáink, és a a többi csúcsra szeretnénk általánosítani)
