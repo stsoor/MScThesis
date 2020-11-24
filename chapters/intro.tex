@@ -244,28 +244,105 @@ Gradiens-, illetve deriváltalapú algoritmusok vagy a deriváltfüggvényt (Hes
 Az előzőeknek megfelelően sokszor elvárt tulajdonság a folytonos deriválhatóság is.
 
 
-A gyakorlatban használt legtöbb iteratív algoritmus a gradiens leszálláson alapszik. Gradiens leszállás során egy tetszőleges $\theta_0$ kiindulópontot választunk, majd a $\theta_{i+1} = \theta_i - \alpha * \nabla f(\theta_i)$ szabály alapján kiválasztjuk a következő vizsgálandó pontot, ahol $\alpha$ egy hiperparaméter. Az iteráció addig folytatódik, míg a megállási feltétel (például felső korlát az iterációk számára vagy a lépésköz nagyságára) nem teljesül. Fontos tulajdonsága ennek az algoritmusnak, hogy túl nagynak megválasztva $\alpha$-t átugorhatunk minimumhelyeket, míg túl kicsire állításával a keresési időt növeljük meg. Számos módszer született ennek a hiányosságnak az áthidalására, így egyes variációk az iterációk számának növekedésének függvényében csökkentik $\alpha$-t vagy eltérő kiindulópontokból indítják újra a keresést. Bizonyos feltételek mellett az algoritmus garantáltan egy lokális minimumhelyhez konvergál\cite{gradient_convergence}.
+A gyakorlatban használt legtöbb iteratív algoritmus a gradiens leszálláson alapszik. Gradiens leszállás során egy tetszőleges $\theta_0$ kiindulópontot választunk, majd a $\theta_{i+1} = \theta_i - \alpha * \nabla f(\theta_i)$ szabály alapján kiválasztjuk a következő vizsgálandó pontot, ahol $\alpha$ egy hiperparaméter. Az iteráció addig folytatódik, míg a megállási feltétel (például felső korlát az iterációk számára, a lépésköz nagyságára vagy a gradiensre egy normájára) nem teljesül. Fontos tulajdonsága ennek az algoritmusnak, hogy túl nagynak megválasztva $\alpha$-t átugorhatunk minimumhelyeket, míg túl kicsire állításával a keresési időt növeljük meg. Számos módszer született ennek a hiányosságnak az áthidalására, így egyes variációk az iterációk számának növekedésének függvényében csökkentik $\alpha$-t vagy eltérő kiindulópontokból indítják újra a keresést. Bizonyos feltételek mellett az algoritmus garantáltan egy lokális minimumhelyhez konvergál\cite{gradient_convergence}.
 
 
 A gradiensalapú módszerekkel rokon jegyeket mutat a - nem feltétlenül differenciálható, de konvex függvények esetében a alkalmazható - szubgradiensmódszer, illetve az általánosabban használható, lokális keresésen alapuló hegymászó algoritmus (hill climbing).
 
 \subsubsection{Sztochasztikus algoritmusok}
 
-Összefoglaló néven sztochasztikus algoritmus névvel illetjük azokat a módszereket, amelyek futásuk során valószínűségi változókat alkalmaznak. A gradiens leszállás során látott véletlen kezdőpont kiválasztása nem része az iterációnak, így annak alapverziója nem számít sztochasztikus algoritmusnak.
+Összefoglaló néven sztochasztikus algoritmus névvel illetjük azokat a módszereket, amelyek futásuk során valószínűségi változókat alkalmaznak. Ez a megközelítés gyakran használt, mikor a költségfüggvény nem alkalmas direkt optimalizációra, viszont megelégszünk közelítő megoldásokkal is. Szintúgy előnyös, mikor a keresési térben számos, globális minimumértékhez közel álló pont létezik. A gradiens leszállás során látott véletlen kezdőpont kiválasztását inputnak tekintjük, így az algoritmus alapverzióját nem tekintjük sztochasztikusnak, viszont - mint számos egyéb determinisztikus (nem sztochasztikus) algoritmusnak - vannak sztochasztikus variánsai. Ennek megfelelően fontos kiemelni, hogy az egyes optimalizációs módszereknek általában több variánsa is létezhet, melyek esetenként összemossák a kategóriákat. Ennek a szekciónak a további részében át fogjuk tekinteni azokat az algoritmusokat, amelyeknek szükséges az ismerete a továbbiakban, azonban néhol pont az itt bemutatott alapverziótól való eltérés lesz különösen érdekes.
 
-% TODO GA, PSO, Hill climbing, simulated annealing
-% 3 oldal, GA + alg, PSO + alg, SGD+alg, általános + a többi
-%\subsubsection{Genetikus algoritmus}
-%\subsubsection{Particle Swarm Optimization}
+
+A legismertebb ilyen variáns az úgynevezett sztochasztikus gradiens leszállás (SGD). Mikor az $f$ költségfüggvény több $f_i$ veszteségfüggvény átlagaként jön létre, azaz $f(x) = 1/n * \sum_{i=1}^{n} f_i(x)$ (például gépi tanulás során több mintaelemen alkalmazva ugyanazt a veszteségfüggvényt), akkor előfordul, hogy a gradiens leszállás során a mai számítógépek kapacitásához képest túl sok parciális deriváltat kéne kiértékelni. Az SGD ez úgy kerüli el, hogy a veszteségfüggvényeket egyesével értekeli ki, mindegyik kiértékelés után modósítva a paramétereket. Láthatóan ez nem ekvivalens a teljes költségfüggvény gradiensének használatával (csak közelíti azt), továbbá nagyban függ a kiértékelés sorrendjétől is, ezért a veszteségfüggvények sorrendje a kiértékelés során randomizált. Néha szintúgy SGD-nek nevezik a mini-batch gradient descent módszert, ami annyiban tér el az SGD-től, hogy a paraméterek módosítása során egyszerre $k$ darab veszteségfüggvény átlagát használjuk, ahol $k$ egy hiperparaméter.
+
+
+Természetben lejátszódó folyamatok számos esetben optimalizációs módszerként is tekinthetők. Az ilyen adaptált optimalizációs technikákat összefoglaló néven biologiailag inspirált algoritmusoknak nevezzük. A természeti rendszerek komplexitásából fakadó modellezési bizonytalanság feloldását sokszor a sztochaszticitás bevezetésével érjük el, így - gyakorlatban - a legtöbb biológiailag inspirált optimalizációs algoritmus egyben sztochasztikus algoritmus is.
+
+
+Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló genetikus algoritmus (GA)\cite{genetic_algorithm, non_gradient_optimization}. A módszer mögötti megfontolás, hogy egy populáció életciklusa a új egyedek születéséből/halálából, az egyedek szaporodásából (így genetikai keveredéséből), illetve mutációkból tevődik össze, ahol a párosodás a gének előnyös jellegének $f$ függvénye. Az algoritmus célja, hogy ezt az $f$ fitness függvényt \textit{maximalizálja}, az életképes egyedek kombinációjával, illetve kis, véletlenszerű módosításokkal. Az algoritmus pszeudokódja alább látható, azonban nem térünk ki minden részletére.
+
+\begin{algorithm}[H]
+\caption{Genetikus algoritmus}
+\label{alg:ga} 
+\textbf{\underline{Function}} GA($populationSize, parentNumber, mutationRate$)
+\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+\STATE $t = 0$
+\STATE $population_t$ = generateFeasibleSolutions($populationSize$)
+\STATE $fitnessValues$ = evaluateFitness($population_t$)
+\STATE $bestFitness, bestPosition = updateBest(fitnessValues, \infty, population_t, bestPosition)$
+\WHILE{megállási feltétel nem teljesült}
+	\STATE $parents$ = selectFitnessProportionally($population_t, fitnessValues, parentNumber$)
+	\STATE $children$ = recombine($parents$)
+	\STATE $population_t$ = deleteLast($population_t, fitnessValues, |children|$)
+	\STATE $population_{t+1} = population_t \cup children$
+	\STATE $population_{t+1}$ = mutate($population_{t+1}, mutationRate$)
+	\STATE $fitnessValues$ = evaluateFitness($population_{t+1}$)
+	\STATE $bestFitness = updateBest(fitnessValues, bestFitness, population_{t+1}, bestPosition)$
+	\STATE $t = t + 1$
+\ENDWHILE
+\STATE \textbf{return} $bestFitness, bestPosition$
+\end{algorithmic}
+\end{algorithm}
+
+
+Ahol $generateFeasibleSolutions(n)$ $n$ darab megengedett megoldást generál, $evaluateFitness(population)$ kiértékeli az egyes egyedek fitness értékeit, $updateBest(newValues, oldBest, newPositions, oldPosition)$ az új értékek és pozíciók, illetve a korábbi legjobbak segítségével kiválasztja a legjobbat (maximumot és maximumhelyet), $selectFitnessProportionally(population, fitnessValues, num)$ a fitness értékek által implikált valószínűségi eloszlás szerint kiválaszt $num$ darab egyedet, $recombine(population)$ két elemenként egy új egyedet hoz létre, amely a szülei génállományán alapszik, $deleteLast(population, fitnessValues, num)$ törli a $num$ darab legrosszabb fitness értékkel bíró egyedet a populációból, $mutate(population, mutationRate)$ pedig a $mutationRate$ arányában megváltoztatja az egyedek génállományát. A megállási feltétel gyakran iterációs felső korlát vagy alsó korlát a legjobb fitness értékre.
+
+
+A particle swarm optimization (PSO) egy másik biológiailag inspirált algoritmus, amely analóg módon működik egyes rajként együtt dolgozó állat- és rovarfajokkal\cite{non_gradient_optimization, pso, modified_pso}. A módszer alapelve, hogy különböző, részecskéknek nevezett, entitások pozícióiban értékeljük ki az $f$ költségfüggvényt. A részecskék haladási sebességgel rendelkeznek, amelyet minden iterációban úgy frissítünk, hogy figyelembe vesszük a részecske által, illetve a globálisan talált legjobb pozíciót/értéket.
+
+\begin{algorithm}[H]
+\caption{Particle swarm initialization}
+\label{alg:pso} 
+\textbf{\underline{Function}} InitializePSO($S, lowerBounds, upperBounds$)
+\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+\STATE $bestPosition_{global} = \infty$
+\FOR{$i=1 \ldots S$}
+	\STATE $particlePosition_i \sim U(lowerBounds, upperBounds)$
+	\STATE $bestPosition_i = particlePosition_i$
+	\STATE $velocityRange = |upperBounds-lowerBounds|$
+	\STATE $velocity_i \sim U(-velocityRange, velocityRange)$
+	\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
+		\STATE $bestPosition_{global} = bestPosition_i$
+	\ENDIF
+\ENDFOR
+\STATE \textbf{return} $bestPosition_{global}, particlePosition_{1 \ldots S}, bestPosition_{1 \ldots S}, velocity_{1 \ldots S}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Particle swarm optimization}
+\label{alg:pso} 
+\textbf{\underline{Function}} PSO($S, w, c_1, c_2, lowerBounds, upperBounds$)
+\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+\STATE $bestPosition_{global}, particlePosition_{1 \ldots S}, bestPosition_{1 \ldots S}, velocity_{1 \ldots S} = InitializePSO(S, lowerBounds, upperBounds)$
+\WHILE{megállási feltétel nem teljesült}
+	\FOR{$i=1 \ldots S$}
+		\STATE $random_1, random_2 \sim U([0,1]^{dim(lowerBounds)})$
+		\STATE $velocity_i = w*velocity_i + c_1*random_1*(bestPosition_i-particlePosition_i) + c_2*random_2*(bestPosition_{global}-particlePosition_i)$
+		\STATE $particlePosition_i = particlePosition_i + velocity_i$ % \alpha * velocity_i
+		\IF{$f(particlePosition_i) < f(bestPosition_i)$}
+			\STATE $bestPosition_i = particlePosition_i$
+			\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
+				\STATE $bestPosition_{global} = bestPosition_i$
+			\ENDIF
+		\ENDIF
+	\ENDFOR
+\ENDWHILE
+\STATE \textbf{return} $f(bestPosition_{global}), bestPosition_{global}$
+\end{algorithmic}
+\end{algorithm}
+
 \subsubsection{Egyéb optimalizációs módszerek}
 Számos további megszorítás és függvényosztály létezik, amelyre létezik hozzászabott optimalizációs algoritmus, mint például lineáris egyenlőtlenségrendszerek vagy diszkrét halmazok esetén, azonban ezekre itt nem térünk ki.
+
+% TODO ma
 
 \subsection{Függvényapproximáció}
 \subsubsection{Lineáris függvényapproximáció}
 \subsubsection{Nem-lineáris függvényapproximáció}
 %TODO \subsubsection{Neurális hálók}
 
-% TODO ma
 
 \subsection{Mély tanulás}
 %TODO áttekintés
@@ -289,9 +366,9 @@ Számos további megszorítás és függvényosztály létezik, amelyre létezik
 %TODO képlet
 
 
-
 \subsection{Alkalmazott Euler-diagram reprezentáció}
 \subsection{Vizsgált optimalizációs módszerek}
+% TODO GA variánsok (alg)
 \subsection{Vizsgált inicializációs módszerek}
 
 %TODO holnapután
