@@ -32,32 +32,40 @@ Ahhoz, hogy megértsük a megoldandó problémát, számos fogalmat át kell tek
 A gráf (variációi) alapvető fontosságú adattípus(ok) a modern informatikai megoldások során. Definiálásuk nem csak a dolgozat későbbi részeiben felbukkanó algoritmusok miatt fontos, hanem a - gyakran a gráfok általánosításának tekintett - hipergráfok mélyebb megértését is elősegítik. 
 
 \begin{definition}
-\textbf{Irányítatlan gráfnak} nevezünk egy olyan, rendezett $G=(V,E)$ párt, ahol $V$ egy nem-üres halmaz, $E$ pedig egy olyan multihalmaz, amely a $V$ elmeiből képzett kételemű halmazokat tartalmaz. Formálisan $E \subseteq \{\{u,v\} | u,v \in V\}$. A $V$ halmazt \textbf{csúcshalmaznak} is szokás nevezni, elemeit \textbf{csúcsoknak}, míg $E$-t az \textbf{élhalmaz}, elemeit pedig \textbf{él} névvel illetjük. Az élek által tartalmazott elemeket az adott él \textbf{végpontjainak} hívjuk. Két csúcs \textbf{szomszédos}, ha van olyan él $G$-ben, amely őket tartalmazza, míg egy csúcs \textbf{izolált}, ha egyetlen élnek sem végpontja.
+\textbf{Irányítatlan gráfnak} nevezünk egy olyan, rendezett $G=(V,E)$ párt, ahol $V$ egy nem-üres halmaz, $E$ pedig egy olyan multihalmaz, amely a $V$ elmeiből képzett kételemű halmazokat tartalmaz. Formálisan $E \subseteq \{\{u,v\} | u,v \in V\}$. A $V$ halmazt \textbf{csúcshalmaznak} is szokás nevezni, elemeit \textbf{csúcsoknak}, míg $E$-t az \textbf{élhalmaz}, elemeit pedig \textbf{él} névvel illetjük. Az élek által tartalmazott elemeket az adott él \textbf{végpontjainak} hívjuk. Két csúcs \textbf{szomszédos}, ha van olyan él $G$-ben, amely őket tartalmazza, míg egy csúcs \textbf{izolált}, ha egyetlen élnek sem végpontja. A $G'=(V',E'), V' \subseteq V, E' \subseteq E$ a $G=(V,E)$ gráf \textbf{részgráfja}.
 \end{definition}
 
 \begin{definition}
-Az $e_i, e_j \in E, i \neq j$ éleket \textbf{párhuzamos éleknek} nevezzük, ha $e_i=e_j$. \textbf{Hurokélnek} egy olyan élet nevezünk, amely $\{v, v\}$ formájú, azaz a két végpontja azonos.
+Egy nem-üres halmaz, $V$, és a $V$ elmeiből képzett kételemű \textit{rendezett párokat} tartalmazó $A$ multihalmazból képzett rendezett $D=(V,A)$ párt \textbf{irányított gráfnak} hívjuk. Az irányítatlan gráfok nómenklatúrája itt is érvényes, azonban az élek rendezett párjában az első elemet speciálisan \textbf{kiindulópontnak}, a másodikat pedig \textbf{végpontnak} is szokás nevezni. Azt mondjuk, hogy egy $(u, v) \in A$ él az $u$ csúcsnak egy \textbf{kimenő éle}, $v$-nek pedig egy \textbf{bemenő éle}. \textbf{Forrásnak} nevezzük azt a csúcsot, amelynek nincsenek bemenő élei, \textbf{nyelőnek} azt, aminek nincsenek kimenő élei.
 \end{definition}
 
 \begin{definition}
-Az $v \in V$ él \textbf{fokszámát} $d$-vel jelöljük, és $d=| \{ e | e \in E \land v \in e \}|$. A $G$ gráf \textbf{k-reguláris}, ha minden csúcsának fokszáma $k$.
+Az $e_i, e_j \in E, i \neq j$ éleket \textbf{párhuzamos éleknek} nevezzük, ha $e_i=e_j$. \textbf{Hurokélnek} egy olyan élet nevezünk, amely $\{v, v\}$ vagy $(v, v)$ formájú, azaz a két végpontja azonos.
+\end{definition}
+
+\begin{definition}
+Az $v \in V$ él \textbf{fokszámát} $d$-vel jelöljük, és $d=| \{ e | e \in E \land v \in e \}|$. A $G$ gráf \textbf{k-reguláris}, ha minden csúcsának fokszáma $k$. Irányított gráf esetében megkülönbeztetjük a \textbf{befokszámot} és a \textbf{kifokszámot}.
 \end{definition}
 
 \begin{definition}
 \textbf{Egyszerű gráf} egy olyan irányítatlan gráf, amelyben sem párhuzamos, sem hurokélek nincsenek jelen.
 \end{definition}
 
+
 \begin{definition}
-Egy $G=(V,E)$ gráf \textbf{line graphja} alatt az $L(G)=(E, \{ \{ e_i, e_j \} | v \in V \land v \in e_i \land v \in e_j, i \neq j \})$ gráfot értjük.
+Irányított gráf esetén élek egy $(u_1, v_1), \ldots, (u_k, v_k)$ sorozatát \textbf{sétának} nevezzük, ha $v_i=u_{i+1}, i=1 \ldots k-1$. Irányított gráfok esetén analóg módon defináljuk a fogalmat. Ha a séta semelyik két éle nem tartalmazza ugyanazt a csúcsot, akkor a sétát \textbf{útnak} mondjuk. Ha az út kezdőpontja megegyezik a végpontjával, akkor az egy \textbf{kör}. Két csúcs \textbf{távolsága} a köztük lévő legrövidebb útban szereplő élek száma, ha ilyen nincs, akkor végtelen. Egy $v$ csúcs \textbf{elérhető} az $s$ csúcsból, ha a távolsága nem végtelen tőle. \textbf{Összefüggőnek} mondott egy gráf (vagy részgráf), ha abban minden csúcs elérhető mindegyik másikból.
 \end{definition}
 
-% TODO
-% utak, séták
-% elérhetőség
-% (erős) összefüggés
-% teljes gráf
-% részgráf
-% klikk / teljes részgráf
+\begin{definition}
+$K_n$-nel jelöljük az $n$ csúcsú egyszerű gráfot, amelyben minden csúcspár között fut él, az ilyen gráfok neve \textbf{teljes gráf}. Mikor csak egy részgráfra igaz ez a tulajdonság, akkor azt \textbf{teljes részgráfnak} vagy \textbf{klikknek} mondjuk.
+\end{definition}
+
+% DAG, körmentesség
+% topologikus rendezés
+
+\begin{definition}
+Egy $G=(V,E)$ irányítatlan gráf \textbf{line graphja} alatt az $L(G)=(E, \{ \{ e_i, e_j \} | v \in V \land v \in e_i \land v \in e_j, i \neq j \})$ gráfot értjük.
+\end{definition}
 
 \subsubsection{Halmazrendszerek és hipergráfok}
 
@@ -289,6 +297,9 @@ Ahol $generateFeasibleSolutions(n)$ $n$ darab megengedett megoldást generál, $
 
 
 A \textbf{particle swarm optimization} (PSO) egy másik biológiailag inspirált algoritmus, amely analóg módon működik egyes rajként együtt dolgozó állat- és rovarfajokkal\cite{non_gradient_optimization, pso, modified_pso}. A módszer alapelve, hogy különböző, részecskéknek nevezett, entitások pozícióiban értékeljük ki az $f$ költségfüggvényt. A részecskék haladási iránnyal és sebességgel rendelkeznek, amelyet minden iterációban úgy frissítünk, hogy - véletlenszerű mértékben - figyelembe vesszük magát az irányt/sebességet és a részecske által, illetve a globálisan talált eddigi legjobb pozíciót/értéket.
+Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecskék számát, illetve a módosítási szabály egyes tagjainak súlyát. % ez áttolható mögé, ha kell
+
+%TODO check final page break
 
 \begin{algorithm}[H]
 \caption{Particle swarm initialization}
@@ -332,8 +343,6 @@ A \textbf{particle swarm optimization} (PSO) egy másik biológiailag inspirált
 \end{algorithmic}
 \end{algorithm}
 
-Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecskék számát, illetve a módosítási szabály egyes tagjainak súlyát
-
 \subsubsection{Egyéb optimalizációs módszerek}
 Természetesen az áttekintett kategóriákat nem merítettük ki, számos további algoritmus és variáns áttekintésére a dolgozat keretei között nincsen lehetőségem, illetve számos további megszorítás és függvényosztály is ismert, amelyekre létezik optimalizációs algoritmus, mint például lineáris egyenlőtlenségrendszerek vagy diszkrét halmazok esetén.
 
@@ -344,18 +353,19 @@ A numerikus analízis - így például az optimalizáció - számos területén 
 
 Legyen $f = \left(\begin{smallmatrix}f_1 & \ldots & f_n\end{smallmatrix}\right)^\top, w \in \mathcal{R}^n$, ahol $f_i, i=1 \ldots n$ tetszőleges függvény lehet. Ekkor az $f(x, w)$ \textbf{linear function approximatornek} nevezzük, ha az lineáris súlyok $w$ vektorában (bár nem feltétlenül az az $x$ inputban), azaz $f(x,w) = w_1*f_1(x) + \ldots + w_n*f_n(x)$. Mikor az $f$ függvény nem teljesíti a linearitási feltételt, akkor \textbf{nonlinear function approximatorről} beszélünk.
 
-%TODO \subsubsection{Neurális hálók}
+\subsection{Mesterséges neurális hálók}
 
+Hasonlóan a biológiailag inspirált algoritmusokhoz, a \textbf{mesterséges neurális hálók} (artificial neural network - ANN) olyan számítási rendszerek, amelyek biológiai folyamatokat, speciálisan az emberi - illetve állati - agyban működő neuronokat, és azok működését modellezik. Egy ANN legkönnyebben irányított gráfként képzelhető el, amelyben \textbf{(mesterséges) neuronok} alkotják a valós számokkal címkézett csúcsokat, míg a köztük létező, súllyal rendelkező kapcsolatok (szinapszisok) az éleket. A csúcsok címkéjét \textbf{biasnek} hívjuk, az élekét \textbf{weightnek}. A weight és a bias értékek közösen adják ki a neurális hálózat paramétereit. Az így kapott gráf számítási rendszerként fogható fel, amennyiben az egyes csúcsok műveleteket reprezentálnak. A forráscsúcsoknak közvetlenül beadhatók a rendszer bemenetei, míg az összes többi csúcs egy újabb értéket számít ki, melyek a nyelő csúcsokban értelmezhetők végeredményként. A források kivételével az egyes csúcsok az $x_v=\sigma(w_n \cdot x_n +b_v)$ képlet alapján számítják ki az értéküket, ahol $x_v$ a $v$ csúcs új értéke (nem címkéje), $w_n$ a bemenő élek súlyainak (weight) vektora, $x_n$ ezen élek kiindulópontjainak értéke, $b_v$ a $v$ csúcs címkéje/biase, a $\sigma$ függvény pedig egy - jellemzően nem-lineáris - aktiválási függvény.
 
-\subsection{Mély tanulás}
-%TODO áttekintés
+\subsubsection{Architektúra}
+
+A számítási gráf csúcsait általában a forrásoktól való távolságuk alapján particionálni szokás, ahol strukturálisan az egyes rétegek általában minden csúcsukban azonos módon viselkednek. Az egyes partíciókat \textbf{rétegeknek} nevezzük, és számos előnyös tulajdonsággal bírnak. Egyrészt a különböző rétegek szemantikailag egyre magasabb szintű absztrakciókat reprezentálnak, másrészt párhuzamosan is kiszámíthatók. 
+Mivel a rétegek minden csúcsukban hasonlóan épülnek fel, ezért gyakran megkülönböztetünk speciális célú rétegeket. Ilyen az időkomponenssel bíró adatok kezelésére kifejlesztett rekurrens/visszacsatolt réteg, a lokális információkat összegző konvolúciós réteg vagy az általánosabb, teljesen összekötött réteg. A rétegekből (vagy anélkül) kialakított számítási gráfot a neurális hálózat architektúrájának is szokás nevezni.
+
 \subsubsection{Tanulás}
-%TODO tanulás módja (inicializálás, batch, update, forward/backward propagation)
-%(TODO regularizáció)
-%TODO neuroevolution (-cikkek)
-\subsubsection{Architektúrák}
 
-% TODO ma
+Neurális hálózatok architektúrája leggyakrabban emberi munkával készül el. Van példa arra is, hogy jól működő (a célnak megfelelő pontosságú eredményt adó) neurális hálózatok paramétereit is emberi erővel vagy egyszerű konstruktív szabályokkal állítanák be, azonban ezek a megoldások szélsőséges esetekben, kis méretű hálózatokon szoktak működni. A paraméterek automatikus konfigurálását szokás a hálózat tanításának nevezni, míg az erre alkalmazott algoritmus paramétereit hiperparaméternek.
+Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens leszállás variánsait szokás használni. Az SGD-alapú tanulás során véletlenszerű módon inicializáljuk a paramétereket, ami után a tényleges tanulás a kimenetre alkalmazott költségfüggvény segítségével történik, melynek függvényében módosítjuk a hibás (rossz eredményre jutó) paramétereket. Különösen nehéz értékelni, hogy egy rossz kimenethez egy adott paraméter mennyire járult hozzá, azonban itt nem térünk ki az erre alkalmazott módszerekre. A tanításnak lehetnek másodlagos követelményei is, mint például a kapott paraméterek komplexitásának (értékskálájának) csökkentése. Fontos kiemelni, hogy nem mentesek a gradiensalapú megoldások a problémáktól (kezdve a paraméter/kimenet hozzárendelési problémától, a szükségszerűen differenciálható költségfüggvényen át, a deriválhatósági szempontból megfelelő inicializálási módszerekig bezárólag), és egyáltalán nem csak ilyen tanulóalgoritmusok léteznek. Evolúciós algoritmusok hatásfokát a neurális hálózatok tanításának kontextusában már számos szerző vizsgálta, illetve javította\cite{ann_ga, ann_ga2}. Bár ígéretes eredményeket érhetők el genetikus algoritmusokkal, és nem is szükséges hozzá, hogy deriválható költségfüggvényt alkalmazzunk, de - egyelőre - ez a módszer nem terjedt el széles körben, azonban - neuroevolúció néven - virágzó szakterületté nőtte ki magát a problémakör.
 
 \subsection{Gráf konvolúciós neurális hálózatok}
 %TODO áttekintés (jellemzően shallow, a bigyókára használatos, ahol vannak címkézett mintáink, és a a többi csúcsra szeretnénk általánosítani)
