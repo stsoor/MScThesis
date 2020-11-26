@@ -332,7 +332,7 @@ Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecsk
 	\FOR{$i=1 \ldots S$}
 		\STATE $random_1, random_2 \sim U([0,1]^{dim(lowerBounds)})$
 		\STATE $velocity_i = w*velocity_i + c_1*random_1*(bestPosition_i-particlePosition_i) + c_2*random_2*(bestPosition_{global}-particlePosition_i)$
-		\STATE $particlePosition_i = particlePosition_i + velocity_i$ % \alpha * velocity_i
+		\STATE $particlePosition_i = particlePosition_i + velocity_i$ \COMMENT{néha $\ldots + \alpha * velocity_i$}
 		\IF{$f(particlePosition_i) < f(bestPosition_i)$}
 			\STATE $bestPosition_i = particlePosition_i$
 			\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
@@ -357,7 +357,7 @@ Legyen $f = \left(\begin{smallmatrix}f_1 & \ldots & f_n\end{smallmatrix}\right)^
 
 \subsection{Mesterséges neurális hálók}
 
-Hasonlóan a biológiailag inspirált algoritmusokhoz, a \textbf{mesterséges neurális hálók} (artificial neural network - ANN) olyan számítási rendszerek, amelyek biológiai folyamatokat, speciálisan az emberi - illetve állati - agyban működő neuronokat, és azok működését modellezik. Egy ANN legkönnyebben irányított gráfként képzelhető el, amelyben \textbf{(mesterséges) neuronok} alkotják a valós számokkal címkézett csúcsokat, míg a köztük létező, súllyal rendelkező kapcsolatok (szinapszisok) az éleket. A csúcsok címkéjét \textbf{biasnek} hívjuk, az élekét \textbf{weightnek}. A weight és a bias értékek közösen adják ki a neurális hálózat paramétereit. Az így kapott gráf számítási rendszerként fogható fel, amennyiben az egyes csúcsok műveleteket reprezentálnak. A forráscsúcsoknak közvetlenül beadhatók a rendszer bemenetei, míg az összes többi csúcs egy újabb értéket számít ki, melyek a nyelő csúcsokban értelmezhetők végeredményként. A források kivételével az egyes csúcsok az $x_v=\sigma(w_n \cdot x_n +b_v)$ képlet alapján számítják ki az értéküket, ahol $x_v$ a $v$ csúcs új értéke (nem címkéje), $w_n$ a bemenő élek súlyainak (weight) vektora, $x_n$ ezen élek kiindulópontjainak értéke, $b_v$ a $v$ csúcs címkéje/biase, a $\sigma$ függvény pedig egy - jellemzően nem-lineáris - aktiválási függvény.
+Az egyik legismertebb és legszéleskörűbben alkalmazott nem-lineáris függvényapproximátorok a \textbf{mesterséges neurális hálók} (artificial neural network - ANN). Hasonlóan a biológiailag inspirált algoritmusokhoz, ezek olyan számítási rendszerek, amelyek biológiai folyamatokat, speciálisan az emberi - illetve állati - agyban működő neuronokat, és azok működését modellezik. Egy ANN legkönnyebben irányított gráfként képzelhető el, amelyben \textbf{(mesterséges) neuronok} alkotják a valós számokkal címkézett csúcsokat, míg a köztük létező, súllyal rendelkező kapcsolatok (szinapszisok) az éleket. A csúcsok címkéjét \textbf{biasnek} hívjuk, az élekét \textbf{weightnek}. A weight és a bias értékek közösen adják ki a neurális hálózat paramétereit. Az így kapott gráf számítási rendszerként fogható fel, amennyiben az egyes csúcsok műveleteket reprezentálnak. A forráscsúcsoknak közvetlenül beadhatók a rendszer bemenetei, míg az összes többi csúcs egy újabb értéket számít ki, melyek a nyelő csúcsokban értelmezhetők végeredményként. A források kivételével az egyes csúcsok az $x_v=\sigma(w_n \cdot x_n +b_v)$ képlet alapján számítják ki az értéküket, ahol $x_v$ a $v$ csúcs új értéke (nem címkéje), $w_n$ a bemenő élek súlyainak (weight) vektora, $x_n$ ezen élek kiindulópontjainak értéke, $b_v$ a $v$ csúcs címkéje/biase, a $\sigma$ függvény pedig egy - jellemzően nem-lineáris - aktiválási függvény.
 
 \subsubsection{Architektúra}
 
@@ -369,7 +369,7 @@ Mivel a rétegek minden csúcsukban hasonlóan épülnek fel, ezért gyakran meg
 Neurális hálózatok architektúrája leggyakrabban emberi munkával készül el. Van példa arra is, hogy jól működő (a célnak megfelelő pontosságú eredményt adó) neurális hálózatok paramétereit is emberi erővel vagy egyszerű konstruktív szabályokkal állítanák be, azonban ezek a megoldások szélsőséges esetekben, kis méretű hálózatokon szoktak működni. A paraméterek automatikus konfigurálását szokás a hálózat tanításának nevezni, míg az erre alkalmazott algoritmus paramétereit hiperparaméternek.
 Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens leszállás variánsait szokás használni. Az SGD-alapú tanulás során véletlenszerű módon inicializáljuk a paramétereket, ami után a tényleges tanulás a kimenetre alkalmazott költségfüggvény segítségével történik, melynek függvényében módosítjuk a hibás (rossz eredményre jutó) paramétereket. Különösen nehéz értékelni, hogy egy rossz kimenethez egy adott paraméter mennyire járult hozzá, azonban itt nem térünk ki az erre alkalmazott módszerekre. A tanításnak lehetnek másodlagos követelményei is, mint például a kapott paraméterek komplexitásának (értékskálájának) csökkentése. Fontos kiemelni, hogy nem mentesek a gradiensalapú megoldások a problémáktól (kezdve a paraméter/kimenet hozzárendelési problémától, a szükségszerűen differenciálható költségfüggvényen át, a deriválhatósági szempontból megfelelő inicializálási módszerekig bezárólag), és egyáltalán nem csak ilyen tanulóalgoritmusok léteznek. Evolúciós algoritmusok hatásfokát a neurális hálózatok tanításának kontextusában már számos szerző vizsgálta, illetve javította\cite{ann_ga, ann_ga2}. Bár ígéretes eredményeket érhetők el genetikus algoritmusokkal, és nem is szükséges hozzá, hogy deriválható költségfüggvényt alkalmazzunk, de - egyelőre - ez a módszer nem terjedt el széles körben, azonban - neuroevolúció néven - virágzó szakterületté nőtte ki magát a problémakör.
 
-\subsection{Gráf konvolúciós neurális hálózatok}
+\subsection{Gráf konvolúciós neurális hálózatok} % 5
 %TODO áttekintés (jellemzően shallow, a bigyókára használatos, ahol vannak címkézett mintáink, és a a többi csúcsra szeretnénk általánosítani)
 %TODO képlet
 \subsubsection{Laplacian}
@@ -380,9 +380,9 @@ Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens l
 %TODO áttekintés, hasonlóság a gráfokhoz, nehézségek (új hypergraph laplacian definíció)
 %TODO képlet
 
-%TODO holnap
+%TODO ma
 
-\subsection{Alkalmazott Euler-diagram reprezentáció}
+\subsection{Alkalmazott Euler-diagram reprezentáció} % 5
 \subsection{Vizsgált optimalizációs módszerek}
 % TODO GA variánsok (alg)
 \subsection{Vizsgált inicializációs módszerek}
@@ -390,7 +390,7 @@ Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens l
 % TODO 27-én
 
 % force directed
-\subsection{Vizsgált heurisztikák}
+\subsection{Vizsgált heurisztikák} % 5
 \subsubsection{Szemantikus heurisztikák}
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
@@ -401,6 +401,8 @@ Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens l
 
 % -------------------------------------------------------------------------------------
 
-\section{Mérések és következtetések}
+\section{Mérések és következtetések} % 15
 
 %TODO 28-30 között
+
+%öf - 2-5
