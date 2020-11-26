@@ -365,8 +365,11 @@ Az egyik legismertebb és legszéleskörűbben alkalmazott nem-lineáris függv�
 
 \subsubsection{Architektúra}
 
-A számítási gráf csúcsait általában a forrásoktól való távolságuk alapján particionálni szokás, ahol strukturálisan az egyes rétegek általában minden csúcsukban azonos módon viselkednek. Az egyes partíciókat \textbf{rétegeknek} nevezzük, és számos előnyös tulajdonsággal bírnak. Egyrészt a különböző rétegek szemantikailag egyre magasabb szintű absztrakciókat reprezentálnak, másrészt párhuzamosan is kiszámíthatók. 
+A számítási gráf csúcsait általában a forrásoktól való távolságuk alapján particionálni szokás, ahol strukturálisan az egyes rétegek általában minden csúcsukban azonos módon viselkednek. Az egyes partíciókat \textbf{rétegeknek} nevezzük, és számos előnyös tulajdonsággal bírnak. Egyrészt a különböző rétegek szemantikailag egyre magasabb szintű absztrakciókat reprezentálnak, másrészt rétegen belül párhuzamosan is kiszámíthatók.
 Mivel a rétegek minden csúcsukban hasonlóan épülnek fel, ezért gyakran megkülönböztetünk speciális célú rétegeket. Ilyen az időkomponenssel bíró adatok kezelésére kifejlesztett rekurrens/visszacsatolt réteg, a lokális információkat összegző konvolúciós réteg vagy az általánosabb, teljesen összekötött réteg. A rétegekből (vagy anélkül) kialakított számítási gráfot a neurális hálózat architektúrájának is szokás nevezni.
+
+
+Amennyiben a rétegek szekvenciálisan egymásra épülnek (azaz általában), akkor az egyes rétegek weight és bias értékeit könnyebben kezelhető mátrix alakban is felírhatjuk. Jelöljük az $i$-edik réteget $H^{(i)}$-vel, a rákövetkezőt $H^{(i+1)}$-gyel, az adott rétegben található csúcsok számát pedig $|H^{(j)}|$-vel. Ekkor az $i$-edik rétegből az $i+1$-edikbe menő élek súlyai egy $W^{(i)} \in  \mathcal{R}^{|H^{(i)}|\times|H^{(i+1)}|}$ mátrixban tárolhatók, amelyben - értelemszerűen - a sorok jelentik az élek kiindulópontját, az oszlopok pedig a végpontját. Egy $B^{(i)} \in \mathcal{R}^{|H^{(i)}|}$ bias vektor is kialakítható, amely a csúcsok címkéjét tartalmazza. Ezek felhasználásával egy réteg kimenetének kiszámítása a $H^{i+1} = \sigma(H^{(i)} * W^{(i)} + B^{(i)})$ egyenletre redukálódik, ahol a $\sigma$ függvény az elemenként alkalmazott aktiválási függvényt jelöli, a többi művelet pedig mátrixműveleteket. Ebben a formában a bemenetet a nulladik réteg kimenetének tekintjük. Egyes speciális rétegek ettől a számítási módtól néha kis mértékben eltérnek (például konvolúciót alkalmaznak mátrix szorzás helyett).
 
 \subsubsection{Tanulás}
 
@@ -374,12 +377,31 @@ Neurális hálózatok architektúrája leggyakrabban emberi munkával készül e
 Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens leszállás variánsait szokás használni. Az SGD-alapú tanulás során véletlenszerű módon inicializáljuk a paramétereket, ami után a tényleges tanulás a kimenetre alkalmazott költségfüggvény segítségével történik, melynek függvényében módosítjuk a hibás (rossz eredményre jutó) paramétereket. Különösen nehéz értékelni, hogy egy rossz kimenethez egy adott paraméter mennyire járult hozzá, azonban itt nem térünk ki az erre alkalmazott módszerekre. A tanításnak lehetnek másodlagos követelményei is, mint például a kapott paraméterek komplexitásának (értékskálájának) csökkentése. Fontos kiemelni, hogy nem mentesek a gradiensalapú megoldások a problémáktól (kezdve a paraméter/kimenet hozzárendelési problémától, a szükségszerűen differenciálható költségfüggvényen át, a deriválhatósági szempontból megfelelő inicializálási módszerekig bezárólag), és egyáltalán nem csak ilyen tanulóalgoritmusok léteznek. Evolúciós algoritmusok hatásfokát a neurális hálózatok tanításának kontextusában már számos szerző vizsgálta, illetve javította\cite{ann_ga, ann_ga2}. Bár ígéretes eredményeket érhetők el genetikus algoritmusokkal, és nem is szükséges hozzá, hogy deriválható költségfüggvényt alkalmazzunk, de - egyelőre - ez a módszer nem terjedt el széles körben, azonban - neuroevolúció néven - virágzó szakterületté nőtte ki magát a problémakör.
 
 \subsection{Gráf konvolúciós neurális hálózatok} % 5
-Említés szintjén láttuk, hogy lokális információk összegzésére konvolúciós rétegek alkalmasak. Mivel gráfokon létezik távolságfogalom, ezért elméletben a körükben is alkalmazható ugyanez az elv. A sztenderd konvolúciós hálózat bemenete azonban egy olyan tenzor (
+Említés szintjén láttuk, hogy lokális információk összegzésére konvolúciós rétegek alkalmasak. Mivel gráfokon létezik távolságfogalom, ezért elméletben a körükben is alkalmazható ugyanez az elv. A sztenderd konvolúciós hálózat bemenete azonban egy olyan tenzor (azaz, a mi szempontunkból, egy tetszőleges dimenziószámú mátrix), amelyben a lokalitás a tenzoron egyes elemei közti távolságon alapszik. Az általunk látott gráfreprezentációk (incidencia mátrix, adjacencia mátrix stb.) izomorf gráfot ír le akkor is, ha ugyanazt a permutációt alkalmazzuk a sorokra, mint az oszlopokra, tehát a mátrixon belüli közelség irreleváns.
+
+\subsubsection{Laplacian}
+A jelfeldolgozás és gráfelmélet határmezsgyéjén fekvő spektrális gráfanalízis területe azonban már évtizedekkel ezelőtt kidolgozott egy olyan, Laplace-mátrixnak (vagy csak Laplaciennek) nevezett - reprezentációt\cite{spectral_graph}, amely sajátértékeiben független a csúcsok sorrendjétől.
+
+\begin{definition}
+A $G=(V,E)$ gráf \textbf{fokszám-mátrixaként} vagy \textbf{degree matrixaként} ismerjük azt a $D_G^{|V| \times |V|}$ négyzetes mátrixot, amelyre a diagonális elemeit a $d_{i,i} = degree(v_i), i=1, \ldots, |V|$ képlet alapján kapjuk, minden egyéb eleme pedig 0.
+\end{definition}
+
+\begin{definition}
+A $G=(V,E)$ gráf \textbf{szimmetrikusan normalizált Laplace-mátrixa} az $L = \sqrt{inv(D)} * A * \sqrt{inv(D)} = I - \sqrt{inv(D_G)} * A_G * \sqrt{inv(D_G)}$, ahol $D$ a G gráf degree mátrixa, $inv$ a mátrixinverz függvény, a gyökvonás elemenként értendő, a szorzás mátrixszorzás, az $A_G$ az adjacencia mátrix és $I$ a megfelelő méretű egységmátrix.
+\end{definition}
+
+\begin{note}
+Egy másik Laplacian-variáns, a random walk (normalized) Laplacian is népszerű, azonban a továbbiakhoz nem szükséges a kettő közti különbséget mélyebben átlátni.
+\end{note}
+
+A Laplace-mátrix továbbra sem lesz független a gráf csúcsainak sorrendjétől, azonban egyrészt reflektálja azokat a szerkezete, másrészt a sajátértéke már független a csúcsok permutációitól.
+
+\subsubsection{Számítási szabály}
+Bár a neurális hálók gráfjellegű adatokra való adaptációjára már korábban is voltak kísérletek\cite{old_gcnn, old_gcnn2}, napjainkban a - Welling és társa által kidolgozott - Laplace-mátrixon alapuló variáns\cite{base_gcnn} a leginkább elterjedt. Wellingék azt ismerték fel, hogy a megelőző réteg kimenete egy impulzusmátrixként is felfogható, amin - korábbi eredményekre hagyatkozva\cite{laplace_filter} - a Laplacian gráfalapú (spektrális) szűrőként funkcionál. Mivel ez a szűrő csak egy adott él környezetének megfelelő impulzusokat összegzi, ezért a számítás során nem az eredeti gráfot használják, hanem aszerint módosítják először, hogy minden csúcs egy hurokéllel rendelkezzen. A neurális rétegekről szóló fejezetben látottaknak megfelelően tudjuk, hogy általában $H^{i+1} = \sigma(H^{(i)} * W^{(i)} + B^{(i)})$ szabály segítségével kapható meg egy réteg kimenete. A Welling-féle gráf konvolúciós réteg (GCN) ezzel szemben a $H^{i+1} = \sigma(\tilde L * H^{(i)} * W^{(i)})$ szabályt alkalmazza, amelyben $\tilde L$ jelöli a hurokélekkel ellátott $G$ gráf Laplace-mátrixát, azaz az $\tilde A = A_G + I$ adjacencia mátrix segítségével kapott Laplaciant. Mint látjuk, a biasok itt elhagyásra kerülnek, amit a csak és kizárólag lokális információk kiszűrésével viszont ellensúlyozunk.
+
 
 %TODO áttekintés (jellemzően shallow, a bigyókára használatos, ahol vannak címkézett mintáink, és a a többi csúcsra szeretnénk általánosítani)
 %TODO képlet
-\subsubsection{Laplacian}
-%TODO Laplacian
 \subsubsection{Hipergráf Laplacian}
 %TODO hypergraph laplacian - cikkek (random X hiányosságai!)
 \subsubsection{Hipergráf konvolúciós neurális hálózatok}
@@ -389,7 +411,7 @@ Említés szintjén láttuk, hogy lokális információk összegzésére konvol�
 %TODO ma
 
 %TODO színek problémája (cikkek), megoldása (rgb, hsv, genetic alg)
-
+% TODO force layout & graph layouts
 % -------------------------------------------------------------------------------------
 
 
@@ -397,15 +419,15 @@ Említés szintjén láttuk, hogy lokális információk összegzésére konvol�
 \chapter{Saját eredmények}
 \section{Vizsgált módszerek}
 
-\subsection{Alkalmazott Euler-diagram reprezentáció} % 5
-\subsection{Vizsgált optimalizációs módszerek}
+\subsection{Euler-diagram reprezentáció} % 5
+\subsection{Optimalizációs módszerek}
 % TODO GA variánsok (alg)
-\subsection{Vizsgált inicializációs módszerek}
+\subsection{Inicializációs módszerek}
 
 % TODO 27-én
 
 % force directed
-\subsection{Vizsgált heurisztikák} % 5
+\subsection{Heurisztikák} % 5
 \subsubsection{Szemantikus heurisztikák}
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
