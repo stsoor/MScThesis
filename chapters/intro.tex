@@ -418,7 +418,7 @@ Adott $H=(V,E)$ hipergráf és $X \in \mathcal{R}^{|V|}$, véletlenszámokat tar
 \begin{compactenum}
 	\item Minden $e \in E$ hiperél esetén legyen $\{i_e, i_j\} = argmax_{i,j \in X}(|X_i - X_j|)$, a döntetlenek esetén véletlenszerű választással.
 	\item Hozzunk létre egy $G_X=(V',E')$ irányítatlan, súlyozott gráfot, amelyben $V'=V$ és $E'=\{\{i_e, i_j\} | e \in E\}$, továbbá $w(\{i_e, i_j\})=w(e)$. $G_X$ minden $v$ csúcsához adjunk $d_v$ hurokélet, ahol $d_v$ a csúcs fokszáma. Jelölje $A_X$ ennek a gráfnak az adjacencia mátrixát.
-	\item A szimmetrikusan normalizált Laplaciant az $L = (I-\sqrt(inv(D))*A_x*\sqrt(inv(D)))$ képlet adja, azonban a konvulúciós réteg alkalmazása során $A_X$ helyett az $\tilde A = A_X + I$ mátrixot használjuk.
+	\item Egyszerű gráfokhoz hasonlóan a szimmetrikusan normalizált hipergráf Laplaciant az $L = (I-\sqrt(inv(D))*A_x*\sqrt(inv(D)))$ képlet adja, azonban a konvulúciós réteg alkalmazása során $A_X$ helyett az $\tilde A = A_X + I$ mátrixot használjuk.
 \end{compactenum}
 
 %TODO FastHGCN impl, laplacian fix, line graph HGNN impl
