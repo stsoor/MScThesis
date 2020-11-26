@@ -1,21 +1,20 @@
-\chapter{Bevezetés} % Introduction
-\label{ch:intro}
-
-\section{Absztrakt}
+\chapter{Absztrakt}
 
 A hipergráfok gyakran alkalmazott matematikai eszközök az informatika számos területén, így a szemantikus web, bioinformatika, szenzorhálózatok, adatbázisrendszerek, szociális hálózatok, gépi látás és egyéb területek számos megoldása épül rájuk.
 Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok, illetve halmazrendszerek vizualizációja. Vizualizáció során egyszerre merül fel igény a mögöttes struktúra tökéletes leképezésére, a könnyű értelmezhetőségre (így esztétikai metrikákra), az általános alkalmazhatóságra, gyors futásidőre, és - ezzel összefüggésben - a megjeleníthető adathalmaz méretének maximalizálására is, továbbá gyakran felmerül a dinamikus környezet - akár a struktúra, akár 
 Mint látható, ez egy felettébb összetett problémát eredményez, amely megoldására számos módszer született már a szakterületi irodalomban, azonban ezek gyakran szenvednek egy - vagy több - tervezési elv sérülésétől, így egyik sem terjedt el a gyakorlatban.
 Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgáljuk a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra és helyes leképezésre.
 
-\newpage
+
+\chapter{Elméleti alapok}
+\label{ch:intro}
 
 \section{A dolgozat felépítése}
 
-Segítendő a szövegben való tájékozódást, ebben az alfejezetben részletezem a dolgozat felépítését. A diplomamunkára vonatkozó szabályoknak megfelelően három fejezetre bomlik a szöveg. Az első (Bevezetés című) fejezet további három nagyobb részre bontható. Az első ilyenben megadom a probléma leírásához, illetve megértéséhez szükséges definíciókat és fogalmakat, majd a tágabb és szűkebb problématerület irodalmi áttekintésére kerül sor, a probléma pontos megfogalmazásával lezárva. A második elkülönülő része a bevezetésnek a megoldás során alkalmazott módszereket, illetve az azokhoz közvetlenül kapcsolódó definíciókat írja le. A bevezetés végén a különböző megoldási módszerek teljesítményét vizsgáljuk, különböző hiperparaméterek mellett.
+Segítendő a szövegben való tájékozódást, ebben az alfejezetben részletezem a dolgozat felépítését. A szöveg két fő fejezetre bontható, amelyek előtt egy rövid összefoglaló (Absztrakt), után pedig egy összefoglaló fejezet (Összefoglalás) található. Az első (Elméleti alapok című) fejezetben először megadom a probléma leírásához, illetve megértéséhez szükséges definíciókat és fogalmakat, majd a tágabb és szűkebb problématerület irodalmi áttekintésére kerül sor, a probléma pontos megfogalmazásával lezárva. Az első fejezet második felében a megoldás során alkalmazott módszereket elméleti alapjait tekintem át. A második fejezet (Saját eredmények) az általam vizsgált különböző megoldási módszerek teljesítményét vizsgálja különböző paraméterek mellett, illetve az ezekből levont következtetésekre is itt térek ki.
 
 
-A mérések során alkalmazott szoftver felhasználói dokumentációját a második (Felhasználói dokumentáció), míg fejlesztői dokumentációját a harmadik (Fejlesztői dokumentáció című) fejezetében találhatjuk.
+A mérések során alkalmazott szoftver rövid leírása a függelékben található.
 
 \begin{note}
 A dolgozatban szereplő egyes szakszavak (néha egész szakterületek) egyáltalán nem, vagy nem elég hangsúlyosan szerepelnek a magyar szakirodalomban ahhoz, hogy elterjedt fordításuk legyen. Ezekben az esetekben - további figyelmeztetés nélkül - az angol nyelvű megfelelőjüket fogom használni. Népszerű, szinonímaként használt szakkifejezéseket igyekszem per jellel elválasztva felsorolni.
@@ -256,7 +255,8 @@ Gradiens-, illetve deriváltalapú algoritmusok vagy a deriváltfüggvényt (Hes
 A gyakorlatban használt legtöbb iteratív algoritmus a gradiens leszálláson alapszik. Gradiens leszállás során egy tetszőleges $\theta_0$ kiindulópontot választunk, majd a $\theta_{i+1} = \theta_i - \alpha * \nabla f(\theta_i)$ szabály alapján kiválasztjuk a következő vizsgálandó pontot, ahol $\alpha$ egy hiperparaméter. Az iteráció addig folytatódik, míg a megállási feltétel (például felső korlát az iterációk számára, a lépésköz nagyságára vagy a gradiensre egy normájára) nem teljesül. Fontos tulajdonsága ennek az algoritmusnak, hogy túl nagynak megválasztva $\alpha$-t átugorhatunk minimumhelyeket, míg túl kicsire állításával a keresési időt növeljük meg. Számos módszer született ennek a hiányosságnak az áthidalására, így egyes variációk az iterációk számának növekedésének függvényében csökkentik $\alpha$-t vagy eltérő kiindulópontokból indítják újra a keresést. Bizonyos feltételek mellett az algoritmus garantáltan egy lokális minimumhelyhez konvergál\cite{gradient_convergence}.
 
 
-A gradiensalapú módszerekkel rokon jegyeket mutat a - nem feltétlenül differenciálható, de konvex függvények esetében a alkalmazható - szubgradiensmódszer, illetve az általánosabban használható, lokális keresésen alapuló hegymászó algoritmus (hill climbing).
+A gradiensalapú módszerekkel rokon jegyeket mutat a - nem feltétlenül differenciálható, de konvex függvények esetében a alkalmazható - szubgradiensmódszer, illetve az általánosabban használható, lokális keresésen alapuló hegymászó algoritmus.
+% (hill climbing).
 
 \subsubsection{Sztochasztikus algoritmusok}
 
@@ -269,7 +269,9 @@ A legismertebb ilyen variáns az úgynevezett \textbf{sztochasztikus gradiens le
 Természetben lejátszódó folyamatok számos esetben optimalizációs módszerként is tekinthetők. Az ilyen adaptált optimalizációs technikákat összefoglaló néven \textbf{biologiailag inspirált} algoritmusoknak nevezzük. A természeti rendszerek komplexitásából fakadó modellezési bizonytalanság feloldását sokszor a sztochaszticitás bevezetésével érjük el, így - gyakorlatban - a legtöbb biológiailag inspirált optimalizációs algoritmus egyben sztochasztikus algoritmus is.
 
 
-Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \textbf{genetikus algoritmus} (GA)\cite{genetic_algorithm, non_gradient_optimization}. A módszer mögötti megfontolás, hogy egy populáció életciklusa a új egyedek születéséből/halálából, az egyedek szaporodásából (így genetikai keveredéséből), illetve mutációkból tevődik össze, ahol a párosodás a gének előnyös jellegének $f$ függvénye. Az algoritmus célja, hogy ezt az $f$ fitness függvényt \textit{maximalizálja}, az életképes egyedek kombinációjával, illetve kis, véletlenszerű módosításokkal. Az algoritmus pszeudokódja alább látható, azonban nem térünk ki minden részletére.
+Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \textbf{genetikus algoritmus} (GA)\cite{genetic_algorithm, non_gradient_optimization}. A módszer mögötti megfontolás, hogy egy populáció életciklusa a új egyedek születéséből/halálából, az egyedek szaporodásából (így genetikai keveredéséből), illetve mutációkból tevődik össze, ahol a párosodás a gének előnyös jellegének $f$ függvénye. Az algoritmus célja, hogy ezt az $f$ fitness függvényt \textit{maximalizálja}, az életképes egyedek kombinációjával, illetve kis perturbációkkal.
+%, véletlenszerű módosításokkal.
+%Az algoritmus pszeudokódja alább látható, azonban nem térünk ki minden részletére.
 
 \begin{algorithm}[H]
 \caption{Genetikus algoritmus}
@@ -278,16 +280,16 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \t
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
 \STATE $t = 0$
 \STATE $population_t$ = generateFeasibleSolutions($populationSize$)
-\STATE $fitnessValues$ = evaluateFitness($population_t$)
-\STATE $bestFitness, bestPosition = updateBest(fitnessValues, \infty, population_t, bestPosition)$
+\STATE $values$ = evaluateFitness($population_t$)
+\STATE $bestFitness, bestPosition = updateBest(values, \infty, population_t, bestPosition)$
 \WHILE{megállási feltétel nem teljesült}
-	\STATE $parents$ = selectFitnessProportionally($population_t, fitnessValues, parentNumber$)
+	\STATE $parents$ = selectFitnessProportionally($population_t, values, parentNumber$)
 	\STATE $children$ = recombine($parents$)
-	\STATE $population_t$ = deleteLast($population_t, fitnessValues, |children|$)
+	\STATE $population_t$ = deleteLast($population_t, values, |children|$)
 	\STATE $population_{t+1} = population_t \cup children$
 	\STATE $population_{t+1}$ = mutate($population_{t+1}, mutationRate$)
-	\STATE $fitnessValues$ = evaluateFitness($population_{t+1}$)
-	\STATE $bestFitness = updateBest(fitnessValues, bestFitness, population_{t+1}, bestPosition)$
+	\STATE $values$ = evaluateFitness($population_{t+1}$)
+	\STATE $bestFitness = updateBest(values, bestFitness, population_{t+1}, bestPosition)$
 	\STATE $t = t + 1$
 \ENDWHILE
 \STATE \textbf{return} $bestFitness, bestPosition$
@@ -295,11 +297,10 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \t
 \end{algorithm}
 
 
-Ahol $generateFeasibleSolutions(n)$ $n$ darab megengedett megoldást generál, $evaluateFitness(population)$ kiértékeli az egyes egyedek fitness értékeit, $updateBest(newValues, oldBest, newPositions, oldPosition)$ az új értékek és pozíciók, illetve a korábbi legjobbak segítségével kiválasztja a legjobbat (maximumot és maximumhelyet), $selectFitnessProportionally(population, fitnessValues, num)$ a fitness értékek által implikált valószínűségi eloszlás szerint kiválaszt $num$ darab egyedet, $recombine(population)$ két elemenként egy új egyedet hoz létre, amely a szülei génállományán alapszik, $deleteLast(population, fitnessValues, num)$ törli a $num$ darab legrosszabb fitness értékkel bíró egyedet a populációból, $mutate(population, mutationRate)$ pedig a $mutationRate$ arányában megváltoztatja az egyedek génállományát. A megállási feltétel gyakran iterációs felső korlát vagy alsó korlát a legjobb fitness értékre.
+Itt a $generateFeasibleSolutions(n)$ $n$ darab megengedett megoldást generál, $evaluateFitness(population)$ kiértékeli az egyes egyedek fitness értékeit, $updateBest(newValues, oldBest, newPositions, oldPosition)$ az új értékek és pozíciók, illetve a korábbi legjobbak segítségével kiválasztja a legjobbat (maximumot és maximumhelyet), $selectFitnessProportionally(population, fitnessValues, num)$ a fitness értékek által implikált valószínűségi eloszlás szerint kiválaszt $num$ darab egyedet, $recombine(population)$ két elemenként egy új egyedet hoz létre, amely a szülei génállományán alapszik, $deleteLast(population, fitnessValues, num)$ törli a $num$ darab legrosszabb fitness értékkel bíró egyedet a populációból, $mutate(population, mutationRate)$ pedig a $mutationRate$ arányában megváltoztatja az egyedek génállományát. A megállási feltétel gyakran iterációs felső korlát vagy alsó korlát a legjobb fitness értékre.
 
 
 A \textbf{particle swarm optimization} (PSO) egy másik biológiailag inspirált algoritmus, amely analóg módon működik egyes rajként együtt dolgozó állat- és rovarfajokkal\cite{non_gradient_optimization, pso, modified_pso}. A módszer alapelve, hogy különböző, részecskéknek nevezett, entitások pozícióiban értékeljük ki az $f$ költségfüggvényt. A részecskék haladási iránnyal és sebességgel rendelkeznek, amelyet minden iterációban úgy frissítünk, hogy - véletlenszerű mértékben - figyelembe vesszük magát az irányt/sebességet és a részecske által, illetve a globálisan talált eddigi legjobb pozíciót/értéket.
-Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecskék számát, illetve a módosítási szabály egyes tagjainak súlyát. % ez áttolható mögé, ha kell
 
 %TODO check final page break
 
@@ -310,8 +311,8 @@ Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecsk
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
 \STATE $bestPosition_{global} = \infty$
 \FOR{$i=1 \ldots S$}
-	\STATE $particlePosition_i \sim U(lowerBounds, upperBounds)$
-	\STATE $bestPosition_i = particlePosition_i$
+	\STATE $bestPosition_i = particlePosition_i \sim U(lowerBounds, upperBounds)$
+%	\STATE $bestPosition_i = particlePosition_i$
 	\STATE $velocityRange = |upperBounds-lowerBounds|$
 	\STATE $velocity_i \sim U(-velocityRange, velocityRange)$
 	\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
@@ -345,6 +346,9 @@ Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecsk
 \end{algorithmic}
 \end{algorithm}
 
+
+Ahogy látható algoritmus hiperparméterek segítségével adja meg a részecskék számát, illetve a módosítási szabály egyes tagjainak súlyát. % ez áttolható mögé, ha kell
+
 \subsubsection{Egyéb optimalizációs módszerek}
 Természetesen az áttekintett kategóriákat nem merítettük ki, számos további algoritmus és variáns áttekintésére a dolgozat keretei között nincsen lehetőségem, illetve számos további megszorítás és függvényosztály is ismert, amelyekre létezik optimalizációs algoritmus, mint például lineáris egyenlőtlenségrendszerek vagy diszkrét halmazok esetén.
 
@@ -370,6 +374,8 @@ Neurális hálózatok architektúrája leggyakrabban emberi munkával készül e
 Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens leszállás variánsait szokás használni. Az SGD-alapú tanulás során véletlenszerű módon inicializáljuk a paramétereket, ami után a tényleges tanulás a kimenetre alkalmazott költségfüggvény segítségével történik, melynek függvényében módosítjuk a hibás (rossz eredményre jutó) paramétereket. Különösen nehéz értékelni, hogy egy rossz kimenethez egy adott paraméter mennyire járult hozzá, azonban itt nem térünk ki az erre alkalmazott módszerekre. A tanításnak lehetnek másodlagos követelményei is, mint például a kapott paraméterek komplexitásának (értékskálájának) csökkentése. Fontos kiemelni, hogy nem mentesek a gradiensalapú megoldások a problémáktól (kezdve a paraméter/kimenet hozzárendelési problémától, a szükségszerűen differenciálható költségfüggvényen át, a deriválhatósági szempontból megfelelő inicializálási módszerekig bezárólag), és egyáltalán nem csak ilyen tanulóalgoritmusok léteznek. Evolúciós algoritmusok hatásfokát a neurális hálózatok tanításának kontextusában már számos szerző vizsgálta, illetve javította\cite{ann_ga, ann_ga2}. Bár ígéretes eredményeket érhetők el genetikus algoritmusokkal, és nem is szükséges hozzá, hogy deriválható költségfüggvényt alkalmazzunk, de - egyelőre - ez a módszer nem terjedt el széles körben, azonban - neuroevolúció néven - virágzó szakterületté nőtte ki magát a problémakör.
 
 \subsection{Gráf konvolúciós neurális hálózatok} % 5
+Említés szintjén láttuk, hogy lokális információk összegzésére konvolúciós rétegek alkalmasak. Mivel gráfokon létezik távolságfogalom, ezért elméletben a körükben is alkalmazható ugyanez az elv. A sztenderd konvolúciós hálózat bemenete azonban egy olyan tenzor (
+
 %TODO áttekintés (jellemzően shallow, a bigyókára használatos, ahol vannak címkézett mintáink, és a a többi csúcsra szeretnénk általánosítani)
 %TODO képlet
 \subsubsection{Laplacian}
@@ -381,6 +387,15 @@ Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens l
 %TODO képlet
 
 %TODO ma
+
+%TODO színek problémája (cikkek), megoldása (rgb, hsv, genetic alg)
+
+% -------------------------------------------------------------------------------------
+
+
+\cleardoublepage
+\chapter{Saját eredmények}
+\section{Vizsgált módszerek}
 
 \subsection{Alkalmazott Euler-diagram reprezentáció} % 5
 \subsection{Vizsgált optimalizációs módszerek}
@@ -397,12 +412,8 @@ Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens l
 
 
 % TODO 28-án
-%TODO színek problémája (cikkek), megoldása (rgb, hsv, genetic alg)
-
-% -------------------------------------------------------------------------------------
 
 \section{Mérések és következtetések} % 15
 
 %TODO 28-30 között
-
 %öf - 2-5
