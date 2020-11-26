@@ -326,39 +326,6 @@
 	year = 1997
 }
 
-@book{spectra,
-	added-at = {2014-01-12T22:58:07.000+0100},
-	address = {New York, NY},
-	author = {Brouwer, Andries E. and Haemers, Willem H.},
-	biburl = {https://www.bibsonomy.org/bibtex/27535ef0387a36f72224bb938aee4ce5e/ytyoun},
-	doi = {10.1007/978-1-4614-1939-6},
-	interhash = {861ca735ed5c4d66dca4c1683a966f99},
-	intrahash = {7535ef0387a36f72224bb938aee4ce5e},
-	keywords = {eigenvalues graph.theory spectral.graph.theory textbook},
-	timestamp = {2016-11-16T07:47:53.000+0100},
-	title = {Spectra of Graphs},
-	year = 2012
-}
-
-@article{spectral_hypergraph,
-	abstract = {In this paper we study the distribution of eigenvalues of regular graphs, regular hypergraphs, and biregular bipartite graphs of given girth by considering the polynomials orthogonal with respect to the measures attached to the spectra of such graphs and to the continuous spectra of their ‘universal covers’. Our estimates are tight for Biggs graphs and generalized polygons. We also give an application to the distribution of eigenvalues of Hecke operators acting on weight 2 cusp forms for certain congruence subgroups.},
-	added-at = {2016-10-29T16:05:54.000+0200},
-	author = {Li, Wen-Ch'ing Winnie and Sol\'{e}, Patrick},
-	biburl = {https://www.bibsonomy.org/bibtex/246ed3c194038855d2e1e8b0c44d49b57/ytyoun},
-	doi = {10.1006/eujc.1996.0040},
-	interhash = {a529c2d5274e9d3a286f1dbc62bb635c},
-	intrahash = {46ed3c194038855d2e1e8b0c44d49b57},
-	issn = {0195-6698},
-	journal = {European Journal of Combinatorics},
-	keywords = {eigenvalues graph.theory orthogonal polynomial spectral.graph.theory},
-	number = 5,
-	pages = {461--477},
-	timestamp = {2016-11-16T07:44:57.000+0100},
-	title = {Spectra of Regular Graphs and Hypergraphs and Orthogonal Polynomials},
-	volume = 17,
-	year = 1996
-}
-
 @article{base_gcnn,
 	title={Semi-Supervised Classification with Graph Convolutional Networks},
 	author={Thomas Kipf and M. Welling},
@@ -408,3 +375,114 @@
 	series = {NIPS'16}
 }
 
+@book{spectra,
+	added-at = {2014-01-12T22:58:07.000+0100},
+	address = {New York, NY},
+	author = {Brouwer, Andries E. and Haemers, Willem H.},
+	biburl = {https://www.bibsonomy.org/bibtex/27535ef0387a36f72224bb938aee4ce5e/ytyoun},
+	doi = {10.1007/978-1-4614-1939-6},
+	interhash = {861ca735ed5c4d66dca4c1683a966f99},
+	intrahash = {7535ef0387a36f72224bb938aee4ce5e},
+	keywords = {eigenvalues graph.theory spectral.graph.theory textbook},
+	timestamp = {2016-11-16T07:47:53.000+0100},
+	title = {Spectra of Graphs},
+	year = 2012
+}
+
+@article{old_spectral_hypergraph,
+	abstract = {In this paper we study the distribution of eigenvalues of regular graphs, regular hypergraphs, and biregular bipartite graphs of given girth by considering the polynomials orthogonal with respect to the measures attached to the spectra of such graphs and to the continuous spectra of their ‘universal covers’. Our estimates are tight for Biggs graphs and generalized polygons. We also give an application to the distribution of eigenvalues of Hecke operators acting on weight 2 cusp forms for certain congruence subgroups.},
+	added-at = {2016-10-29T16:05:54.000+0200},
+	author = {Li, Wen-Ch'ing Winnie and Sol\'{e}, Patrick},
+	biburl = {https://www.bibsonomy.org/bibtex/246ed3c194038855d2e1e8b0c44d49b57/ytyoun},
+	doi = {10.1006/eujc.1996.0040},
+	interhash = {a529c2d5274e9d3a286f1dbc62bb635c},
+	intrahash = {46ed3c194038855d2e1e8b0c44d49b57},
+	issn = {0195-6698},
+	journal = {European Journal of Combinatorics},
+	keywords = {eigenvalues graph.theory orthogonal polynomial spectral.graph.theory},
+	number = 5,
+	pages = {461--477},
+	timestamp = {2016-11-16T07:44:57.000+0100},
+	title = {Spectra of Regular Graphs and Hypergraphs and Orthogonal Polynomials},
+	volume = 17,
+	year = 1996
+}
+
+@inproceedings{base_hypergraph_laplacian,
+	author = {Louis, Anand},
+	title = {Hypergraph Markov Operators, Eigenvalues and Approximation Algorithms},
+	year = {2015},
+	isbn = {9781450335362},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2746539.2746555},
+	doi = {10.1145/2746539.2746555},
+	abstract = {The celebrated Cheeger's Inequality [AM85,a86] establishes a bound on the expansion of a graph via its spectrum. This inequality is central to a rich spectral theory of graphs, based on studying the eigenvalues and eigenvectors of the adjacency matrix (and other related matrices) of graphs. It has remained open to define a suitable spectral model for hypergraphs whose spectra can be used to estimate various combinatorial properties of the hypergraph. In this paper we introduce a new hypergraph Laplacian operator generalizing the Laplacian matrix of graphs. Our operator can be viewed as the gradient operator applied to a certain natural quadratic form for hypergraphs. We show that various hypergraph parameters (for e.g. expansion, diameter, etc) can be bounded using this operator's eigenvalues. We study the heat diffusion process associated with this Laplacian operator, and bound its parameters in terms of its spectra. All our results are generalizations of the corresponding results for graphs.We show that there can be no linear operator for hypergraphs whose spectra captures hypergraph expansion in a Cheeger-like manner. Our Laplacian operator is non-linear, and thus computing its eigenvalues exactly is intractable. For any k, we give a polynomial time algorithm to compute an approximation to the kth smallest eigenvalue of the operator. We show that this approximation factor is optimal under the SSE hypothesis (introduced by [RS10]) for constant values of k.Finally, using the factor preserving reduction from vertex expansion in graphs to hypergraph expansion, we show that all our results for hypergraphs extend to vertex expansion in graphs.},
+	booktitle = {Proceedings of the Forty-Seventh Annual ACM Symposium on Theory of Computing},
+	pages = {713–722},
+	numpages = {10},
+	keywords = {heat dispersion, spectral theory, expansion},
+	location = {Portland, Oregon, USA},
+	series = {STOC '15}
+}
+
+@article{base_hypergraph_laplacian_refinement,
+	author = {Chan, T.-H. Hubert and Louis, Anand and Tang, Zhihao Gavin and Zhang, Chenzi},
+	title = {Spectral Properties of Hypergraph Laplacian and Approximation Algorithms},
+	year = {2018},
+	issue_date = {March 2018},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {65},
+	number = {3},
+	issn = {0004-5411},
+	url = {https://doi.org/10.1145/3178123},
+	doi = {10.1145/3178123},
+	abstract = {The celebrated Cheeger’s Inequality (Alon and Milman 1985; Alon 1986) establishes a bound on the edge expansion of a graph via its spectrum. This inequality is central to a rich spectral theory of graphs, based on studying the eigenvalues and eigenvectors of the adjacency matrix (and other related matrices) of graphs. It has remained open to define a suitable spectral model for hypergraphs whose spectra can be used to estimate various combinatorial properties of the hypergraph.In this article, we introduce a new hypergraph Laplacian operator generalizing the Laplacian matrix of graphs. In particular, the operator is induced by a diffusion process on the hypergraph, such that within each hyperedge, measure flows from vertices having maximum weighted measure to those having minimum. Since the operator is nonlinear, we have to exploit other properties of the diffusion process to recover the Cheeger’s Inequality that relates hyperedge expansion with the “second eigenvalue” of the resulting Laplacian. However, we show that higher-order spectral properties cannot hold in general using the current framework.Since higher-order spectral properties do not hold for the Laplacian operator, we instead use the concept of procedural minimizers to consider higher-order Cheeger-like inequalities. For any k ∈ N, we give a polynomial-time algorithm to compute an O(log r)-approximation to the kth procedural minimizer, where r is the maximum cardinality of a hyperedge. We show that this approximation factor is optimal under the SSE hypothesis (introduced by Raghavendra and Steurer (2010)) for constant values of k.Moreover, using the factor-preserving reduction from vertex expansion in graphs to hypergraph expansion, we show that all our results for hypergraphs extend to vertex expansion in graphs.},
+	journal = {J. ACM},
+	month = mar,
+	articleno = {15},
+	numpages = {48},
+	keywords = {approximation algorithms, Hypergraph Laplacian}
+}
+
+@article{hgnn,
+	title={Hypergraph Neural Networks},
+	volume={33},
+	url={https://ojs.aaai.org/index.php/AAAI/article/view/4235},
+	DOI={10.1609/aaai.v33i01.33013558},
+	abstractNote={&lt;p&gt;In this paper, we present a hypergraph neural networks (HGNN) framework for data representation learning, which can encode high-order data correlation in a hypergraph structure. Confronting the challenges of learning representation for complex data in real practice, we propose to incorporate such data structure in a hypergraph, which is more flexible on data modeling, especially when dealing with complex data. In this method, a hyperedge convolution operation is designed to handle the data correlation during representation learning. In this way, traditional hypergraph learning procedure can be conducted using hyperedge convolution operations efficiently. HGNN is able to learn the hidden layer representation considering the high-order data structure, which is a general framework considering the complex data correlations. We have conducted experiments on citation network classification and visual object recognition tasks and compared HGNN with graph convolutional networks and other traditional methods. Experimental results demonstrate that the proposed HGNN method outperforms recent state-of-theart methods. We can also reveal from the results that the proposed HGNN is superior when dealing with multi-modal data compared with existing methods.&lt;/p&gt;},
+	number={01},
+	journal={Proceedings of the AAAI Conference on Artificial Intelligence},
+	author={Feng, Yifan and You, Haoxuan and Zhang, Zizhao and Ji, Rongrong and Gao, Yue},
+	year={2019},
+	month={Jul.},
+	pages={3558-3565}
+}
+
+@article{directed_hgnn,
+	author = {Tran, Loc},
+	year = {2020},
+	month = {03},
+	pages = {1434-1441},
+	title = {Directed Hypergraph Neural Network},
+	volume = {12},
+	journal = {Journal of Advanced Research in Dynamical and Control Systems},
+	doi = {10.5373/JARDCS/V12SP4/20201622}
+}
+
+@article{hgcn,
+	author = {Yadati, Naganand and Nimishakavi, Madhav and Yadav, Prateek and Louis, Anand and Talukdar, Partha},
+	year = {2018},
+	month = {09},
+	pages = {},
+	title = {HyperGCN: Hypergraph Convolutional Networks for Semi-Supervised Classification}
+}
+
+@article{line_hgnn,
+	author = {Bandyopadhyay, Sambaran and Das, Kishalay and Murty, M.},
+	year = {2020},
+	month = {02},
+	pages = {},
+	title = {Line Hypergraph Convolution Network: Applying Graph Convolution for Hypergraphs}
+}
