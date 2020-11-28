@@ -1,3 +1,5 @@
+
+
 \chapter{Absztrakt}
 
 A hipergráfok gyakran alkalmazott matematikai eszközök az informatika számos területén, így a szemantikus web, bioinformatika, szenzorhálózatok, adatbázisrendszerek, szociális hálózatok, gépi látás és egyéb területek számos megoldása épül rájuk.
@@ -35,7 +37,7 @@ A gráf (variációi) alapvető fontosságú adattípus(ok) a modern informatika
 \end{definition}
 
 \begin{definition}
-Egy nem-üres halmaz, $V$, és a $V$ elmeiből képzett kételemű \textit{rendezett párokat} tartalmazó $A$ multihalmazból képzett rendezett $D=(V,A)$ párt \textbf{irányított gráfnak} hívjuk. Az irányítatlan gráfok nómenklatúrája itt is érvényes, azonban az élek rendezett párjában az első elemet speciálisan \textbf{kiindulópontnak}, a másodikat pedig \textbf{végpontnak} is szokás nevezni. Azt mondjuk, hogy egy $(u, v) \in A$ él az $u$ csúcsnak egy \textbf{kimenő éle}, $v$-nek pedig egy \textbf{bemenő éle}. \textbf{Forrásnak} nevezzük azt a csúcsot, amelynek nincsenek bemenő élei, \textbf{nyelőnek} azt, aminek nincsenek kimenő élei.
+Egy nem-üres halmaz, $V$, és az elemeiből képzett kételemű \textit{rendezett párokat} tartalmazó $A$ multihalmazból képzett rendezett $D=(V,A)$ párt \textbf{irányított gráfnak} hívjuk. Az irányítatlan gráfok nómenklatúrája itt is érvényes, azonban az élek rendezett párjában az első elemet speciálisan \textbf{kiindulópontnak}, a másodikat pedig \textbf{végpontnak} is szokás nevezni. Azt mondjuk, hogy egy $(u, v) \in A$ él az $u$ csúcsnak egy \textbf{kimenő éle}, $v$-nek egy \textbf{bemenő éle}. \textbf{Forrásnak} nevezzük azt a csúcsot, amelynek nincsenek bemenő élei, \textbf{nyelőnek} azt, aminek nincsenek kimenő élei.
 \end{definition}
 
 \begin{definition}
@@ -50,10 +52,62 @@ Az $v \in V$ él \textbf{fokszámát} $d$-vel jelöljük, és $d=| \{ e | e \in 
 \textbf{Egyszerű gráf} egy olyan irányítatlan gráf, amelyben sem párhuzamos, sem hurokélek nincsenek jelen.
 \end{definition}
 
-
 \begin{definition}
-Irányított gráf esetén élek egy $(u_1, v_1), \ldots, (u_k, v_k)$ sorozatát \textbf{sétának} nevezzük, ha $v_i=u_{i+1}, i=1 \ldots k-1$. Irányított gráfok esetén analóg módon defináljuk a fogalmat, azonban eltekintünk a csúcsok élen belüli sorrendjétől. Ha a séta semelyik két éle nem tartalmazza ugyanazt a csúcsot, akkor a sétát \textbf{útnak} mondjuk. Ha az út kezdőpontja megegyezik a végpontjával, akkor az egy \textbf{kör}. Két csúcs \textbf{távolsága} a köztük lévő legrövidebb útban szereplő élek száma, ha ilyen nincs, akkor végtelen. Egy $v$ csúcs \textbf{elérhető} az $s$ csúcsból, ha a távolsága nem végtelen tőle. \textbf{Összefüggőnek} mondott egy gráf (vagy részgráf), ha abban minden csúcs elérhető mindegyik másikból.
+Irányított gráf esetén élek egy $(u_1, v_1), \ldots, (u_k, v_k)$ sorozatát \textbf{sétának} nevezzük, ha $v_i=u_{i+1}, i=1 \ldots k-1$. Irányított gráfok esetén analóg módon defináljuk a fogalmat, azonban eltekintünk a csúcsok élen belüli sorrendjétől. Ha a séta semelyik két éle nem tartalmazza ugyanazt a csúcsot, akkor a sétát \textbf{útnak} mondjuk. Ha az út kezdőpontja megegyezik a végpontjával, akkor az egy \textbf{kör}. Két csúcs \textbf{távolsága} a köztük lévő legrövidebb útban szereplő élek száma, ha ilyen nincs, akkor végtelen. Egy $v$ csúcs \textbf{elérhető} az $s$ csúcsból, ha a távolsága nem végtelen tőle. \textbf{Összefüggőnek} mondott egy gráf (vagy részgráf), ha abban minden csúcs elérhető mindegyik másikból, míg egy \textbf{összefüggő komponens} a vizsgált gráf csúcsainak egy olyan részhalmaza, amely összefüggő, de nem bővíthető úgy, hogy az maradjon.
 \end{definition}
+
+Egy $G=(V,E)$ gráf összefüggő komponensei megtalálhatók Tarjan algoritmusával\cite{tarjan} lineáris, $\mathcal{O}(|V|+|E|)$ futásidő alatt.
+
+\begin{algorithm}[H]
+\caption{Tarjan's connected components - main}
+\label{alg:tarjan_main} 
+\textbf{\underline{Function}} Tarjan($V, E$)
+\begin{algorithmic}[1]
+\STATE initialize v.number to -1 for all $v \in V$ vertices
+\STATE $i = 0, S$ = empty stack, $components$ = empty list
+\FOR{$w \in V$}
+	\IF{$w.number < 0$}
+		\STATE $component = getComponent(w, i, S, E)$
+		\IF{$|component| > 0$}
+			\STATE $components.add(getComponent(w, i, S, E))$
+		\ENDIF
+	\ENDIF
+\ENDFOR
+\STATE \textbf{return} $components$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{Tarjan's connected components - root finding}
+\label{alg:tarjan_components} 
+\textbf{\underline{Function}} getComponent($v, i, S, E$)
+\begin{algorithmic}[1]
+\STATE $v.lowlink = v.number = i$
+\STATE $i = i+1$
+\STATE $S.push(v)$
+\FOR{$\{v,w\} \in E$}
+	\IF{$w.number < 0$}
+		\STATE $getComponent(w,i,S,E)$
+		\STATE $v.lowlink = min(v.lowlink, w.lowlink)$
+	\ELSIF{$w.number < v.number$ and $w \in stack$}
+		\STATE $v.lowlink = min(v.lowlink, w.number)$
+	\ENDIF
+\ENDFOR
+	
+\STATE $component = \emptyset$
+\IF{$v.lowlink = v.number$}
+	\STATE $component$ = empty list
+	
+	\REPEAT
+		\STATE $w = S.pop()$
+		\STATE component.add(w)
+	\UNTIL{$S \neq \emptyset$ and $w.number \geq v.number$}
+\ENDIF
+
+\STATE \textbf{return} $component$
+\end{algorithmic}
+\end{algorithm}
 
 \begin{definition}
 $K_n$-nel jelöljük az $n$ csúcsú egyszerű gráfot, amelyben minden csúcspár között fut él, az ilyen gráfok neve \textbf{teljes gráf}. Mikor csak egy részgráfra igaz ez a tulajdonság, akkor azt \textbf{teljes részgráfnak} vagy \textbf{klikknek} mondjuk.
@@ -63,6 +117,8 @@ $K_n$-nel jelöljük az $n$ csúcsú egyszerű gráfot, amelyben minden csúcsp�
 \begin{definition}
 \textbf{Topologikus sorrendként} ismert a $D=(V,A)$ irányított gráf csúcsainak egy olyan sorrendje, ahol kisebb sorszámú csúcsból csak nagyobb sorszámúba megy él. A topologikus sorrend megléte ekivivalens azzal, hogy az adott gráfban nincsen kör, így az ilyet \textbf{körmentes gráfnak} nevezzük.
 \end{definition}
+
+% TODO (DFS), Tarjan's alg
 
 \begin{definition}
 Egy $G=(V,E)$ irányítatlan gráf \textbf{line graphja} alatt az $L(G)=(E, \{ \{ e_i, e_j \} | v \in V \land v \in e_i \land v \in e_j, i \neq j \})$ gráfot értjük.
@@ -109,7 +165,7 @@ A $H=(V,E)$ hipergráf \textbf{incidencia mátrixát} ugyanúgy definiáljuk, ah
 \end{definition}
 
 \begin{note}
-Hipergráfok esetében az adjacencia mátrix nem értelmezett, azonban a szakirodalomban gyakran használnak gráfokat köztes reprezentációként, így különösen a bipartite incidence structure, a multimodal/multi-layer/multiplex/multidimensional graph/network és a line/intersection graph fogalmaknak érdemes utánanéznie az ez iránt érdeklődő olvasónak.
+Hipergráfok esetében az adjacencia mátrix nem értelmezett, azonban a szakirodalomban gyakran használnak gráfokat köztes reprezentációként, így (az incidencia mátrixon kívül) a bipartite incidence structure, a multimodal/multi-layer/multiplex/multidimensional graph/network és a line/intersection graph fogalmaknak érdemes utánanéznie az ez iránt érdeklődő olvasónak.
 \end{note}
 
 \begin{definition}
@@ -127,15 +183,16 @@ Figyeljük meg, hogy a szuperduálisban szereplő csúcsok száma exponenciális
 \subsection{Gráfok ábrázolása}
 
 Mivel a gráfok gyakran használt, és könnyen konceptualizálható modellek, ezért a számítógépes vizsgálat mellett gyakran előnyös a felhasználó számára vizualizálni őket. Gráfok reprezentálhatók halmazokként, numerikusan (erre később látni fogunk példát), azonban ember-gép közreműködések során a leggyakrabban olyan képként szokás ábrázolni őket, melyeken a csúcsok körökként, az őket összekötő élek pedig egyenes (egyes esetekben akár görbe) vonalakként.
-%\\
-% TODO
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[height=100px]{simple_graph}
-% 	\caption{Egyszerű gráf képi ábrázolása}
-% \end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=100px]{simple_graph}
+	\caption{Egyszerű gráf képi ábrázolása}
+\end{figure}
 
 Gyakorlatban különösen fontos tulajdonságnak bizonyult - a könnyű értelmezhetőség szempontjából -, hogy egy adott gráf kirajzolható-e anélkül, hogy bármely két éle metszené egymást. A gráfelmélet egy ismert tétele, hogy nem minden gráf rajzolható síkba. A \textbf{Fáry-Wagner} tétel továbbá kimondja, hogy minden olyan gráf, ami görbe vonalak használatával síkbarajzolható, az egyenes vonalak esetén is síkbarajzolható marad.
+
+%TODO layouts & force directed
 
 \subsection{Hipergráfok és halmazrendszerek ábrázolása}
 
@@ -148,23 +205,36 @@ Ebben a dolgozatban egy specifikus, régióalapú ábrázolási mód, az Euler-d
 A továbbiakban a $H=(V,E)$ hipergráfot reprezentáló \textbf{egyszerű Euler-diagram} alatt egy olyan ábrát értünk, amelyben minden $e \in E$ halmaz egyetlen zárt görbére képződik le, mely azokat, és csak azokat a hipercsúcsokat tartalmazza, melyek az adott $e$ hiperélnek is elemei. Azon hipercsúcsok, melyek egyetlen hiperélben sem szerepelnek, az összes görbén kívül kell megjelenjenek. Az egyes görbék címkével (esetünkben színekkel) rendelkeznek.
 \end{definition}
 
-% TODO
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[height=100px]{euler_diagram}
-% 	\caption{Példa egyszerű Euler-diagramra}
-% \end{figure}
+% TODO glyphs & other hybrids
+
+% TODO citations
+\begin{figure}[H]
+	\centering
+	\subfigure[Ellipszisalapú Euler-diagram]{
+		\includegraphics[width=0.45\linewidth]{euler_ellipse}}
+	\hspace{5pt}
+	\subfigure[Poligonalapú Euler-diagram]{
+		\includegraphics[width=0.45\linewidth]{euler_polygon}}
+	\caption{Egyszerű Euler-diagramok}
+	\label{fig:euler_simple}
+\end{figure}
 
 \begin{definition}
-\textbf{Általánosított Euler-diagramként} vagy csak \textbf{Euler-diagramként} fogom nevezni azt az egyszerű Euler-diagramot, mely egy hiperélt több, azonos címkével ellátott zárt görbére is leképezhet.
+\textbf{Általánosított Euler-diagramként} fogom nevezni azt az egyszerű Euler-diagramot, mely egy hiperélt több, azonos címkével ellátott zárt görbére is leképezhet.
 \end{definition}
 
-% TODO
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[height=100px]{general_euler_diagram}
-% 	\caption{Példa általánosított Euler-diagramra}
-% \end{figure}
+% TODO citations
+\begin{figure}[H]
+	\centering
+	\subfigure[Általánosított Euler-diagram]{
+		\includegraphics[width=0.45\linewidth]{euler_general}}
+	\hspace{5pt}
+	\subfigure[Hibrid Euler-diagram glyphekkel]{
+		\includegraphics[width=0.45\linewidth]{euler_glyph}}
+	\caption{Euler-diagram variánsok}
+	\label{fig:euler_general}
+\end{figure}
+
 
 \subsection{Euler-diagramok vizualizációja}
 
@@ -173,7 +243,7 @@ A továbbiakban a $H=(V,E)$ hipergráfot reprezentáló \textbf{egyszerű Euler-
 Gráfok esetében láthattuk, hogy felmerül a síkbarajzolhatóság kérdése. Amennyiben egyszer Euler-diagramokkal, így zárt, a végpontokat (jelen esetben hipercsúcsokat) tartalmazó görbékkel reprezentáljuk az éleket, akkor rögtön láthatjuk, hogy ezeknek tartalmazniuk kell legalább egy görbét is, amely közvetlenül összeköti a végpontokat. Ebből már észrevehetjük, hogy nem minden hipergráf rajzolható síkba egyszerű Euler-diagramokkal.
 
 
-Verroust és Viaud bebizonyította\cite{drawability_8_sets}, hogy az általuk használt Euler-diagram definíció 8 halmazig megőrzi a síkbarajzolhatósági tulajdonságot. Simonetto és Auber egy másik struktúrát vizsgált\cite{simonetto_undrawable}, ami megfelel az itt általánosított Euler-diagramként definiált fogalomnak (ők Euler representationnek nevezik), melyről levezették, hogy alkalmas tetszőleges hipergráf síkbarajzolására. A szuperduális felhasználásával pontos leírása is adható annak, hogy mikor nem rajzolható ki egy hipergráf egyszerű Euler-diagramok használatával\cite{drawability_8_sets, simonetto_undrawable}. (Megjegyzendő, hogy a Sunibetto cikk intersection graphnak nevezi a szuperduálist, miközben az egy másik struktúrát jelöl, de a leírásból, illetve a példákból levezethető, hogy valójából felcserélték a kettőt.)
+Verroust és Viaud bebizonyította\cite{drawability_8_sets}, hogy az általuk használt Euler-diagram definíció 8 halmazig megőrzi a síkbarajzolhatósági tulajdonságot. Simonetto és Auber egy másik struktúrát vizsgált\cite{simonetto_undrawable}, ami megfelel az itt általánosított Euler-diagramként definiált fogalomnak (ők Euler representationnek nevezik), melyről levezették, hogy alkalmas tetszőleges hipergráf síkbarajzolására, görbéknek kizárólag szemantikailag helyes metszeteinek létrehozása mellett. A szuperduális felhasználásával pontos leírása is adható annak, hogy mikor nem rajzolható ki egy hipergráf egyszerű Euler-diagramok használatával\cite{drawability_8_sets, simonetto_undrawable}. (Megjegyzendő, hogy a Sunibetto cikk intersection graphnak nevezi a szuperduálist, miközben az egy másik struktúrát jelöl, de a leírásból, illetve a példákból levezethető, hogy valójából felcserélték a kettőt.)
 
 \subsubsection{Esztétikai mértékek}
 
@@ -197,13 +267,13 @@ A well-formed tulajdonság hat kritériumból tevődik össze, bár néha csak a
 	\item Nem rendelkezik két görbe azonos címkével - WFC6\\
 \end{compactenum}
 
-A well-matched tulajdonság az alábbi négy tulajdonság meglétét fedi:
+A well-matched tulajdonság az alábbi négy tulajdonság együttes meglétét fedi:
 
 \begin{compactenum}
 	\item Egy Euler-diagram well-matched a zónák szintjén, ha nem tartalmaz üres zónákat. - WMP1
-	\item Egy Euler-diagram well-matched a görbék szintjén, ha a halmazok közti részhalmaz, metszet és diszjunkt relációk megfelelnek az adott halmazokat reprezentáló görbék tartalmazás, átfedés és diszjunkt tulajdonságának. - WMP2
+	\item Egy Euler-diagram well-matched a görbék szintjén, ha a halmazok közti részhalmaz, metszet és diszjunkció relációk megfelelnek az adott halmazokat reprezentáló görbék tartalmazás, átfedés és diszjunkció tulajdonságának. - WMP2
 	\item Egy Euler-diagram well-matched a minimális régiók szintjén, ha well-matched a zónák szintjén, és csak összefüggő zónákat tartalmaz. - WMP3
-	\item Egy Euler-diagram well-matched a kontúrok szintjén, ha a halmazok közti részhalmaz, metszet és diszjunkt relációk megfelelnek az adott halmazokat reprezentáló kontúrok tartalmazás, átfedés és diszjunkt tulajdonságának. - WMP4\\
+	\item Egy Euler-diagram well-matched a kontúrok szintjén, ha a halmazok közti részhalmaz, metszet és diszjunkció relációk megfelelnek az adott halmazokat reprezentáló kontúrok tartalmazás, átfedés és diszjunkció tulajdonságának. - WMP4
 \end{compactenum}
 
 Szintúgy széles körben vizsgált tulajdonság az area-proportionality, avagy méretarányosság\cite{euler_with_circles, area_proportional_phd, drawing_area_proportional, general_area_proportional}, amely azt mondja ki, hogy minden régió (bizonyos definíciók szerint az univerzumot reprezentáló kivételével) mérete úgy aránylik az ilyenek összegéhez, mint az $\omega$ súlyfüggvényük azok összegéhez. Leggyakrabban a zárt görbe által tartalmazott elemek számát alkalmazzuk súlyfüggvényként. Hibamértékek segítségével könnyen metrika is előállítható a tulajdonságból.
@@ -222,13 +292,13 @@ A dolgozat későbbi részeiben legfontosabbnak Flower, Rodgers és Mutton munk�
 
 \subsection{Problémaleírás}
 
-Láthattuk, hogy az EDGP egy összetett probléma, amely magában foglalja a konkrét ábrázolási mód (Euler-diagram definíció), a vizsgált esztétikai metrikák, az elfogadható futásidő és a megoldható problémaméret meghatározását is. Különösen fontos kitérni arra is, hogy egy adott probléma vizsgálata során nem feltétlenül egyféle szempont szeretnénk ábrázolási módot választani. Elképzelhető, hogy ugyanúgy szeretnénk az előforduló klasztereket vizsgálni, mint a leghosszabb utakat, melyek másféle elrendezést tételeznek fel.
+Láthattuk, hogy az EDGP egy összetett probléma, amely magában foglalja a konkrét ábrázolási mód (Euler-diagram definíció), a vizsgált esztétikai metrikák, az elfogadható futásidő és a megoldható problémaméret meghatározását is. Különösen fontos kitérni arra is, hogy egy adott probléma vizsgálata során nem feltétlenül egyféle szempont szeretnénk ábrázolási módot választani, elképzelhető például, hogy ugyanúgy szeretnénk az előforduló klasztereket vizsgálni, mint a leghosszabb utakat, melyek másféle elrendezést tételeznek fel.
 
 
 Az általam kitűzött célt az egyetemen folyó egyik kutatás igényei szerint tűztem ki, ahol adatbázisrendszerek redundanciáját csökkentjük hipergráfmodellek segítségével. Az itt folyó napi munka során egy olyan eszközre támadt szükség, amely - a jelenleg elérhető programokkal szemben - képes több tucat éllel és akár több száz csúcsal bíró hipergráfot többféle esztétikai metrika szerint is kirajzolni, akár hosszabb futási idő (órák) és/vagy egyszeri, kifejezetten hosszú (napok, hetek) tanulási idő után. Különösképp megnehezíti a feladatot, hogy Alsallakh és társai - a halmazábrázolási módszereket áttekintő cikkükben\cite{alsallakah2016_the_state_of_the_art_set_visualization} - az Euler-diagramokat mindössze 10-20 halmazig tartják alkalmazhatónak. A tématerület bonyolultságának és mélységének megfelelően a dolgozat különböző módszerek vizsgálatáról szól, a végső eszközt még nem hivatott létrehozni.
 
 
-Mint láthattuk, az általános megoldhatóság érdekében emberi beavatkozás, korlát nélküli paramétertér (például Bézier görbék kontrollpontjai\cite{layout_metrics}) vagy exponenciális futásidő\cite{inductive_euler} lehet szükséges. Mivel tetszőleges esztétikai metrika fölött az optimalizáció, így a legjobb Euler-diagram megtalálása is NP-nehéz, ezért ez egyáltalán nem meglepő. A megoldásom alapjaként választott Flower cikkel\cite{layout_metrics} szemben, az általam használt, bonyolultabb problématér (mind a hipergráf méretében, egy adott halmazt reprezentáló zárt görbék számában és ebből kifolyólag a költségfüggvényként alkalmazott heurisztikák nem-folytonos jellegében) felveti a modell egyszerűsítésének igényét, illetve újabb heurisztikák kidolgozásának szükségességét is.
+Mint láthattuk, az általános megoldhatóság érdekében emberi beavatkozás, korlát nélküli paramétertér (például Bézier görbék kontrollpontjai\cite{layout_metrics}) vagy exponenciális futásidő\cite{inductive_euler} lehet szükséges. Mivel tetszőleges esztétikai metrika fölött az optimalizáció, így a legjobb Euler-diagram megtalálása is NP-nehéz, ezért ez egyáltalán nem meglepő. A megoldásom alapjaként választott Flower cikkel\cite{layout_metrics} szemben, az általam használt, bonyolultabb problématér (mind a hipergráf méretében, egy adott halmazt reprezentáló zárt görbék számában és ebből kifolyólag a költségfüggvényként alkalmazott heurisztikák nem-folytonos jellegében) felveti a diagram modell egyszerűsítésének igényét, illetve újabb heurisztikák kidolgozásának szükségességét is.
 
 % -------------------------------------------------------------------------------------
 
@@ -424,7 +494,6 @@ Adott $H=(V,E)$ hipergráf és $X \in \mathcal{R}^{|V|}$, véletlenszámokat tar
 
 %TODO FastHGCN impl, line graph HGNN impl
 %TODO színek problémája (cikkek), megoldása (rgb, hsv, genetic alg)
-% TODO force layout & graph layouts
 % -------------------------------------------------------------------------------------
 
 
@@ -432,12 +501,73 @@ Adott $H=(V,E)$ hipergráf és $X \in \mathcal{R}^{|V|}$, véletlenszámokat tar
 \chapter{Saját eredmények}
 \section{Vizsgált módszerek}
 
-\subsection{Euler-diagram reprezentáció} % 5
+\subsection{Euler-diagram reprezentáció}
+
+Láthattuk, hogy Euler-diagramok reprezentálhatók Bézier-görbékkel, körökkel, ellipszisekkel és poligonokkal is, azonban bizonyos esztétikai vagy szemantikai kritériumok betartása mellett (lásd well-formed kritériumok) nem minden hipergráf rajzolható ki. A korábbi eredményekkel összhangban ezért itt az 
+Általános megoldás eléréséhez mindenképp egy olyan modell bevezetése szükséges, amely egyszerre képes kezelni az ismert esztétikai metrikákat, így például kompakt módon, egyetlen görbével reprezentálni egy halmazt, azonban mikor ez nem lehetséges, akkor - bár komplexebb diagramok használatával - továbbra is megfelel az elvárt szemantikai követelményeknek. Fogalmi szinten ennek természetesen megfelel az Általánosított Euler-diagram definíció. Ennek a definíciónak a használatával viszont további kérdések merülnek fel. Mivel zárt görbék segítségével írtuk le a fogalmat, ezért kérdéses, hogy magukat a görbéket hogyan ábrázoljuk a memóriában, illetve olyan reprezentációra lenne szükség, ami lehetőleg flexibilis, kevés paraméterrel leírható és tetszőleges számú régióra tud bontani egyetlen görbét, kis számítási igény mellett.
+
+\subsubsection{Definíció}
+
+Az általam választott reprezentáció csúcsalapú, amelyben az egyes görbéket a hiperéleket alkotó csúcsok részhalmazainak konvex burka adja. Vegyünk minden csúcs esetén egy háromelemű vektort, amely tartalmazza a csúcs $x$ és $y$ koordinátáit, illetve egy $d$-vel jelölt értéket. Minden $e$ hiperélhez rendeljünk egy $G_e$ gráfot, amelynek csúcshalmaza megegyezik a hiperél csúcshalmazával, tetszőleges $u, v, u \neq v$ csúcsa között pedig akkor fut él, ha $distance(u, v) \leq min(u_d, v_d)$, ahol a $distance$ függvény tetszőleges távolságmetrika lehet (én az implementáció során az $L^2$ normát használom). A $G_e$ gráf összefüggő komponensei particionálják a hiperél elemeit. Az egyes partíciók konvex burkát véve egy a hiperél több zárt poligonra bomlik szét, így általánosított Euler-diagramot reprezentál.
+
+
+\subsubsection{Optimalizáció}
+
+% Az összes csúcs közti távolság kiszámítható egyszerre, azonban később ki kell szűrni, hogy szerep
+% Két csúcs között
+
+
+
+
+
+
+
+
+
+
+A továbbiakban érdemes lehet megvizsgálni, hogy nem csúcsonkénti, hanem globális vagy hiperélenkénti $d$ értékek használatával mennyire romlik tanuláis/optimalizálási idő, illetve az elérhető legjobb költségfüggvény.
+
+
+\subsubsection{Futásidő}
+
+
+
+
+
+
+
+\subsubsection{Megjegyzések}
+
+% csúcsokat nem muszáj kirajzolni
+% post processing nagyon sokat segítene
+
+
+% cleanup az előző fejezetben
+% TODO force layout & graph layouts
+% glyphs fejezet? - hibrid modellek
+%4.1.5. Diagram design
+%Euler diagrams come in different designs, but very few empirical
+%studies have been conducted to assess these designs. A different
+%colour per curve is often used. Curve interiors are often coloured
+%with transparency to help identify the curves in which a region is lo-
+%cated. These colours perceptually fuse at overlaps, so the colours of
+%regions in the same curve often seem unrelated (Figure 4b) as when
+%unrelated colours are used for regions in the same curve (Figure 4a).
+%A weaving approach [LRS10] has been proposed to alleviate this
+%problem. eulerAPE (Section 4.1.2) avoids colour fusion by using
+%different visual feature channels such as colour, outline and texture
+%for the curves, as in Figures 4(c)–(d), allowing one to easily focus
+%on a specific curve [War12]. A recent study suggests that Euler di-
+%agrams whose curves have a coloured outline and no fill are easier
+%to comprehend than ones whose curves have a black outline or a
+%coloured fill with transparency [BSRH14].
+
+% 28 - régiek bővítése, euler repr
+
 \subsection{Optimalizációs módszerek}
 % TODO GA variánsok (alg)
 \subsection{Inicializációs módszerek}
-
-% TODO 27-én
+% TODO gráfok kirajzolása / force directed layout az előző fejezetbe
 
 % force directed
 \subsection{Heurisztikák} % 5
@@ -445,10 +575,10 @@ Adott $H=(V,E)$ hipergráf és $X \in \mathcal{R}^{|V|}$, véletlenszámokat tar
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
 
-
-% TODO 28-án
+% 30-ra minimum 35-40 oldal
+% TODO 29-30-án
 
 \section{Mérések és következtetések} % 15
 
-%TODO 28-30 között
+%TODO 01-04 között
 %öf - 2-5
