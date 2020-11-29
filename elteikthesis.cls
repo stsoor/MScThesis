@@ -401,8 +401,8 @@
 
 % ------------------------------
 % Algoritmusok és kódblokkok írása
-\RequirePackage{algorithm}
-\RequirePackage{algorithmic}
+\usepackage{algcompatible}
+\usepackage{algorithm}
 \RequirePackage{listingsutf8}
 \lstset{
 	basicstyle=\footnotesize\ttfamily,

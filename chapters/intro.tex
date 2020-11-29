@@ -102,7 +102,7 @@ Egy $G=(V,E)$ gráf összefüggő komponensei megtalálhatók Tarjan algoritmus�
 	\REPEAT
 		\STATE $w = S.pop()$
 		\STATE component.add(w)
-	\UNTIL{$S \neq \emptyset$ and $w.number \geq v.number$}
+	\UNTIL{$w.number \geq v.number$} \COMMENT{a stack mindig tartalmazza $v$-t}
 \ENDIF
 
 \STATE \textbf{return} $component$
@@ -117,8 +117,6 @@ $K_n$-nel jelöljük az $n$ csúcsú egyszerű gráfot, amelyben minden csúcsp�
 \begin{definition}
 \textbf{Topologikus sorrendként} ismert a $D=(V,A)$ irányított gráf csúcsainak egy olyan sorrendje, ahol kisebb sorszámú csúcsból csak nagyobb sorszámúba megy él. A topologikus sorrend megléte ekivivalens azzal, hogy az adott gráfban nincsen kör, így az ilyet \textbf{körmentes gráfnak} nevezzük.
 \end{definition}
-
-% TODO (DFS), Tarjan's alg
 
 \begin{definition}
 Egy $G=(V,E)$ irányítatlan gráf \textbf{line graphja} alatt az $L(G)=(E, \{ \{ e_i, e_j \} | v \in V \land v \in e_i \land v \in e_j, i \neq j \})$ gráfot értjük.
@@ -182,7 +180,7 @@ Figyeljük meg, hogy a szuperduálisban szereplő csúcsok száma exponenciális
 
 \subsection{Gráfok ábrázolása}
 
-Mivel a gráfok gyakran használt, és könnyen konceptualizálható modellek, ezért a számítógépes vizsgálat mellett gyakran előnyös a felhasználó számára vizualizálni őket. Gráfok reprezentálhatók halmazokként, numerikusan (erre később látni fogunk példát), azonban ember-gép közreműködések során a leggyakrabban olyan képként szokás ábrázolni őket, melyeken a csúcsok körökként, az őket összekötő élek pedig egyenes (egyes esetekben akár görbe) vonalakként.
+Mivel a gráfok gyakran használt, és könnyen konceptualizálható modellek, ezért a számítógépes vizsgálat mellett gyakran előnyös a felhasználó számára vizualizálni őket. Gráfok reprezentálhatók halmazokként vagy numerikusan (erre később látni fogunk példát), azonban ember-gép közreműködések során a leggyakrabban olyan képként szokás ábrázolni őket, melyeken a csúcsok köröknek, az őket összekötő élek pedig egyenes (egyes esetekben akár görbe) vonalaknak felelnek meg.
 
 \begin{figure}[H]
 	\centering
@@ -192,11 +190,15 @@ Mivel a gráfok gyakran használt, és könnyen konceptualizálható modellek, e
 
 Gyakorlatban különösen fontos tulajdonságnak bizonyult - a könnyű értelmezhetőség szempontjából -, hogy egy adott gráf kirajzolható-e anélkül, hogy bármely két éle metszené egymást. A gráfelmélet egy ismert tétele, hogy nem minden gráf rajzolható síkba. A \textbf{Fáry-Wagner} tétel továbbá kimondja, hogy minden olyan gráf, ami görbe vonalak használatával síkbarajzolható, az egyenes vonalak esetén is síkbarajzolható marad.
 
-%TODO layouts & force directed
+Annak ellenére, hogy a reprezentáció aránylag egységes, rengeteg módszer létezik a konkrét csúcselrendezési feladat megoldására (ami természetesen implikál egy teljes gráfkirajzolást is). Ezen módszerek aztán csoportosíthatók, így ismerünk egyszerű konstruktív szabályokon (például köríven vagy rácson való elhelyezésen) alapulókat\cite{graph_layout_circular, graph_layout_circular2, graph_layout_orthogonal}, a Laplace-mátrix sajátvektorait használó spektrális elrendezéseket\cite{graph_layout_spectral} és - jellemzően - rúgóként kezelt élek és elektronokként tekintett csúcsok egyensúlyi állapotát kereső force-directed módszereket\cite{graph_layout_force_directed, graph_layout_force_directed2}. A mi szempontunkból ezutóbbi lesz a legfontosabb, azon belül is Fruchterman és Reingold megoldása\cite{graph_layout_fruchterman}. Természetesen a korábbiak nem mindig különülnek el teljesen, előfordul, hogy több kategóriába is sorolható egyazon algoritmus\cite{graph_layout_hybrid}.
 
 \subsection{Hipergráfok és halmazrendszerek ábrázolása}
 
-Gráfokhoz hasonlóan hipergráfok (és/vagy halmazrendszerek) esetén is hasznos a felhasználó által értelmezhető ábrázolásuk, azonban - a gráfoktól eltérő módon - a vizuális reprezentációjuk már egyáltalán nem egységes. A szakirodalom számos különböző módszert tart nyilván, melyeket Alsallakh és társai foglaltak össze\cite{alsallakah2016_the_state_of_the_art_set_visualization}. Az említett cikk számos különböző ábra kategóriát különböztet meg, én ezek közül kiemelném, hogy léteznek régiókon, vonalakon, mátrixokon és aggregáción alapuló, illetve hibrid módszerek. Az egyes kategóriák önmagukban is több ábrázolási módszert fednek, melyeket jellemzően egyenként is szakcikkek sokasága fed, így az áttekintésükre itt nincs módunk, azonban jól mutatja a kutatási terület mélységét.
+Gráfokhoz hasonlóan hipergráfok (és/vagy halmazrendszerek) esetén is hasznos a felhasználó által értelmezhető ábrázolásuk, azonban - a gráfoktól eltérő módon - a vizuális reprezentációjuk már egyáltalán nem egységes. A szakirodalom számos különböző módszert tart nyilván, melyeket Alsallakh és társai foglaltak össze\cite{alsallakah2016_the_state_of_the_art_set_visualization}.
+
+% TODO
+
+Az említett cikk az ábrázolási módok számos kategóriáját különbözteti meg. Én ezek közül kiemelném, hogy léteznek régiókon, vonalakon, mátrixokon és aggregáción alapuló, illetve hibrid módszerek. Az egyes kategóriák önmagukban is több ábrázolási módszert fednek, melyeket jellemzően egyenként is szakcikkek sokasága fed, így az áttekintésükre itt nincs módunk, azonban jól mutatja a kutatási terület mélységét.
 
 
 Ebben a dolgozatban egy specifikus, régióalapú ábrázolási mód, az Euler-diagram vizsgálatát tűztem ki célul. Az Euler-diagram kirajzolását célzó algoritmusok az úgynevezett Euler Diagram Generation Problem (EDGP) megoldásai. Ahogy a neve is mutatja, a szóban forgó ábrázolási módot még maga Leonhard Euler vezette be a XVIII. században, azonban mindmáig előszeretettel használatos. Ahogy Baron írja\cite{euler_early}, Euler mindössze példákon mutatta be, illetve alkalmazta módszerét, nem definálta konkrétan. Ezek alapján - a hipergráfokhoz mintájára - Euler-diagramokra is többféle definíció létezik, melyek mind megyeznek abban, hogy az egyes halmazok/hiperélek zárt görbékkel reprezentáltak, melyek metszetei közös halmazelemeket feltételeznek, míg diszjunkt esetben azok hiányát. Egyes definíciók az alaphalmaz elemeit/hipercsúcsokat is elhelyezik az ábrán, így létrejöhetnek olyan metszetek is a vizualizáció során, melyek valójából üresek, de az értelmezés során ez mégsem okoz gondot. Gyakori kérdés, hogy a zárt görbék körök, ellipszisek vagy tetszőleges formájúak lehetnek-e, hogy szükségszerűen konvexek-e, illetve az egyes halmazok több, azonos címkével ellátott görbével is reprezentálhatók-e. A következőkben definiálom, hogy ebben a dolgozatban milyen értelmezést használok, azonban - az előzőeknek megfelelően - egyéb források ettől eltérhetnek.
@@ -239,7 +241,7 @@ A továbbiakban a $H=(V,E)$ hipergráfot reprezentáló \textbf{egyszerű Euler-
 \subsection{Euler-diagramok vizualizációja}
 
 \subsubsection{Síkbarajzolhatóság}
-
+% TODO síkbarajzolhatóság = felesleges metszetek elkerülése
 Gráfok esetében láthattuk, hogy felmerül a síkbarajzolhatóság kérdése. Amennyiben egyszer Euler-diagramokkal, így zárt, a végpontokat (jelen esetben hipercsúcsokat) tartalmazó görbékkel reprezentáljuk az éleket, akkor rögtön láthatjuk, hogy ezeknek tartalmazniuk kell legalább egy görbét is, amely közvetlenül összeköti a végpontokat. Ebből már észrevehetjük, hogy nem minden hipergráf rajzolható síkba egyszerű Euler-diagramokkal.
 
 
@@ -278,9 +280,8 @@ A well-matched tulajdonság az alábbi négy tulajdonság együttes meglétét f
 
 Szintúgy széles körben vizsgált tulajdonság az area-proportionality, avagy méretarányosság\cite{euler_with_circles, area_proportional_phd, drawing_area_proportional, general_area_proportional}, amely azt mondja ki, hogy minden régió (bizonyos definíciók szerint az univerzumot reprezentáló kivételével) mérete úgy aránylik az ilyenek összegéhez, mint az $\omega$ súlyfüggvényük azok összegéhez. Leggyakrabban a zárt görbe által tartalmazott elemek számát alkalmazzuk súlyfüggvényként. Hibamértékek segítségével könnyen metrika is előállítható a tulajdonságból.
 
-Annak ellenére, hogy több esztétikai metrika és tulajdonság is széles körben alkalmazott, nagyon kevés empirikus tapasztalatunk van arról, hogy ezek ténylegesen befolyásolják-e egy ábra értelmezhetőségét. Fish és társai kis mintán vizsgálták\cite{euler_comprehension} a well-formed tulajdonságnak az ábrák megértésére vonatkozó hatását. Az ő eredményeik alapján a WFC2 megsértése akár segítheti is egy ábra értelmezését, míg a WFC1 és WFC4 egyidejű, illetve a WFC3 vagy WFC4 önálló megsértése is rontja azt. Blake és társai\cite{orientation_comprehension} arra az eredményre jutottak, hogy az egyes görbék orientációja nincs hatással az emberi percepciójukra. Blake-ék egy másik cikkükben\cite{shape_comprehension} a szimmetrikus alakzatokat azonosították a legkönnyebben megérthetőként, így különösen a kör alakú reprezentációt javasolják.
+Annak ellenére, hogy több esztétikai metrika és tulajdonság is széles körben alkalmazott, nagyon kevés empirikus tapasztalatunk van arról, hogy ezek ténylegesen befolyásolják-e egy ábra értelmezhetőségét. Fish és társai kis mintán vizsgálták\cite{euler_comprehension} a well-formed tulajdonságnak az ábrák megértésére vonatkozó hatását. Az ő eredményeik alapján a WFC2 megsértése akár segítheti is egy ábra értelmezését, míg a WFC1 és WFC4 egyidejű, illetve a WFC3 vagy WFC4 önálló megsértése is rontja azt. Blake és társai\cite{orientation_comprehension} arra az eredményre jutottak, hogy az egyes görbék orientációja nincs hatással az emberi percepciójukra. Blake-ék, egy másik cikkükben\cite{shape_comprehension}, a szimmetrikus alakzatokat azonosították a legkönnyebben megérthetőként, így különösen a kör alakú reprezentációt javasolják. Chapman és társai empirikus módon arra az eredményre jutottak\cite{wellmatched_important}, hogy a well-matched tulajdonság fontosabb, mint a well-formed.
 %TODO cite colors - az IMDB-s cikknek van még egy érdekes color paragrafusa
-%TODO alsakallah/CSR*14 - well matched fontosabb, mint well formed
 
 \subsubsection{Euler-diagramok generálása}
 
@@ -562,10 +563,11 @@ A továbbiakban érdemes lehet megvizsgálni, hogy nem csúcsonkénti, hanem glo
 %to comprehend than ones whose curves have a black outline or a
 %coloured fill with transparency [BSRH14].
 
-% 28 - régiek bővítése, euler repr
-
 \subsection{Optimalizációs módszerek}
 % TODO GA variánsok (alg)
+
+% 29 - régiek bővítése, euler repr
+
 \subsection{Inicializációs módszerek}
 % TODO gráfok kirajzolása / force directed layout az előző fejezetbe
 
@@ -576,7 +578,7 @@ A továbbiakban érdemes lehet megvizsgálni, hogy nem csúcsonkénti, hanem glo
 \subsubsection{Futásidő analízis}
 
 % 30-ra minimum 35-40 oldal
-% TODO 29-30-án
+% TODO 30-án
 
 \section{Mérések és következtetések} % 15
 
