@@ -217,7 +217,7 @@ Egy adott Euler-diagram esetén \textbf{kontúr/contour} névvel illetjük az eg
 A well-formed tulajdonság hat kritériumból tevődik össze, bár néha csak az első ötöt használják:
 
 \begin{compactenum}
-	\item Minden görbék egyszerű, azaz nem metszi önmagát - WFC1
+	\item Minden görbe egyszerű, azaz nem metszi önmagát - WFC1
 	\item Nincs két görbe, amelynek közös határolószakasza van. (Az elfajuló, pontbeli találkozást nem vesszük hozzá - WFC2
 	\item Nincs olyan pont, ahol három görbe érintkezik - WFC3
 	\item Ha két görbe érintkezik, akkor metszik egymást - WFC4
@@ -343,13 +343,12 @@ A \textbf{particle swarm optimization} (PSO) egy másik biológiailag inspirált
 
 \begin{algorithm}[H]
 \caption{Particle swarm initialization}
-\label{alg:pso} 
+\label{alg:pso_init} 
 \textbf{\underline{Function}} InitializePSO($S, lowerBounds, upperBounds$)
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
 \STATE $bestPosition_{global} = \infty$
 \FOR{$i=1 \ldots S$}
 	\STATE $bestPosition_i = particlePosition_i \sim U(lowerBounds, upperBounds)$
-%	\STATE $bestPosition_i = particlePosition_i$
 	\STATE $velocityRange = |upperBounds-lowerBounds|$
 	\STATE $velocity_i \sim U(-velocityRange, velocityRange)$
 	\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
@@ -515,11 +514,82 @@ A továbbiakban azt is érdemes lehet megvizsgálni, hogy nem csúcsonkénti, ha
 A kísérletek során optimalizációs módszerek több kategóriáját hasonlítom össze; a particle swarm optimization (PSO) nevű módszert, illetve a genetikus algoritmus (GA) különböző variánsait. Bár nem optimalizációs módszer, de itt fogom vizsgálni a költségfüggvény neurális hálókkal való közelítését is, amely célból hipergráf konvolúciós hálózatokat (HCNN) próbálok ki.
 
 \subsubsection{Particle swarm optimization}
-Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \ref{optimization} szekcióban részletezett - módszert egyáltalán nem módosítottam. Amennyiben az Euler-diagramot reprezentáló $X \in \mathcal{R}^{|V| \times 3}$ mátrixot sor- vagy oszlopfolytonosan adjuk meg az eljárásnak, viszont feltételezzük, hogy a költségfüggvény is ilyeneken operál, akkor az eredeti megoldás tökéletesen fedi a mi esetünket is.
+Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \ref{optimization} szekció \ref{alg:pso}. számú pszeudokódjaként bemutatott - módszert egyáltalán nem módosítottam. Amennyiben az Euler-diagramot reprezentáló $X \in \mathcal{R}^{|V| \times 3}$ mátrixot sor- vagy oszlopfolytonosan adjuk meg az eljárásnak, viszont feltételezzük, hogy a költségfüggvény is ilyeneken operál, akkor az eredeti megoldás tökéletesen fedi a mi esetünket is.
 
 \subsubsection{Genetikus algoritmus}
 
-Emlékezhetünk a \ref{optimization} szekcióból, hogy a GA pszeudokódja nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól, ezért én olyan módon határoztam meg ezeket a lépéseket, amik ezt a tulajdonságot figyelembe veszik.
+Emlékezhetünk a \ref{optimization} szekcióból, hogy a GA pszeudokódja (lásd \ref{alg:ga}. pszeudokód) nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól - amennyiben egy csúcs $x$ és $y$ koordinátáját nincs értelme külön kezelni -, ezért én olyan módon határoztam meg az algoritmus szóban forgó lépéseit, amik ezt a tulajdonságot figyelembe veszik. Mint látni fogjuk a \ref{heuristics} szekcióban, a költségfüggvényt alkotó heurisztikák direkt úgy lettek kialakítva, hogy - amelyik esetében ez lehetséges - hiperélenként számítják a költséget, amelyek aggregációjaként számítjuk a globális költségfüggvényt. Ez a számítási mód lehetővé teszi, hogy a GA során akár tetszőleges értékeket, akár hipercsúcsokat vagy hiperéleket tekintsünk a legkisebb értelmes egységnek, amelyet örökölni lehetséges. Ennek megfelelően három különböző GA variánst hoztam létre, melyeket rendre naív GA, csúcsalapú GA és élalapú GA névvel fogok illetni.
+
+%\begin{note}
+%Bár a genetikus algorimus hagyományosan maximalizálási feladatként van megfogalmazva, én - a többi algoritmussal való kompatibilitás érdekében - minimalizációra használtam. Ahogy korábban láttuk, bármelyik visszavezethető a másikra.
+%\end{note}
+
+A születést/halált modellező szelekciós függvényt és a szülők kiválasztását (melyek az erdeti leírásban együttesen $selectFitnessProportionally$ néven, $population,fitnessValues,parentNumber$ paraméterekkel szerepeltek) két lépésre bontottam. A szelekció azonosan is működik minden esetben, azonban a szülők kiválasztása nem.
+
+%Először az utolsó kiértékelés szerinti $parentNumber$ db. legrosszabb értékkel bíró egyedet lecseréljük teljesen újakra, melyeknek kiszámítjuk a fitness értékeit is. Ezután a frissítés után a legjobb $parentNumber$ db. egyedet kiválasztjuk a következő iterációban való megőrzésre.
+
+\begin{algorithm}[H]
+\caption{Szelekció}
+\label{alg:selection} 
+\textbf{\underline{Function}} selection($population,fitnessValues,parentNumber$)
+\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+\STATE $worstIndividuals =$ $parentNumber$ db. legrosszabb értékkel bíró egyed \COMMENT{lecseréljük új egyedekre}
+\STATE $population = population \setminus worstIndividuals$
+\STATE $population = population \cup generateFeasibleSolutions($parentNumber$)$
+\STATE $fitnessValues$ = evaluateFitness($population$)
+\STATE $bestIndividuals =$ $parentNumber$ db. legjobb értékkel bíró egyed \COMMENT{kiválasztjuk a következő iterációban való megőrzésre}
+\STATE \textbf{return} $bestIndividuals$
+\end{algorithmic}
+\end{algorithm}
+
+
+% \begin{algorithm}[H]
+% \caption{Particle swarm initialization}
+% \label{alg:pso_init} 
+% \textbf{\underline{Function}} InitializePSO($S, lowerBounds, upperBounds$)
+% \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+% \STATE $bestPosition_{global} = \infty$
+% \FOR{$i=1 \ldots S$}
+	% \STATE $bestPosition_i = particlePosition_i \sim U(lowerBounds, upperBounds)$
+	% \STATE $velocityRange = |upperBounds-lowerBounds|$
+	% \STATE $velocity_i \sim U(-velocityRange, velocityRange)$
+	% \IF{$f(bestPosition_i) < f(bestPosition_{global})$}
+		% \STATE $bestPosition_{global} = bestPosition_i$
+	% \ENDIF
+% \ENDFOR
+% \STATE \textbf{return} $bestPosition_{global}, particlePosition_{1 \ldots S}, bestPosition_{1 \ldots S}, velocity_{1 \ldots S}$
+% \end{algorithmic}
+% \end{algorithm}
+
+% \begin{algorithm}[H]
+% \caption{Genetikus algoritmus}
+% \label{alg:ga} 
+% \textbf{\underline{Function}} GA($populationSize, parentNumber, mutationRate$)
+% \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+% \STATE $t = 0$
+% \STATE $population_t$ = generateFeasibleSolutions($populationSize$)
+% \STATE $values$ = evaluateFitness($population_t$)
+% \STATE $bestFitness, bestPosition = updateBest(values, \infty, population_t, bestPosition)$
+% \algstore{myalg}
+% \end{algorithmic}
+% \end{algorithm}
+% 
+% \begin{algorithm}[H]
+% \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+% \algrestore{myalg}
+% \WHILE{megállási feltétel nem teljesült}
+% 	\STATE $parents$ = selectFitnessProportionally($population_t, values, parentNumber$)
+% 	\STATE $children$ = recombine($parents$)
+% 	\STATE $population_t$ = deleteLast($population_t, values, |children|$)
+% 	\STATE $population_{t+1} = population_t \cup children$
+% 	\STATE $population_{t+1}$ = mutate($population_{t+1}, mutationRate$)
+% 	\STATE $values$ = evaluateFitness($population_{t+1}$)
+% 	\STATE $bestFitness = updateBest(values, bestFitness, population_{t+1}, bestPosition)$
+% 	\STATE $t = t + 1$
+% \ENDWHILE
+% \STATE \textbf{return} $bestFitness, bestPosition$
+% \end{algorithmic}
+% \end{algorithm}
 
 %TODO update problem description: goal is to test optimization problems cause they can evaluate different aesthetics
 
@@ -531,7 +601,7 @@ Emlékezhetünk a \ref{optimization} szekcióból, hogy a GA pszeudokódja nem t
 % TODO gráfok kirajzolása / force directed layout az előző fejezetbe
 
 % force directed
-\subsection{Heurisztikák} % 5
+\subsection{Heurisztikák} \label{heuristics} % 5
 \subsubsection{Szemantikus heurisztikák}
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
