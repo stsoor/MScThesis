@@ -5,7 +5,7 @@
 A hipergráfok gyakran alkalmazott matematikai eszközök az informatika számos területén, így a szemantikus web, bioinformatika, szenzorhálózatok, adatbázisrendszerek, szociális hálózatok, gépi látás és egyéb területek számos megoldása épül rájuk.
 Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok, illetve halmazrendszerek vizualizációja. Vizualizáció során egyszerre merül fel igény a mögöttes struktúra tökéletes leképezésére, a könnyű értelmezhetőségre (így esztétikai metrikákra), az általános alkalmazhatóságra, gyors futásidőre, és - ezzel összefüggésben - a megjeleníthető adathalmaz méretének maximalizálására is, továbbá gyakran felmerül a dinamikus környezet - akár a struktúra, akár 
 Mint látható, ez egy felettébb összetett problémát eredményez, amely megoldására számos módszer született már a szakterületi irodalomban, azonban ezek gyakran szenvednek egy - vagy több - tervezési elv sérülésétől, így egyik sem terjedt el a gyakorlatban.
-Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgáljuk a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra és helyes leképezésre.
+Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgáljuk a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra és a szemantikailag helyes leképezésre.
 
 
 \chapter{Elméleti alapok}
@@ -264,7 +264,7 @@ Mint láthattuk, az általános megoldhatóság érdekében emberi beavatkozás,
 
 \section{Megoldás}
 
-\subsection{Optimalizáció}
+\subsection{Optimalizáció} \label{optimization}
 
 A matematikai optimalizáció célja egy adott $f: X \rightarrow \mathbb{R} $ valós értékű függvény globális minimum- vagy maximumhelyének megtalálása, ahol X tetszőleges halmaz lehet. Mivel az $f$ függvény negáltja segítségével maximalizációs problémák minimalizáliós problémákká vezethetők vissza (vagy fordítva), ezért a kettő feladatot azonosnak tekintjük. A továbbiakban - mikor nem jelzem az ellenkezőjét - minimalizálási problémát tételezek fel.
 
@@ -475,22 +475,24 @@ Láthattuk, hogy Euler-diagramok reprezentálhatók Bézier-görbékkel, körök
 
 \subsubsection{Definíció}
 
-Az általam választott reprezentáció csúcsalapú, amelyben az egyes görbéket a hiperéleket alkotó csúcsok részhalmazainak konvex burka adja. Vegyünk minden csúcs esetén egy háromelemű vektort, amely tartalmazza a csúcs $x$ és $y$ koordinátáit, illetve egy $d$-vel jelölt értéket. Minden $e$ hiperélhez rendeljünk egy $G_e$ gráfot, amelynek csúcshalmaza megegyezik a hiperél csúcshalmazával, tetszőleges $u, v, u \neq v$ csúcsa között pedig akkor fut él, ha $distance(u, v) \leq min(u_d, v_d)$, ahol a $distance$ függvény tetszőleges távolságmetrika lehet (én az implementáció során az $L^2$ normát használom). A $G_e$ gráf összefüggő komponensei particionálják a hiperél elemeit. Az egyes partíciók konvex burkát véve egy a hiperél több zárt poligonra bomlik szét, így általánosított Euler-diagramot reprezentál. A reprezentáció előnye, hogy tetszőleges számú nem-üres komponensre bontható vele mindegyik él, illetve az egyes görbék az általuk tartalmazott csúcsok számával arányos komplexitással bírnak.
+Az általam választott reprezentáció csúcsalapú, amelyben az egyes görbéket a hiperéleket alkotó csúcsok részhalmazainak konvex burka adja. Vegyünk minden csúcs esetén egy háromelemű vektort, amely tartalmazza a csúcs $x$ és $y$ koordinátáit, illetve egy $d$-vel jelölt értéket, azaz egy $X \in \mathcal{R}^{|V| \times 3}$ mátrixot. Minden $e$ hiperélhez rendeljünk egy $G_e$ gráfot, amelynek csúcshalmaza megegyezik a hiperél csúcshalmazával, tetszőleges $u, v, u \neq v$ csúcsa között pedig akkor fut él, ha $distance(u, v) \leq min(u_d, v_d)$, ahol a $distance$ függvény tetszőleges távolságmetrika lehet (én az implementáció során az $L^2$ normát használom). A $G_e$ gráf összefüggő komponensei particionálják a hiperél elemeit. Az egyes partíciók konvex burkát véve egy a hiperél több zárt poligonra bomlik szét, így általánosított Euler-diagramot reprezentál. A reprezentáció előnye, hogy tetszőleges számú nem-üres komponensre bontható vele mindegyik él, illetve az egyes görbék az általuk tartalmazott csúcsok számával arányos komplexitással bírnak.
 
-\subsubsection{Futásidő}
+\subsubsection{Futásidő és memóriaigény}
 
 Figyeljük meg, hogy egy adott gráf tetszőleges csúcsának elhagyásával egy korábban összefüggő komponens előfordulhat, hogy két részre esik, azonban ez nem szükségszerű. Az előző okból kifolyólag minden hiperélre külön kell létrehozzuk a $G_e$ gráfot. Az egyes $G_e$ gráfok akár minden $e$ hiperél esetén tartalmazhatják az összes csúcsot, ezért feltehetjük, hogy a csúcsszáma megegyezik a hipergráféval. A hiperélenkénti teljes gráf létrehozásának költsége $\mathcal{O}(|E_H|*|V_H|^2)$, ahol a $H=(V_H,E_H)$ hipergráfot vizsgáljuk. Minden $G_e=(V_G,E_G)$ gráf esetén egy bejárást kell lefuttasunk, ami $\mathcal{O}(|V_G|+|E_G|) = \mathcal{O}(|V_G| + |V_G|^2) = \mathcal{O}(|V_G|^2) = \mathcal{O}(|V_H|^2)$ futásidővel bír, azaz a teljes futásidő továbbra is $\mathcal{O}(|E_H|*|V_H|^2)$.
 
+
+Mivel a csúcsonkénti $x$ és $y$ koordináták, illetve a $d$ távolság alkotja a modellt, ezért a memóriaigény $3*|V| \in \mathcal{O}(|V|)$.
+
 \subsubsection{Megjegyzések}
 
+Csúcsok ábrázolása eredetileg nem része az Euler-diagramoknak, azonban a pozíciójuk tartalmazhat információt (esetleg használhatunk  glyph-jellegű ikonokat is), így akár átértelmezhetik az ábra szemantikáját (például a létrejöttükkel engedélyezhetjük üres halmazok megjelenítését). Az általam használt módszer alkalmas csúcsok kezelésére, hiszen a modellben mindegyik konkrét pozícióval rendelkezik, viszont konkrétan a görbék határolóegyenesén is elhelyezkedhetnek (hiszen az ő konvex burkokat használjuk görbék leírására). Amennyiben a csúcsok megjelenítése is célunk, akkor érdemes lehet utólagos lépéseket alkalmazni a görbékre (vagy a széleken elhelyezkedő csúcsok pozícióra), de a csúcsok elrejtése is megoldás.
+
+
 A továbbiakban azt is érdemes lehet megvizsgálni, hogy nem csúcsonkénti, hanem globális vagy hiperélenkénti $d$ értékek használatával mennyire romlik tanuláis/optimalizálási idő, illetve az elérhető legjobb költségfüggvény.
-% csúcsokat nem muszáj kirajzolni
-% post processing nagyon sokat segítene
 
 
-% cleanup az előző fejezetben
-% TODO force layout & graph layouts
-% glyphs fejezet? - hibrid modellek
+% TODO ?
 %4.1.5. Diagram design
 %Euler diagrams come in different designs, but very few empirical
 %studies have been conducted to assess these designs. A different
@@ -509,6 +511,18 @@ A továbbiakban azt is érdemes lehet megvizsgálni, hogy nem csúcsonkénti, ha
 %coloured fill with transparency [BSRH14].
 
 \subsection{Optimalizációs módszerek}
+
+A kísérletek során optimalizációs módszerek több kategóriáját hasonlítom össze; a particle swarm optimization (PSO) nevű módszert, illetve a genetikus algoritmus (GA) különböző variánsait. Bár nem optimalizációs módszer, de itt fogom vizsgálni a költségfüggvény neurális hálókkal való közelítését is, amely célból hipergráf konvolúciós hálózatokat (HCNN) próbálok ki.
+
+\subsubsection{Particle swarm optimization}
+Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \ref{optimization} szekcióban részletezett - módszert egyáltalán nem módosítottam. Amennyiben az Euler-diagramot reprezentáló $X \in \mathcal{R}^{|V| \times 3}$ mátrixot sor- vagy oszlopfolytonosan adjuk meg az eljárásnak, viszont feltételezzük, hogy a költségfüggvény is ilyeneken operál, akkor az eredeti megoldás tökéletesen fedi a mi esetünket is.
+
+\subsubsection{Genetikus algoritmus}
+
+Emlékezhetünk a \ref{optimization} szekcióból, hogy a GA pszeudokódja nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól, ezért én olyan módon határoztam meg ezeket a lépéseket, amik ezt a tulajdonságot figyelembe veszik.
+
+%TODO update problem description: goal is to test optimization problems cause they can evaluate different aesthetics
+
 % TODO GA variánsok (alg)
 
 % 29 - régiek bővítése, euler repr
