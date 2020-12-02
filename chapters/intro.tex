@@ -7,7 +7,7 @@ Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok, ill
 Mint látható, ez egy felettébb összetett problémát eredményez, amely megoldására számos módszer született már a szakterületi irodalomban, azonban ezek gyakran szenvednek egy - vagy több - tervezési elv sérülésétől, így egyik sem terjedt el a gyakorlatban.
 Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgáljuk a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra és a szemantikailag helyes leképezésre.
 
-
+%\cleardoublepage
 \chapter{Elméleti alapok}
 \label{ch:intro}
 
@@ -101,7 +101,7 @@ A hipergráf, úgy is ismertek, mint a gráfok általánosításai, ahol minden 
 Egy másik felmerülő kérdés a hipergráfok kapcsán a hiperutak, más szóval a tranzitivitás fogalma a hiperélek között. A szakirodalomban erre is több, azonban jobban elkülönülő definíció létezik. Az itt bemutatott eredmények nem építenek a tranzitív relációra, így tetszőleges definíció tételezhető fel.
 \end{note}
 
-\subsubsection{Gráf- és hipergráf-adatszerkezetek}
+\subsubsection{Gráf- és hipergráf-adatszerkezetek} \label{adsDefinitions}
 
 Gráfok gépi kezelésére köztes gráfreprezentációkra, gráfadatszerkezetekre van szükség. Leggyakrabban az adjacencia mátrix, az incidencia mátrix, az éllista és a ritka reprezentációk általános osztálya használatos. Mivel a megoldások során csak az első kettőt alkalmazzuk, ezért a többit itt nem is definiáljuk.
 
@@ -138,7 +138,7 @@ Egy irányítatlan $H=(V_H,E_H)$ hipergráf \textbf{(szuper)duálisa} az a $G=(V
 Figyeljük meg, hogy a szuperduálisban szereplő csúcsok száma exponenciális az eredeti csúcshalmaz tekintetében!
 \end{note}
 
-\subsection{Gráfok ábrázolása}
+\subsection{Gráfok ábrázolása} \label{graphLayout}
 
 Mivel a gráfok gyakran használt, és könnyen konceptualizálható modellek, ezért a számítógépes vizsgálat mellett gyakran előnyös a felhasználó számára vizualizálni őket. Gráfok reprezentálhatók halmazokként vagy numerikusan (erre később látni fogunk példát), azonban ember-gép közreműködések során a leggyakrabban olyan képként szokás ábrázolni őket, melyeken a csúcsok köröknek, az őket összekötő élek pedig egyenes (egyes esetekben akár görbe) vonalaknak felelnek meg.
 
@@ -150,14 +150,14 @@ Mivel a gráfok gyakran használt, és könnyen konceptualizálható modellek, e
 
 Gyakorlatban különösen fontos tulajdonságnak bizonyult - a könnyű értelmezhetőség szempontjából -, hogy egy adott gráf kirajzolható-e anélkül, hogy bármely két éle metszené egymást. A gráfelmélet egy ismert tétele, hogy nem minden gráf rajzolható síkba. A \textbf{Fáry-Wagner} tétel továbbá kimondja, hogy minden olyan gráf, ami görbe vonalak használatával síkbarajzolható, az egyenes vonalak esetén is síkbarajzolható marad.
 
-Annak ellenére, hogy a reprezentáció aránylag egységes, rengeteg módszer létezik a konkrét csúcselrendezési feladat megoldására (ami természetesen implikál egy teljes gráfkirajzolást is). Ezen módszerek aztán csoportosíthatók, így ismerünk egyszerű konstruktív szabályokon (például köríven vagy rácson való elhelyezésen) alapulókat\cite{graph_layout_circular, graph_layout_circular2, graph_layout_orthogonal}, a Laplace-mátrix sajátvektorait használó spektrális elrendezéseket\cite{graph_layout_spectral} és - jellemzően - rúgóként kezelt élek és elektronokként tekintett csúcsok egyensúlyi állapotát kereső force-directed módszereket\cite{graph_layout_force_directed, graph_layout_force_directed2}. A mi szempontunkból ezutóbbi lesz a legfontosabb, azon belül is Fruchterman és Reingold megoldása\cite{graph_layout_fruchterman}. Természetesen a korábbiak nem mindig különülnek el teljesen, előfordul, hogy több kategóriába is sorolható egyazon algoritmus\cite{graph_layout_hybrid}.
+Annak ellenére, hogy a reprezentáció aránylag egységes, rengeteg módszer létezik a konkrét csúcselrendezési feladat megoldására (ami természetesen implikál egy teljes gráfkirajzolást is). Ezen módszerek aztán csoportosíthatók, így ismerünk egyszerű konstruktív szabályokon (például köríven vagy rácson való elhelyezésen) alapulókat\cite{graph_layout_circular, graph_layout_circular2, graph_layout_orthogonal}, a Laplace-mátrix sajátvektorait használó spektrális elrendezéseket\cite{graph_layout_spectral} és - jellemzően - rúgóként kezelt élek és elektronokként tekintett csúcsok egyensúlyi állapotát kereső erőalapú (force-directed) módszereket\cite{graph_layout_force_directed, graph_layout_force_directed2}. A mi szempontunkból ezutóbbi lesz a legfontosabb, azon belül is Fruchterman és Reingold megoldása\cite{graph_layout_fruchterman}. Természetesen a korábbiak nem mindig különülnek el teljesen, előfordul, hogy több kategóriába is sorolható egyazon algoritmus\cite{graph_layout_hybrid}.
 
 \subsection{Hipergráfok és halmazrendszerek ábrázolása}
 
 Gráfokhoz hasonlóan hipergráfok (és/vagy halmazrendszerek) esetén is hasznos a felhasználó által értelmezhető ábrázolásuk, azonban - a gráfoktól eltérő módon - a vizuális reprezentációjuk már egyáltalán nem egységes. A szakirodalom számos különböző módszert tart nyilván, melyeket Alsallakh és társai foglaltak össze\cite{alsallakah2016_the_state_of_the_art_set_visualization}. Ugyan a legtöbb cikk hasonló struktúrákat alkalmaz, kis variációk is könnyen összemossák a kialakított kategóriákat, úgyhogy itt inkább csak a gyakran alkalmazott ábrázolási megoldásokra térek ki.
 
 
-A legtöbb cikk régióalapú módszereket alkalmaz, ahol az egyes halmazok a sík részterületeivel vannak reprezentálva, míg a régiók elkülönítése jellemzően színkódolással történik\cite{eulerape, euler_polygon_article, simonetto_undrawable} (az ebben a fejezetben bevezetett Euler-diagramok is ebbe a kategóriába tartoznak). Egy másik népszerű eszköz a gráfszerű leírás. Egyes mószerek egy adott halmazt színkodolt görbékkel írnak le, amelyek akkor tartalmaznak egy adott csúcsot, ha átmennek azon\cite{linesets}. Elképzelhető továbbá a szuperduális használata is, amely végső soron tökéletesen reprezentál egy hipergráfot, azonban a tartalmazás reláció nehezebben felismerhető válik tőle. A bipartite incidence structure használata esetén ez a probléma már nem merül fel, viszont - Skiena kivételével, aki mindössze megemlíti az alkalmazhatóságát\cite{bpis_vis} - nem találtam olyan cikket, amely ne csak építene a struktúrára. Természetesen mátrixokkal (pl. incidencia mátrix segítségével) is ábrázolható egy hipergráf. Különböző aggregációt használó algoritmusok még előfordulnak, amelyek leginkább méretarányos diagramok vagy felhasználói interakció bevezetésével operálnak\cite{wellmatched_important, interactive_sets}, habár ezek nem különösöbben elterjedtek. Ennek ellenére Chapmanék empirikus értékelése szerint az általuk használt aggregációs módszer könnyebben és jobban értelmezhető volt, mint a népszerűbb, Euler-diagramokon alapuló megoldások\cite{wellmatched_important}. Előfordul továbbá, hogy további információt ikonokkal jelölnek, speciálisan a régióalapú megoldásoknál glyphnek nevezzük, mikor az egyes metszetek fölötti ikon(ok) méretével vagy számával jelezzük azok elemeinek számát. Mint a gráfok esetében, itt is előfodulnak tovább hibrid módszerek.
+A legtöbb cikk régióalapú módszereket alkalmaz, ahol az egyes halmazok a sík részterületeivel vannak reprezentálva, míg a régiók elkülönítése jellemzően színkódolással történik\cite{eulerape, euler_polygon_article, simonetto_undrawable} (az ebben a fejezetben bevezetett Euler-diagramok is ebbe a kategóriába tartoznak). Egy másik népszerű eszköz a gráfszerű leírás. Egyes mószerek egy adott halmazt színkodolt görbékkel írnak le, amelyek akkor tartalmaznak egy adott csúcsot, ha átmennek azon\cite{linesets}. Elképzelhető továbbá a szuperduális használata is, amely végső soron tökéletesen reprezentál egy hipergráfot, azonban a tartalmazás reláció nehezebben felismerhető válik tőle. A bipartite incidence structure használata esetén ez a probléma már nem merül fel, viszont - Skiena kivételével, aki mindössze megemlíti az alkalmazhatóságát\cite{bpis_vis} - nem találtam olyan cikket, amely ne csak építene a struktúrára. Természetesen mátrixokkal (pl. incidencia mátrix segítségével) is ábrázolható egy hipergráf. Különböző aggregációt használó algoritmusok még előfordulnak, amelyek leginkább méretarányos diagramok vagy felhasználói interakció bevezetésével operálnak\cite{wellmatched_important, interactive_sets}, habár ezek nem különösöbben elterjedtek. Ennek ellenére Chapmanék empirikus értékelése szerint az általuk használt aggregációs módszer könnyebben és jobban értelmezhető volt, mint a népszerűbb, Euler-diagramokon alapuló megoldások\cite{wellmatched_important}. Előfordul továbbá, hogy információt ikonokkal írnak le, speciálisan a régióalapú megoldásoknál glyphnek nevezzük, mikor az egyes metszetek fölötti ikon(ok) méretével vagy számával jelezzük azok elemeinek számát. Mint a gráfok esetében, itt is előfodulnak tovább hibrid módszerek.
 
 %Az említett cikk az ábrázolási módok számos kategóriáját különbözteti meg. Én ezek közül kiemelném, hogy léteznek gráfokon, régiókon, vonalakon, mátrixokon és aggregáción alapuló, illetve hibrid módszerek. Az egyes kategóriák önmagukban is több ábrázolási módszert fednek, melyeket jellemzően egyenként is szakcikkek sokasága fed, így az áttekintésükre itt nincs módunk, azonban jól mutatja a kutatási terület mélységét.
 
@@ -312,13 +312,13 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \t
 \STATE $population_t$ = generateFeasibleSolutions($populationSize$)
 \STATE $values$ = evaluateFitness($population_t$)
 \STATE $bestFitness, bestPosition = updateBest(values, \infty, population_t, bestPosition)$
-\algstore{myalg}
+\algstore{ga}
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}[H]
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-\algrestore{myalg}
+\algrestore{ga}
 \WHILE{megállási feltétel nem teljesült}
 	\STATE $parents$ = selectFitnessProportionally($population_t, values, parentNumber$)
 	\STATE $children$ = recombine($parents$)
@@ -516,15 +516,22 @@ A kísérletek során optimalizációs módszerek több kategóriáját hasonlí
 \subsubsection{Particle swarm optimization}
 Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \ref{optimization} szekció \ref{alg:pso}. számú pszeudokódjaként bemutatott - módszert egyáltalán nem módosítottam. Amennyiben az Euler-diagramot reprezentáló $X \in \mathcal{R}^{|V| \times 3}$ mátrixot sor- vagy oszlopfolytonosan adjuk meg az eljárásnak, viszont feltételezzük, hogy a költségfüggvény is ilyeneken operál, akkor az eredeti megoldás tökéletesen fedi a mi esetünket is.
 
+% TODO futásidő, memóriaigény ?
+%A futásidő függ az iterációk számától, ami előre ismeretlen, azonban azt $I$-vel, a költségfüggvény kiértékelésének futásidejét $C$-vel jelölve az inicializálás során $S$ db. véletlen modellt ($|V|$ db. érték) és sebességet (szintúgy $|V|$ db. érték) generálunk, illetve ki is értékeljük ezek költségfüggvényét, azaz ekkor $\mathcal{O}(S*(C+|V|))$ lépést végzünk. Iteráció során $\mathcal{O}(I*S*(C+|V|))$ számú lépést végzünk, ahol $S$ a részecskék (megoldáspéldányok) száma, hiszen minden iteráció egy kiértékelésből, sebességváltoztatásból és konstans számú lépésből áll, illetve az $2*S*3*|V|$ darab random értéket is le kell generáljuk. Összesen $\mathcal{O}(I*S*(C+|V|))$ lépést kapunk.
+
+
+%A memóriaigény kiszámításához azt kell lássuk, hogy egy állapot tartalmazza a részecskék által jelenleg használt sebességet, pozíciót (azaz diagram modellt) és az itt kiértékelt költségfüggvény értéket, továbbá az eddig talált legjobb értékeket és pozíciókat is. Ez összesen $(3*S)$ valós szám és modell tárolása, azaz a $H=(V,E)$ hipergráf esetén összesen $(3*S)*(3*|V|) \in \mathcal{O}(S*|V|)$.
+%$\mathcal{O}(I*S*C)$ számú lépést végzünk, ahol $S$ a részecskék (megoldáspéldányok) száma, hiszen minden iteráció egy kiértékelésből és konstans számú lépésből áll. 
+
 \subsubsection{Genetikus algoritmus}
 
 Emlékezhetünk a \ref{optimization} szekcióból, hogy a GA pszeudokódja (lásd \ref{alg:ga}. pszeudokód) nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól - amennyiben egy csúcs $x$ és $y$ koordinátáját nincs értelme külön kezelni -, ezért én olyan módon határoztam meg az algoritmus szóban forgó lépéseit, amik ezt a tulajdonságot figyelembe veszik. Mint látni fogjuk a \ref{heuristics} szekcióban, a költségfüggvényt alkotó heurisztikák direkt úgy lettek kialakítva, hogy - amelyik esetében ez lehetséges - hiperélenként számítják a költséget, amelyek aggregációjaként számítjuk a globális költségfüggvényt. Ez a számítási mód lehetővé teszi, hogy a GA során akár tetszőleges értékeket, akár hipercsúcsokat vagy hiperéleket tekintsünk a legkisebb értelmes egységnek, amelyet örökölni lehetséges. Ennek megfelelően három különböző GA variánst hoztam létre, melyeket rendre naív GA, csúcsalapú GA és élalapú GA névvel fogok illetni.
 
 %\begin{note}
-%Bár a genetikus algorimus hagyományosan maximalizálási feladatként van megfogalmazva, én - a többi algoritmussal való kompatibilitás érdekében - minimalizációra használtam. Ahogy korábban láttuk, bármelyik visszavezethető a másikra.
+%Bár a genetikus algoritmus hagyományosan maximalizálási feladatként van megfogalmazva, én - a többi algoritmussal való kompatibilitás érdekében - minimalizációra használtam. Ahogy korábban láttuk, bármelyik visszavezethető a másikra.
 %\end{note}
 
-A születést/halált modellező szelekciós függvényt és a szülők kiválasztását (melyek az erdeti leírásban együttesen $selectFitnessProportionally$ néven, $population,fitnessValues,parentNumber$ paraméterekkel szerepeltek) két lépésre bontottam. A szelekció azonosan is működik minden esetben, azonban a szülők kiválasztása nem.
+A születést/halált modellező szelekciós függvényt és a szülők kiválasztását (melyek az erdeti leírásban együttesen $selectFitnessProportionally$ néven, $population,fitnessValues,parentNumber$ paraméterekkel szerepeltek) két lépésre bontottam.
 
 %Először az utolsó kiértékelés szerinti $parentNumber$ db. legrosszabb értékkel bíró egyedet lecseréljük teljesen újakra, melyeknek kiszámítjuk a fitness értékeit is. Ezután a frissítés után a legjobb $parentNumber$ db. egyedet kiválasztjuk a következő iterációban való megőrzésre.
 
@@ -542,74 +549,137 @@ A születést/halált modellező szelekciós függvényt és a szülők kiválas
 \end{algorithmic}
 \end{algorithm}
 
+\begin{algorithm}[H]
+\caption{Szülők kiválasztása}
+\label{alg:selectParents} 
+\textbf{\underline{Function}} selectParents($population,fitnessValues,parentNumber$)
+\begin{algorithmic}[1]
+\STATE $fitnessImpliedProbabilities = (fitnessValues - min(fitnessValues)) / sum(fitnessValues)$
+\FOR{$i=1 \ldots parentNumber$}
+	\STATE $parentIndices = fitnessImpliedProbabilities$ alapú eloszlásból visszatevés nélkül kettő minta vétele
+	\STATE $parentsRow = population[parentIndices]$
+	\STATE $parents_i = parentsRow$
+\ENDFOR
+\STATE \textbf{return} $parents$
+\end{algorithmic}
+\end{algorithm}
 
-% \begin{algorithm}[H]
-% \caption{Particle swarm initialization}
-% \label{alg:pso_init} 
-% \textbf{\underline{Function}} InitializePSO($S, lowerBounds, upperBounds$)
-% \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-% \STATE $bestPosition_{global} = \infty$
-% \FOR{$i=1 \ldots S$}
-	% \STATE $bestPosition_i = particlePosition_i \sim U(lowerBounds, upperBounds)$
-	% \STATE $velocityRange = |upperBounds-lowerBounds|$
-	% \STATE $velocity_i \sim U(-velocityRange, velocityRange)$
-	% \IF{$f(bestPosition_i) < f(bestPosition_{global})$}
-		% \STATE $bestPosition_{global} = bestPosition_i$
-	% \ENDIF
-% \ENDFOR
-% \STATE \textbf{return} $bestPosition_{global}, particlePosition_{1 \ldots S}, bestPosition_{1 \ldots S}, velocity_{1 \ldots S}$
-% \end{algorithmic}
-% \end{algorithm}
+A $recombine$ (máshol gyakran $crossover$ névvel illetett) függvény a kiválasztott szülőket kapja meg paraméterként, és kombinálja a génállományukat. Az itt tárgyaltak közül ez a legfontosabb függvény, mivel ez különbözteti meg a három variáns működését. A naív GA esetében nem is részletezem pszeudokódban a működést, mivel a leszármazottak összeállítása mindössze annyiból áll, hogy egyenletes eloszlás szerint kiválasztjuk a gének felét, melyeket az első szülő génállományából másolunk le, a többit pedig a másodikéból. Csúcsalapú GA-nél mindössze annyiban térünk el ettől, hogy az $x,y$ és $d$ értékeket közösen tekintjük egy génnek, így ezek mindig együttesen öröklődnek egy szülőtől (továbbra is fele-fele arányban).
 
-% \begin{algorithm}[H]
-% \caption{Genetikus algoritmus}
-% \label{alg:ga} 
-% \textbf{\underline{Function}} GA($populationSize, parentNumber, mutationRate$)
-% \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-% \STATE $t = 0$
-% \STATE $population_t$ = generateFeasibleSolutions($populationSize$)
-% \STATE $values$ = evaluateFitness($population_t$)
-% \STATE $bestFitness, bestPosition = updateBest(values, \infty, population_t, bestPosition)$
-% \algstore{myalg}
-% \end{algorithmic}
-% \end{algorithm}
-% 
-% \begin{algorithm}[H]
-% \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-% \algrestore{myalg}
-% \WHILE{megállási feltétel nem teljesült}
-% 	\STATE $parents$ = selectFitnessProportionally($population_t, values, parentNumber$)
-% 	\STATE $children$ = recombine($parents$)
-% 	\STATE $population_t$ = deleteLast($population_t, values, |children|$)
-% 	\STATE $population_{t+1} = population_t \cup children$
-% 	\STATE $population_{t+1}$ = mutate($population_{t+1}, mutationRate$)
-% 	\STATE $values$ = evaluateFitness($population_{t+1}$)
-% 	\STATE $bestFitness = updateBest(values, bestFitness, population_{t+1}, bestPosition)$
-% 	\STATE $t = t + 1$
-% \ENDWHILE
-% \STATE \textbf{return} $bestFitness, bestPosition$
-% \end{algorithmic}
-% \end{algorithm}
 
+Élalapú GA esetében természetesen az egyes egyedkhez nem elég egyetlen fitness értéket nyilvántartani, hanem a - ahol értelmezett úgy - minden egyed minden élére szükséges azt tárolni. Az élalapú megoldás esetén a $recombine$ függvénynek ezek az élalapú fitness értékek is bemenetei, melyeket az $edgewiseFitness \in \mathcal{R}^{|population| \times |E|}$ változó tartalmának tekintünk ($H=(V,E)$ esetén), illetve megkapja a hipergráf incidencia mátrixát is. A szóban forgó eljárás során továbbra is egy $x,y,d$ hármast tekintünk génnek, így ezek csak együtt örökölhetők, azonban egy gén szülőjének kiválasztása a korábbiaktól eltérő módon történik. Az egyes csúcsokhoz mindkét szülő esetén külön-külön meghatározzuk, hogy az adott csúcsot tartalmazó éleknek mennyi az átlagos fitness értéke. Az öröklődés során kiválasztjuk azokat a géneket (azaz csúcsonkénti $x,y,d$ értékhármasokat), amelyeknek ez az átlagolt értéke nagyobb az első szülőben. A kiválasztást úgy módosítjuk, hogy mindig fele-fele arányban örököljünk a két szülőből. Ehhez a két átlagolt érték különbségét vesszük, és azokkal bővítjük/csökkentjük az első szülőből átvett értékeket, amelyek a legkisebb eltérést mutatják. Így elveszíthetjük a legjobb értékek öröklését, azonban csak akkor, ha a másik szülő többi génjében nagyobb lenne a fitness értékben beállt veszteség.
+
+
+A mutációt az új populáción alkalmazott normális eloszlású zajjal modellezzük, amelynek az átlaga nulla, a felső értéke a $mutationRate$ változó.
+
+
+% TODO futásidő, memóriaigény ?
+%Futásidő tekintetében most sem ismert az iterációk száma vagy a költségfüggvény kiértékelésének időigénye, ezeket jelöljük rendre $I$-vel és $C$-vel, a populáció (ismert) méretét pedig $S$-sel. Az inicializálás során itt egyszer véletlenszerűen 
 %TODO update problem description: goal is to test optimization problems cause they can evaluate different aesthetics
 
-% TODO GA variánsok (alg)
+\subsubsection{Hipergráf konvolúciós hálózat}
 
-% 29 - régiek bővítése, euler repr
+
+% TODO HGCNN
+
+% TODO szekció -> paragrafus
+% TODO GA variánsok (alg)
 
 \subsection{Inicializációs módszerek}
 % TODO gráfok kirajzolása / force directed layout az előző fejezetbe
 
+A bemutatott algoritmusok során többször előfordul, hogy új megengedett megoldásokat kell generáljunk. Tekintve, hogy ezeknek a minősége nagyban befolyásolja a futás során elérhetőkét, ezért különösen fontos kérdés, hogy kezdeti értékeket hogyan számítjuk ki. Ebből a célból a dolgozatban több módszert is vizsgálok a megoldások inicialiázására, melyeket ebben a fejezetben részletezek.
+
+\subsubsection{Egyenletes eloszlás alapú inicializálás}
+
+A legegyszerűbb - és az optimalizációs algoritmusok eredeti leírásában általában alkalmazott - módszer, hogy a modell minden dimenziójához megadunk egy alsó és felső értéket, majd az inicializálás soroán a kettő közötti egyenletes eloszlás szerint választunk új értéket. A mi esetünkben az $x$ és $y$ koordináták felső határát az alkalmazott képméret adja meg, míg a $d$ esetében akkor kapjuk a legnagyobb értelmes számot, ha a két átellenes csúcs távolságát nézzük, amely Pitagorasz-tétellel megkapható. Az alsó korlátok természetesen minden esetben nullával egyeznek meg.
+
+\subsubsection{Élenkénti inicializálás}
+
+Ennek az inicializálási módszernek a során először az élek pozícióit határozzuk meg (az egyenletes eloszlás alapú inicicializálás szerint), majd az egyes csúcsokat az őket tartalmazó élek átlagaként értelmezzük. A $d$ értékek ettől függetlenül, csúcsonként számítódnak ki. A mögöttes feltételezés, hogy így olyan klaszterek alakulnak ki, amely egy-egy csúcs összes élét tartalmazzák.
+
+
+\subsubsection{Erőalapú gráfelrendezés szerinti inicializás}
+
+%TODO
+Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \ref{adsDefinitions} fejezetben bevezetett bipartite incidence structure vagy szuperduális segítségével). A hiperélek klikkekre való cserélése első ránézésre ilyennek tűnhet, azonban figyeljük meg, hogy elveszik az az információ, hogy pontosan melyik hiperélből származik a két csúcs közötti él. Amennyiben továbbra is előző módszernél bevezetett megfontolásból indulunk ki (azaz a szomszédok valamiféle átlagolásával elérhető klasztereket szeretnénk), akkor azonban az így elvesző információ egyáltalán nem is szükséges. Tekintsük azt a fizikai szimulációt, amelyben a nem szomszédoscsúcsok taszítják, a szomszédosak pedig vonzzák egymást. Ekkor a rendszer egyensúlyi helyzetei felfoghatók a ilyen átlagolásként is. Az így leírt módszer pontosan a force-directed gráfkirajzolási módszerek (lásd \ref{graphLayout}) egy speciális esetét írja le. Az általam használt konkrét eljárás a Fruchterman-Reingold módszer\cite{graph_layout_fruchterman}, amelyet (a cikkből átemelve) alább láthatunk.
+
+\begin{algorithm}[H]
+\caption{Fruchterman-Reingold}
+\label{alg:fruchterman} 
+\textbf{\underline{Function}} layout($Canvas=(width, height), G=(V,E), iterations$)
+\begin{algorithmic}[1]
+\STATE $k = \sqrt{width*height/|V|}$
+\STATE $t = \sqrt{width^2+height^2}$
+\FOR{$i=1 \ldots iterations$}
+	\FOR{$v \in V$} \COMMENT{taszítóerők kiszámítása}
+		\STATE $v.disp = 0$
+		\FOR{$u \in V$}
+			\IF{$\{u,v\} \notin E$}
+				\STATE $v.disp = 0$
+				\STATE $\Delta = v.pos - u.pos$
+				\STATE $v.disp = v.disp + (\Delta/|\Delta|*k^2/|\Delta|)$
+			\ENDIF
+		\ENDFOR
+	\ENDFOR
+	
+	\FOR{$v,u \in E$} \COMMENT{vonzóerők kiszámítása}
+		\STATE $\Delta = v.pos - u.pos$
+		\STATE $v.disp = v.disp - (\Delta/|\Delta|*|\Delta|^2/k)$
+		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
+	\ENDFOR
+	
+\algstore{fruchterman}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{fruchterman}
+
+	\FOR{$v \in V$}
+		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
+		\STATE $v.pos.x = min(width/2), max(-width/2, v.pos.x)$ \COMMENT{nem engedjük túlfutni a kép szélén}
+		\STATE $v.pos.y = min(height/2), max(-height/2, v.pos.y)$
+	\ENDFOR
+	\STATE $t = cool(t)$ \COMMENT{csökkentjük a maximális lehetséges elmozdulást}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+Az algoritmus során kezdetben egyenletes eloszlású véletlen $v.pos$ értékeket tételezünk fel.
+
+%A gráfalapú reprezentációnak megvan az az előnye, hogy léteznek már rá elrendező algoritmusok, melyeket a \ref{graphLayout} fejezetben tekintettem át.
+%A korábbiakkal szemben (amik vagy speciális szemantikát vezetnek be, vagy minden részhalmazt külön reprezentálnak) leírhatunk 
+
+\begin{note}
+Mivel a szuperduális exponenciális méretű az eredeti hipergráfhoz képest, ezért a használatát a teljes kutatás során kerültem.
+\end{note}
+%Az előző módszerhez hasonló megfontolásból egy fizikai szimulációkon alapuló módszert is bevezettem.
+
+
+\subsubsection{Súlyozott inicializálás}
+
+Mikor több, mint egy megoldást inicializálunk - azaz esetünkben mindig -, akkor megtehetjük, hogy az új elemek felét az egyik, felét egy másik inicializálási módszerrel definiáljuk. Ezt a módszert általánosíthatjuk tetszőleges számú inicializációs módszerre (amelyek esetleg csak a paraméterezésükben térnek el), illetve fele-fele bontás helyett tetszőleges súlyozásra is.
+
+
+\subsubsection{Távolságértékek statisztikai inicializálása}
+
+Minden korábbi módszer esetén a csúcsok pozicionálására koncentráltunk, a $d$ értékek háttérbe szorultak. Ezt ellensúlyozandó az egyes módszerek során lehetőség van ezeket különböző módokon számítani. A fönt bevezetett véletlenszerű módszeren kívül - a csúcsok koordinátáinak beállítása után - minden adott $v$ csúcs $d$ értékét beállíthatjuk a legközelebbi, legtávolabbi vagy átlagos szomszéd távolsága alapján, ahol minden csúcsot szomszédnak tekintünk, amellyel $v$ közös hiperélben szerepel.
+
+
+
+
+%TODO force directed
+
+%Fruchterman és Reingold megoldása\cite{graph_layout_fruchterman}
 % force directed
-\subsection{Heurisztikák} \label{heuristics} % 5
+\subsection{Heurisztikák} \label{heuristics}
 \subsubsection{Szemantikus heurisztikák}
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
 
-% 30-ra minimum 35-40 oldal
-% TODO 30-án
+\section{Mérések és következtetések}
 
-\section{Mérések és következtetések} % 15
-
-%TODO 01-04 között
-%öf - 2-5
+% 11-ig - 60
+% 11-ig öf - 2-5
