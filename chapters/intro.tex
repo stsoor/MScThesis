@@ -290,7 +290,7 @@ A gradiensalapú módszerekkel rokon jegyeket mutat a - nem feltétlenül differ
 
 \subsubsection{Sztochasztikus algoritmusok}
 
-Összefoglaló néven \textbf{sztochasztikus algoritmus} névvel illetjük azokat a módszereket, amelyek futásuk során valószínűségi változókat alkalmaznak. Ez a megközelítés gyakran használt, mikor a költségfüggvény nem alkalmas direkt optimalizációra, viszont megelégszünk közelítő megoldásokkal is. Szintúgy előnyös, mikor a keresési térben számos, globális minimumértékhez közel álló pont létezik. A gradiens leszállás során látott véletlen kezdőpont kiválasztását inputnak tekintjük, így az algoritmus alapverzióját nem tekintjük sztochasztikusnak, viszont - mint számos egyéb determinisztikus (nem sztochasztikus) algoritmusnak - vannak sztochasztikus variánsai. Ennek megfelelően fontos kiemelni, hogy az egyes optimalizációs módszereknek általában több variánsa is létezhet, melyek esetenként összemossák a kategóriákat. Ennek a szekciónak a további részében át fogjuk tekinteni azokat az algoritmusokat, amelyeknek szükséges az ismerete a továbbiakban, azonban néhol pont az itt bemutatott alapverziótól való eltérés lesz különösen érdekes.
+Összefoglaló néven \textbf{sztochasztikus algoritmus} névvel illetjük azokat a módszereket, amelyek futásuk során valószínűségi változókat alkalmaznak. Ez a megközelítés gyakran használt, mikor a költségfüggvény nem alkalmas direkt optimalizációra, viszont megelégszünk közelítő megoldásokkal is. Szintúgy előnyös, mikor a keresési térben számos, globális minimumértékhez közel álló pont létezik. A gradiens leszállás során látott véletlen kezdőpont kiválasztását inputnak tekintjük, így az algoritmus alapverzióját nem tekintjük sztochasztikusnak, viszont - mint számos egyéb determinisztikus (nem sztochasztikus) algoritmusnak - vannak sztochasztikus variánsai. Ennek megfelelően fontos kiemelni, hogy az egyes optimalizációs módszereknek általában több variánsa is létezhet, melyek esetenként összemossák a kategóriákat. Ennek a fejezetnek a további részében át fogjuk tekinteni azokat az algoritmusokat, amelyeknek szükséges az ismerete a továbbiakban, azonban néhol pont az itt bemutatott alapverziótól való eltérés lesz különösen érdekes.
 
 
 A legismertebb ilyen variáns az úgynevezett \textbf{sztochasztikus gradiens leszállás} (SGD). Mikor az $f$ költségfüggvény több $f_i$ veszteségfüggvény átlagaként jön létre, azaz $f(x) = 1/n * \sum_{i=1}^{n} f_i(x)$ (például gépi tanulás során több mintaelemen alkalmazva ugyanazt a veszteségfüggvényt), akkor előfordul, hogy a gradiens leszállás során a mai számítógépek kapacitásához képest túl sok parciális deriváltat kéne kiértékelni. Az SGD ez úgy kerüli el, hogy a veszteségfüggvényeket egyesével értekeli ki, mindegyik kiértékelés után modósítva a paramétereket. Láthatóan ez nem ekvivalens a teljes költségfüggvény gradiensének használatával (csak közelíti azt), továbbá nagyban függ a kiértékelés sorrendjétől is, ezért a veszteségfüggvények sorrendje a kiértékelés során randomizált. Néha szintúgy SGD-nek nevezik a mini-batch gradient descent módszert, ami annyiban tér el az SGD-től, hogy a paraméterek módosítása során egyszerre $k$ darab veszteségfüggvény átlagát használjuk, ahol $k$ egy hiperparaméter.
@@ -407,12 +407,12 @@ Mivel a rétegek minden csúcsukban hasonlóan épülnek fel, ezért gyakran meg
 
 Amennyiben a rétegek szekvenciálisan egymásra épülnek (azaz általában), akkor az egyes rétegek weight és bias értékeit könnyebben kezelhető mátrix alakban is felírhatjuk. Jelöljük az $i$-edik réteget $H^{(i)}$-vel, a rákövetkezőt $H^{(i+1)}$-gyel, az adott rétegben található csúcsok számát pedig $|H^{(j)}|$-vel. Ekkor az $i$-edik rétegből az $i+1$-edikbe menő élek súlyai egy $W^{(i)} \in  \mathcal{R}^{|H^{(i)}|\times|H^{(i+1)}|}$ mátrixban tárolhatók, amelyben - értelemszerűen - a sorok jelentik az élek kiindulópontját, az oszlopok pedig a végpontját. Egy $B^{(i)} \in \mathcal{R}^{|H^{(i)}|}$ bias vektor is kialakítható, amely a csúcsok címkéjét tartalmazza. Ezek felhasználásával egy réteg kimenetének kiszámítása a $H^{(i+1)} = \sigma(H^{(i)} * W^{(i)} + B^{(i)})$ egyenletre redukálódik, ahol a $\sigma$ függvény az elemenként alkalmazott aktiválási függvényt jelöli, a többi művelet pedig mátrixműveleteket. Ebben a formában a bemenetet a nulladik réteg kimenetének tekintjük. Egyes speciális rétegek ettől a számítási módtól néha kis mértékben eltérnek (például konvolúciót alkalmaznak mátrix szorzás helyett).
 
-\subsubsection{Tanulás}
+\subsubsection{Tanulás} \label{NNLearning}
 
 Neurális hálózatok architektúrája leggyakrabban emberi munkával készül el. Van példa arra is, hogy jól működő (a célnak megfelelő pontosságú eredményt adó) neurális hálózatok paramétereit is emberi erővel vagy egyszerű konstruktív szabályokkal állítanák be, azonban ezek a megoldások szélsőséges esetekben, kis méretű hálózatokon szoktak működni. A paraméterek automatikus konfigurálását szokás a hálózat tanításának nevezni, míg az erre alkalmazott algoritmus paramétereit hiperparaméternek.
 Számos ilyen algoritmus létezik, azonban manapság a sztochasztikus gradiens leszállás variánsait szokás használni. Az SGD-alapú tanulás során véletlenszerű módon inicializáljuk a paramétereket, ami után a tényleges tanulás a kimenetre alkalmazott költségfüggvény segítségével történik, melynek függvényében módosítjuk a hibás (rossz eredményre jutó) paramétereket. Különösen nehéz értékelni, hogy egy rossz kimenethez egy adott paraméter mennyire járult hozzá, azonban itt nem térünk ki az erre alkalmazott módszerekre. A tanításnak lehetnek másodlagos követelményei is, mint például a kapott paraméterek komplexitásának (értékskálájának) csökkentése. Fontos kiemelni, hogy nem mentesek a gradiensalapú megoldások a problémáktól (kezdve a paraméter/kimenet hozzárendelési problémától, a szükségszerűen differenciálható költségfüggvényen át, a deriválhatósági szempontból megfelelő inicializálási módszerekig bezárólag), és egyáltalán nem csak ilyen tanulóalgoritmusok léteznek. Evolúciós algoritmusok hatásfokát a neurális hálózatok tanításának kontextusában már számos szerző vizsgálta, illetve javította\cite{ann_ga, ann_ga2}. Bár ígéretes eredményeket érhetők el genetikus algoritmusokkal, és nem is szükséges hozzá, hogy deriválható költségfüggvényt alkalmazzunk, de - egyelőre - ez a módszer nem terjedt el széles körben, azonban - neuroevolúció néven - virágzó szakterületté nőtte ki magát a problémakör.
 
-\subsection{Gráf konvolúciós neurális hálózatok} % 5
+\subsection{Gráf konvolúciós neurális hálózatok} 
 Említés szintjén láttuk, hogy lokális információk összegzésére konvolúciós rétegek alkalmasak. Mivel gráfokon létezik távolságfogalom, ezért elméletben a körükben is alkalmazható ugyanez az elv. A sztenderd konvolúciós hálózat bemenete azonban egy olyan tenzor (azaz, a mi szempontunkból, egy tetszőleges dimenziószámú mátrix), amelyben a lokalitás a tenzoron egyes elemei közti távolságon alapszik. Az általunk látott gráfreprezentációk (incidencia mátrix, adjacencia mátrix stb.) izomorf gráfot ír le akkor is, ha ugyanazt a permutációt alkalmazzuk a sorokra, mint az oszlopokra, tehát a mátrixon belüli közelség irreleváns.
 
 \subsubsection{Laplacian}
@@ -432,19 +432,19 @@ Egy másik Laplacian-variáns, a random walk (normalized) Laplacian is népszer�
 
 A Laplace-mátrix továbbra sem lesz független a gráf csúcsainak sorrendjétől, azonban egyrészt reflektálja azokat a szerkezete, másrészt a sajátértéke már független a csúcsok permutációitól.
 
-\subsubsection{Számítási szabály}
+\subsubsection{Számítási szabály} \label{GCNN}
 Bár a neurális hálók gráfjellegű adatokra való adaptációjára már korábban is voltak kísérletek\cite{old_gcnn, old_gcnn2}, napjainkban a - Welling és társa által kidolgozott - Laplace-mátrixon alapuló variáns\cite{base_gcnn} a leginkább elterjedt. Wellingék azt ismerték fel, hogy a megelőző réteg kimenete egy impulzusmátrixként is felfogható, amin - korábbi eredményekre hagyatkozva\cite{laplace_filter} - a Laplacian gráfalapú (spektrális) szűrőként funkcionál. Mivel ez a szűrő csak egy adott él környezetének megfelelő impulzusokat összegzi, ezért a számítás során nem az eredeti gráfot használják, hanem aszerint módosítják először, hogy minden csúcs egy hurokéllel rendelkezzen. A neurális rétegekről szóló fejezetben látottaknak megfelelően tudjuk, hogy általában $H^{(i+1)} = \sigma(H^{(i)} * W^{(i)} + B^{(i)})$ szabály segítségével kapható meg egy réteg kimenete. A Welling-féle gráf konvolúciós réteg (GCN) ezzel szemben a $H^{(i+1)} = \sigma(\tilde L * H^{(i)} * W^{(i)})$ szabályt alkalmazza, amelyben $\tilde L$ jelöli a hurokélekkel ellátott $G$ gráf Laplace-mátrixát, azaz az $\tilde A = A_G + I$ adjacencia mátrix segítségével kapott Laplaciant. Mint látjuk, a biasok itt elhagyásra kerülnek, amit viszont azzal ellensúlyozunk, hogy $\tilde L$ csak és kizárólag a lokális információk szűri ki.
 
 
 A GCN-nek különösen alkalmasak gráfcímkézési és klaszterezési problémák megoldására, akár alig néhány réteg használatával is.
 
-\subsection{Hipergráf konvolúciós neurális hálózatok}
+\subsection{Hipergráf konvolúciós neurális hálózatok} 
 Hipergráfok esetén már régóta vizsgált probléma, hogy hogyan lehet úgy általánosítani a gráfokon alkalmazott Laplaciant, hogy az minél több tulajdonságát megőrizze. Régebbi eredmények mindössze a hipergráfok speciális részosztályain voltak képesek ezt megvalósítani\cite{old_spectral_hypergraph, spectra}, azonban egy 2015-ös cikkben\cite{base_hypergraph_laplacian} sikerült áttörést elérni, és egy általánosan alkalmazható definíciót bevezetni. A konstrukciós módszer bizonyos hiányosságait aztán 2018-ban Chan és társasi tárták fel, illetve javították\cite{base_hypergraph_laplacian_refinement}.
 
 
 Ez a két eredmény lehetővé tette, hogy a GCN rétegekhez hasonló megoldásokat defináljunk hipergráfok esetében. Először Feng és társai vetették fel, hogy a hipergráfokon értelmezett Laplace-mátrix alkalmazható GCN-szerű megoldásokra\cite{hgnn}, azonban módszerükhöz szükséges egy olyan gráf létrehozása, amelyben minden hiperél klikként van reprezentálva. Nem sokkal később Yadati és társai több kisebb komplexitású metódust is felvetettek\cite{hgcn}, amelyek - az eredményeik alapján - rövidebb tanítási időt igényel, de összemérhető vagy jobb eredményeket érnek el az általuk vizsgált problémán. Az általuk bemutatott módszerek (tudatosan) figyelmen kívül hagyták a feltárt Laplacian-konstruálási hibákat, azonban ez nem okozott problémát sem valós, sem szintetikus adatok esetében. Bandyopadhyay-ék egyszerűen a hipergráf line graph-ján futtatott GCN rétegekkel értek el ígéretes eredményeket\cite{line_hgnn}. A terület legújabb eredménye Tranék cikke\cite{directed_hgnn}, amelyben (általunk nem definiált) irányított hipergráfokra is kiterjesztik a módszert.
 
-\subsubsection{Hipergráf Laplacian}
+\subsubsection{Hipergráf Laplacian} \label{hypergraphLaplacian}
 
 Az alábbiakban áttekintjük a hipergráf Laplacian konstrukciós szabályát, ahogy azt az első, Chang-féle cikkben alkalmazták\cite{base_hypergraph_laplacian}.
 
@@ -511,10 +511,10 @@ A továbbiakban azt is érdemes lehet megvizsgálni, hogy nem csúcsonkénti, ha
 
 \subsection{Optimalizációs módszerek}
 
-A kísérletek során optimalizációs módszerek több kategóriáját hasonlítom össze; a particle swarm optimization (PSO) nevű módszert, illetve a genetikus algoritmus (GA) különböző variánsait. Bár nem optimalizációs módszer, de itt fogom vizsgálni a költségfüggvény neurális hálókkal való közelítését is, amely célból hipergráf konvolúciós hálózatokat (HCNN) próbálok ki.
+A kísérletek során optimalizációs módszerek több kategóriáját hasonlítom össze; a particle swarm optimization (PSO) nevű módszert, illetve a genetikus algoritmus (GA) különböző variánsait. Bár - szigorúan véve - nem optimalizációs módszer, de itt fogom vizsgálni a költségfüggvény neurális hálókkal való közelítését is, amely célból hipergráf konvolúciós hálózatokat (HCNN) próbálok ki.
 
 \subsubsection{Particle swarm optimization}
-Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \ref{optimization} szekció \ref{alg:pso}. számú pszeudokódjaként bemutatott - módszert egyáltalán nem módosítottam. Amennyiben az Euler-diagramot reprezentáló $X \in \mathcal{R}^{|V| \times 3}$ mátrixot sor- vagy oszlopfolytonosan adjuk meg az eljárásnak, viszont feltételezzük, hogy a költségfüggvény is ilyeneken operál, akkor az eredeti megoldás tökéletesen fedi a mi esetünket is.
+Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \ref{optimization} fejezet \ref{alg:pso}. számú pszeudokódjaként bemutatott - módszert egyáltalán nem módosítottam. Amennyiben az Euler-diagramot reprezentáló $X \in \mathcal{R}^{|V| \times 3}$ mátrixot sor- vagy oszlopfolytonosan adjuk meg az eljárásnak, viszont feltételezzük, hogy a költségfüggvény is ilyeneken operál, akkor az eredeti megoldás tökéletesen fedi a mi esetünket is.
 
 % TODO futásidő, memóriaigény ?
 %A futásidő függ az iterációk számától, ami előre ismeretlen, azonban azt $I$-vel, a költségfüggvény kiértékelésének futásidejét $C$-vel jelölve az inicializálás során $S$ db. véletlen modellt ($|V|$ db. érték) és sebességet (szintúgy $|V|$ db. érték) generálunk, illetve ki is értékeljük ezek költségfüggvényét, azaz ekkor $\mathcal{O}(S*(C+|V|))$ lépést végzünk. Iteráció során $\mathcal{O}(I*S*(C+|V|))$ számú lépést végzünk, ahol $S$ a részecskék (megoldáspéldányok) száma, hiszen minden iteráció egy kiértékelésből, sebességváltoztatásból és konstans számú lépésből áll, illetve az $2*S*3*|V|$ darab random értéket is le kell generáljuk. Összesen $\mathcal{O}(I*S*(C+|V|))$ lépést kapunk.
@@ -525,7 +525,7 @@ Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti - a \r
 
 \subsubsection{Genetikus algoritmus}
 
-Emlékezhetünk a \ref{optimization} szekcióból, hogy a GA pszeudokódja (lásd \ref{alg:ga}. pszeudokód) nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól - amennyiben egy csúcs $x$ és $y$ koordinátáját nincs értelme külön kezelni -, ezért én olyan módon határoztam meg az algoritmus szóban forgó lépéseit, amik ezt a tulajdonságot figyelembe veszik. Mint látni fogjuk a \ref{heuristics} szekcióban, a költségfüggvényt alkotó heurisztikák direkt úgy lettek kialakítva, hogy - amelyik esetében ez lehetséges - hiperélenként számítják a költséget, amelyek aggregációjaként számítjuk a globális költségfüggvényt. Ez a számítási mód lehetővé teszi, hogy a GA során akár tetszőleges értékeket, akár hipercsúcsokat vagy hiperéleket tekintsünk a legkisebb értelmes egységnek, amelyet örökölni lehetséges. Ennek megfelelően három különböző GA variánst hoztam létre, melyeket rendre naív GA, csúcsalapú GA és élalapú GA névvel fogok illetni.
+Emlékezhetünk a \ref{optimization} fejezetből, hogy a GA pszeudokódja (lásd \ref{alg:ga}. pszeudokód) nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól - amennyiben egy csúcs $x$ és $y$ koordinátáját nincs értelme külön kezelni -, ezért én olyan módon határoztam meg az algoritmus szóban forgó lépéseit, amik ezt a tulajdonságot figyelembe veszik. Mint látni fogjuk a \ref{heuristics} fejezetben, a költségfüggvényt alkotó heurisztikák direkt úgy lettek kialakítva, hogy - amelyik esetében ez lehetséges - hiperélenként számítják a költséget, amelyek aggregációjaként számítjuk a globális költségfüggvényt. Ez a számítási mód lehetővé teszi, hogy a GA során akár tetszőleges értékeket, akár hipercsúcsokat vagy hiperéleket tekintsünk a legkisebb értelmes egységnek, amelyet örökölni lehetséges. Ennek megfelelően három különböző GA variánst hoztam létre, melyeket rendre naív GA, csúcsalapú GA és élalapú GA névvel fogok illetni.
 
 %\begin{note}
 %Bár a genetikus algoritmus hagyományosan maximalizálási feladatként van megfogalmazva, én - a többi algoritmussal való kompatibilitás érdekében - minimalizációra használtam. Ahogy korábban láttuk, bármelyik visszavezethető a másikra.
@@ -579,14 +579,16 @@ A mutációt az új populáción alkalmazott normális eloszlású zajjal modell
 
 \subsubsection{Hipergráf konvolúciós hálózat}
 
+A neurális hálózaton alapuló megoldás esetében fontos felismernünk, hogy nem egy direkt optimalizációs megoldásról beszélünk. Függvényapproximációs módszerként itt nem egyetlen hipergráf legjobb elrendezését szeretnénk megkapni, hanem hipergráfok egy egész - azonos csúcs- és élszámú - családját szeretnénk leképezni (problémapéldányonként) különböző megoldásokra. Ez  sajnos (nagyságrendekkel) lassabb tanulási idővel jár, és elkerülhetetlen a vizsgálandó hipergráfok köréből minél több legenerálása, amely alapján a hálózat betanítható. A hátrányok mellett a módszer természetesen előnyökkel is rendelkezik; a modellt elég egyszer betanítani, onnantól közvetlenül alkalmazható tetszőleges hipergráf Laplace-mátrixára.
 
-% TODO HGCNN
 
-% TODO szekció -> paragrafus
+A korábbiakban már bevezettük mind a hipergráf Laplaciant (\ref{hypergraphLaplacian} fejezet), mind a gráf konvolúciós neurális hálózatokat (\ref{GCNN} fejezet). Ahogy láttuk, több módszer is definiált hipergráf konvolúciós hálózatokra létrehozására. A kísérleteim során egy egyszerű variánst választottam ezek közül, amely megegyezik a GCN számításával, azonban a Laplace-mátrixot lecseréljük a hipergráf Laplacianjára. A módszer nem csak intuíción alapuló kísérlet, Yadatiék cikkében\cite{hgcn} a FastHyperGCN nagy hasonlóságot mutat vele, mindössze én nem alkalmazok mediátorokat (máshogy súlyozom a csúcsokat). A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem várjuk el, hogy deriválható legyen, így a naív GA eljárást választottam a neurális háló betanítására.
+
+
+% TODO HGCN fejezet += fast hgcn
 % TODO GA variánsok (alg)
 
 \subsection{Inicializációs módszerek}
-% TODO gráfok kirajzolása / force directed layout az előző fejezetbe
 
 A bemutatott algoritmusok során többször előfordul, hogy új megengedett megoldásokat kell generáljunk. Tekintve, hogy ezeknek a minősége nagyban befolyásolja a futás során elérhetőkét, ezért különösen fontos kérdés, hogy kezdeti értékeket hogyan számítjuk ki. Ebből a célból a dolgozatban több módszert is vizsgálok a megoldások inicialiázására, melyeket ebben a fejezetben részletezek.
 
@@ -601,7 +603,6 @@ Ennek az inicializálási módszernek a során először az élek pozícióit ha
 
 \subsubsection{Erőalapú gráfelrendezés szerinti inicializás}
 
-%TODO
 Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \ref{adsDefinitions} fejezetben bevezetett bipartite incidence structure vagy szuperduális segítségével). A hiperélek klikkekre való cserélése első ránézésre ilyennek tűnhet, azonban figyeljük meg, hogy elveszik az az információ, hogy pontosan melyik hiperélből származik a két csúcs közötti él. Amennyiben továbbra is előző módszernél bevezetett megfontolásból indulunk ki (azaz a szomszédok valamiféle átlagolásával elérhető klasztereket szeretnénk), akkor azonban az így elvesző információ egyáltalán nem is szükséges. Tekintsük azt a fizikai szimulációt, amelyben a nem szomszédoscsúcsok taszítják, a szomszédosak pedig vonzzák egymást. Ekkor a rendszer egyensúlyi helyzetei felfoghatók a ilyen átlagolásként is. Az így leírt módszer pontosan a force-directed gráfkirajzolási módszerek (lásd \ref{graphLayout}) egy speciális esetét írja le. Az általam használt konkrét eljárás a Fruchterman-Reingold módszer\cite{graph_layout_fruchterman}, amelyet (a cikkből átemelve) alább láthatunk.
 
 \begin{algorithm}[H]
@@ -610,7 +611,7 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 \textbf{\underline{Function}} layout($Canvas=(width, height), G=(V,E), iterations$)
 \begin{algorithmic}[1]
 \STATE $k = \sqrt{width*height/|V|}$
-\STATE $t = \sqrt{width^2+height^2}$
+\STATE $t = \sqrt{width^2+height^2}$ \COMMENT{lehetséges maximum (a cikkben nem definiált)}
 \FOR{$i=1 \ldots iterations$}
 	\FOR{$v \in V$} \COMMENT{taszítóerők kiszámítása}
 		\STATE $v.disp = 0$
@@ -618,17 +619,6 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 			\IF{$\{u,v\} \notin E$}
 				\STATE $v.disp = 0$
 				\STATE $\Delta = v.pos - u.pos$
-				\STATE $v.disp = v.disp + (\Delta/|\Delta|*k^2/|\Delta|)$
-			\ENDIF
-		\ENDFOR
-	\ENDFOR
-	
-	\FOR{$v,u \in E$} \COMMENT{vonzóerők kiszámítása}
-		\STATE $\Delta = v.pos - u.pos$
-		\STATE $v.disp = v.disp - (\Delta/|\Delta|*|\Delta|^2/k)$
-		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
-	\ENDFOR
-	
 \algstore{fruchterman}
 \end{algorithmic}
 \end{algorithm}
@@ -636,6 +626,17 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 \begin{algorithm}[H]
 \begin{algorithmic}[1]
 \algrestore{fruchterman}
+				\STATE $v.disp = v.disp + (\Delta/|\Delta|*k^2/|\Delta|)$
+			\ENDIF
+		\ENDFOR
+	\ENDFOR
+	
+	
+	\FOR{$v,u \in E$} \COMMENT{vonzóerők kiszámítása}
+		\STATE $\Delta = v.pos - u.pos$
+		\STATE $v.disp = v.disp - (\Delta/|\Delta|*|\Delta|^2/k)$
+		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
+	\ENDFOR
 
 	\FOR{$v \in V$}
 		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
@@ -657,6 +658,9 @@ Mivel a szuperduális exponenciális méretű az eredeti hipergráfhoz képest, 
 \end{note}
 %Az előző módszerhez hasonló megfontolásból egy fizikai szimulációkon alapuló módszert is bevezettem.
 
+\subsubsection{Hipergráf konvolúciós inicializálás}
+
+A HGCN módszernek megvan az az előnye, hogy tetszőleges - adott méretű - hipergráfon működik, azonban továbbra is csak egyetlen elrendezést rendel hozzájuk, az inicializáláshoz szükséges variácókat nem szolgáltatja. Ez a probléma természetesen fennáll, ha a tanítás során mindössze egyetlen modellt (neurális hálót) optimalizálunk (például SGD esetén), illetve akkor is, ha csak a betanított neurális hálót tartjuk meg. Mivel én genetikus algoritmust használok a tanítási folyamatra, ezért annak a végén a populáció számával megegyező számú különböző modellel is rendelkezésre áll. Ezeket elmentve és felhasználva - a populáció méretéig - a variációs kritériumot is tudjuk teljesíteni, így inicializációs módszerként is tud működni.
 
 \subsubsection{Súlyozott inicializálás}
 
@@ -670,10 +674,8 @@ Minden korábbi módszer esetén a csúcsok pozicionálására koncentráltunk, 
 
 
 
-%TODO force directed
+%TODO futásidők
 
-%Fruchterman és Reingold megoldása\cite{graph_layout_fruchterman}
-% force directed
 \subsection{Heurisztikák} \label{heuristics}
 \subsubsection{Szemantikus heurisztikák}
 \subsubsection{Esztétikai heurisztikák}
