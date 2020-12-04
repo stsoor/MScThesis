@@ -403,6 +403,7 @@
 % Algoritmusok és kódblokkok írása
 \usepackage{algcompatible}
 \usepackage{algorithm}
+\usepackage{longtable}
 \RequirePackage{listingsutf8}
 \lstset{
 	basicstyle=\footnotesize\ttfamily,
