@@ -397,7 +397,7 @@ Legyen $f = \left(\begin{smallmatrix}f_1 & \ldots & f_n\end{smallmatrix}\right)^
 
 \subsection{Mesterséges neurális hálók}
 
-Az egyik legismertebb és legszéleskörűbben alkalmazott nem-lineáris függvényapproximátorok a \textbf{mesterséges neurális hálók} (artificial neural network - ANN). Hasonlóan a biológiailag inspirált algoritmusokhoz, ezek olyan számítási rendszerek, amelyek biológiai folyamatokat, speciálisan az emberi - illetve állati - agyban működő neuronokat, és azok működését modellezik. Egy ANN legkönnyebben irányított gráfként képzelhető el, amelyben \textbf{(mesterséges) neuronok} alkotják a valós számokkal címkézett csúcsokat, míg a köztük létező, súllyal rendelkező kapcsolatok (szinapszisok) az éleket. A csúcsok címkéjét \textbf{biasnek} hívjuk, az élekét \textbf{weightnek}. A weight és a bias értékek közösen adják ki a neurális hálózat paramétereit. Az így kapott gráf számítási rendszerként fogható fel, amennyiben az egyes csúcsok műveleteket reprezentálnak. A forráscsúcsoknak közvetlenül beadhatók a rendszer bemenetei, míg az összes többi csúcs egy újabb értéket számít ki, melyek a nyelő csúcsokban értelmezhetők végeredményként. A források kivételével az egyes csúcsok az $x_v=\sigma(w_n \cdot x_n +b_v)$ képlet alapján számítják ki az értéküket, ahol $x_v$ a $v$ csúcs új értéke (nem címkéje), $w_n$ a bemenő élek súlyainak (weight) vektora, $x_n$ ezen élek kiindulópontjainak értéke, $b_v$ a $v$ csúcs címkéje/biase, a $\sigma$ függvény pedig egy - jellemzően nem-lineáris - aktiválási függvény.
+Az egyik legismertebb és legszélesebb körben alkalmazott nem-lineáris függvényapproximátorok a \textbf{mesterséges neurális hálók} (artificial neural network - ANN). Hasonlóan a biológiailag inspirált algoritmusokhoz, ezek olyan számítási rendszerek, amelyek biológiai folyamatokat, speciálisan az emberi - illetve állati - agyban működő neuronokat, és azok működését modellezik. Egy ANN legkönnyebben irányított gráfként képzelhető el, amelyben \textbf{(mesterséges) neuronok} alkotják a valós számokkal címkézett csúcsokat, míg a köztük létező, súllyal rendelkező kapcsolatok (szinapszisok) az éleket. A csúcsok címkéjét \textbf{biasnek} hívjuk, az élekét \textbf{weightnek}. A weight és a bias értékek közösen adják ki a neurális hálózat paramétereit. Az így kapott gráf számítási rendszerként fogható fel, amennyiben az egyes csúcsok műveleteket reprezentálnak. A forráscsúcsoknak közvetlenül beadhatók a rendszer bemenetei, míg az összes többi csúcs egy újabb értéket számít ki, melyek a nyelő csúcsokban értelmezhetők végeredményként. A források kivételével az egyes csúcsok az $x_v=\sigma(w_n \cdot x_n +b_v)$ képlet alapján számítják ki az értéküket, ahol $x_v$ a $v$ csúcs új értéke (nem címkéje), $w_n$ a bemenő élek súlyainak (weight) vektora, $x_n$ ezen élek kiindulópontjainak értéke, $b_v$ a $v$ csúcs címkéje/biase, a $\sigma$ függvény pedig egy - jellemzően nem-lineáris - aktiválási függvény.
 
 \subsubsection{Architektúra}
 
@@ -582,10 +582,11 @@ A mutációt az új populáción alkalmazott normális eloszlású zajjal modell
 A neurális hálózaton alapuló megoldás esetében fontos felismernünk, hogy nem egy direkt optimalizációs megoldásról beszélünk. Függvényapproximációs módszerként itt nem egyetlen hipergráf legjobb elrendezését szeretnénk megkapni, hanem hipergráfok egy egész - azonos csúcs- és élszámú - családját szeretnénk leképezni (problémapéldányonként) különböző megoldásokra. Ez  sajnos (nagyságrendekkel) lassabb tanulási idővel jár, és elkerülhetetlen a vizsgálandó hipergráfok köréből minél több legenerálása, amely alapján a hálózat betanítható. A hátrányok mellett a módszer természetesen előnyökkel is rendelkezik; a modellt elég egyszer betanítani, onnantól közvetlenül alkalmazható tetszőleges hipergráf Laplace-mátrixára.
 
 
-A korábbiakban már bevezettük mind a hipergráf Laplaciant (\ref{hypergraphLaplacian} fejezet), mind a gráf konvolúciós neurális hálózatokat (\ref{GCNN} fejezet). Ahogy láttuk, több módszer is definiált hipergráf konvolúciós hálózatokra létrehozására. A kísérleteim során egy egyszerű variánst választottam ezek közül, amely megegyezik a GCN számításával, azonban a Laplace-mátrixot lecseréljük a hipergráf Laplacianjára. A módszer nem csak intuíción alapuló kísérlet, Yadatiék cikkében\cite{hgcn} a FastHyperGCN nagy hasonlóságot mutat vele, mindössze én nem alkalmazok mediátorokat (máshogy súlyozom a csúcsokat). A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem várjuk el, hogy deriválható legyen, így a naív GA eljárást választottam a neurális háló betanítására.
+A korábbiakban már bevezettük mind a hipergráf Laplaciant (\ref{hypergraphLaplacian} fejezet), mind a gráf konvolúciós neurális hálózatokat (\ref{GCNN} fejezet). Ahogy láttuk, több módszer is definiált hipergráf konvolúciós hálózatokra létrehozására. A kísérleteim során egy egyszerű variánst választottam ezek közül, amely megegyezik a GCN számításával, azonban a Laplace-mátrixot lecseréljük a hipergráf Laplacianjára. A módszer nem csak intuíción alapuló kísérlet, Yadatiék cikkében\cite{hgcn} a FastHyperGCN nagy hasonlóságot mutat vele, mindössze én nem alkalmazok mediátorokat (máshogy súlyozom a Laplacian éleit).
 
 
-% TODO HGCN fejezet += fast hgcn
+A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem várjuk el, hogy deriválható legyen, így a naív GA eljárást választottam a neurális háló betanítására. Mivel a gráf és hipergráf konvolúciós hálózatokkal foglalkozó cikkek jellemzően kettő rétegű architektúrát alkalmaznak\cite{base_gcnn, hgcn}, ezért én sem fogok mély hálózatokkal kísérletezni. Az egyes rétegekhez relu ($f(x)=max(0,x)$), sigmoid ($f(x)=e^x/(e^x+1)$) vagy softmax ($f_i(x)=e^x/\sum_{i=1}^{n}(e^x)$) aktiválási használok (ahol emlékezzünk, hogy az aktiválási függvény minden neuron kimeneti értékére külön-külön számítódik), azzal a kikötéssel, hogy az utolsó réteg nem lehet relu (mivel nem szorítaná az értékeket 0 és 1 közé). Neurális hálók tanítása során kevésbé látható át, hogy az egyes paraméterek hogyan befolyásolják a végeredményt, azonban közismert, hogy a paraméterek nagyságrendjének mövekedése negatívan befolyásolja a hálózat tanulásának sebességét\cite{nn_regularization}. Ebből az okból kifolyólag a paramétereket kis értékekkel ($mean=0,\sigma^2\in(0,1], \theta = (mean,var)$ paraméterű normális eloszlással) inicializálom, ami után a hálózat sekélysége biztosítja, hogy relu esetén se kapjunk nagy értékeket (ezért regularizációt nem alkalmaztam).
+
 % TODO GA variánsok (alg)
 
 \subsection{Inicializációs módszerek}
@@ -619,13 +620,6 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 			\IF{$\{u,v\} \notin E$}
 				\STATE $v.disp = 0$
 				\STATE $\Delta = v.pos - u.pos$
-\algstore{fruchterman}
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\begin{algorithmic}[1]
-\algrestore{fruchterman}
 				\STATE $v.disp = v.disp + (\Delta/|\Delta|*k^2/|\Delta|)$
 			\ENDIF
 		\ENDFOR
@@ -637,6 +631,14 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 		\STATE $v.disp = v.disp - (\Delta/|\Delta|*|\Delta|^2/k)$
 		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
 	\ENDFOR
+
+\algstore{fruchterman}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{fruchterman}
 
 	\FOR{$v \in V$}
 		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
@@ -677,7 +679,40 @@ Minden korábbi módszer esetén a csúcsok pozicionálására koncentráltunk, 
 %TODO futásidők
 
 \subsection{Heurisztikák} \label{heuristics}
+
+Az egyik legfontosabb tulajdonsága az általam használt Euler-diagram modellnek, hogy nem rigid szabályokon alapszik (például well-formed vagy well-matched kritériumok teljesítésén), hanem súlyozható (és költségfüggvényként alkalmazható) mérőszámokon. A kapott ábrával szembeni elvárásaink természetesen sokrétűek lehetnek, azonban az irodalom áttekintése során láttuk, hogy egyes tulajdonságok több szerző szerint is segítik a végeredmény könnyebb értelmezését, emberi feldolgozását. A szabályalapú megoldásokat kiváltandó, az általam legfontosabbnak ítélt tulajdonságokat igyekeztem különböző heurisztikus mérőszámok segítségével leírni. A létrehozott heurisztikus módszerek, illetve egyáltalán az általuk leírt tulajdonságok köre is vitathatatlanul némileg önkényesen lettek meghatározva, azonban a dolgozat egyik fő célja pontosan annak kiderítése, hogy mennyire alkalmasak a vizsgált módszerek arra, hogy tetszőleges esztétikára szabva tudjunk hipergráfokat kirajzolni. Mivel kizárólag a költségfüggvényen alapszik a modell tanítása, ezért az magában kell foglalja a szemantikus információkat is, azaz hogy az ábrázolt csúcsok és görbék elhelyezkedése megfelel-e az Euler-diagram definíciójának. Bár ezutóbbi tulajdonság jóval fontosabbnak tűnhet, mint az esztétikai megfontolások, azonban könnyen előfordulhat például, hogy a hiperélek egymáshoz viszonyított relatív mérete jóval fontosabb információt hordoz a szemlélőnek, mint amit néhány csúcs rossz hiperélbe való helyezésével elveszít.
+
+A heurisztikák által visszaadott mérőszámok persze nem alkalmasak arra, hogy önmagukban költségfüggvényként használjuk őket, hiszen csak egy-egy aspektusát vizsgálják az adott ábrának, ezért inkább veszteségfüggvényként, a költségfüggvény építőelemeként gondolhatunk rájuk. Ahogy már korábban is említettem, a heurisztikák direkt úgy lettek kialakítva, hogy ahol lehetséges hiperélenként is értelmezve (és tárolva) legyenek, a többi esetben pedig csak globálisan. Minden mérőszám a $[0, 1]$ intervallumból veszi fel az értékeit, ahol a $0$ a legjobb, $1$ a legrosszabb lehetséges érték. Ezzel a módszerrel kerültem el, hogy a különböző skálákból adódó értelmezés nehézség megnehezítse az eredmények összehasonlítását.  Igyekeztem a mérőszámokat úgy kilakítani, hogy ne csak a szélsőértékek legyenek felvehetők, hanem több diszkrét ugrás is legyen a két végpont között. Az ugrások jobban közelítenek egy folytonos függvényt, amely többletinformációt szolgáltat az optimalizációs algoritmusok számára, hogy a paraméterek adott irányú elmozdulása pozitívan befolyásolja-e a költségfüggvényt. A költségfüggvény kiszámításához hiperélenként súlyozva összeadjuk az arra alkalmas heurisztikák eredményét, majd ezek átlagához hozzádva a csak globálisan értelmezettek eredményét, megkapjuk az aggregált, végső értéket. Ezek a súlyok a felhasználó által meghatározhatók, így a költségfüggvény egy paraméteres függvény.
+
+\begin{note}
+Operálhatnának azzal a feltételezéssel a heurisztikák, hogy az ábra tere $[0,1] \times [0,1]$-en értelmezett, majd a végfelhasználó átméretezhetné ezt a saját igényeinek megfelelően. Mivel az ábrák szélessége és magassága jellemzően nem $1:1$ arányú, ezért ezzel olyan torzítást is bevezetnénk, amely nem jelenik meg a modellben. Ezt elkerülendő a költségfüggvény, így a heurisztikák is paraméterként megkapják, illetve hozzáférnek az ábra szélesség/magasság attribútumához.
+\end{note}
+
+\begin{note}
+A szemfüles olvasónak feltűnhet, hogy a genetikus algoritmust végig úgy tárgyaltam, hogy maximalizálási feladaton operál, azonban a költségfüggvényt egyféleképp definiálom itt. Ez a tényleges megvalósítás során nem okozott problémát, mivel pontosan ebből a célból magát a genetikus algoritmust minimalizációs eszközként alkalmaztam.
+\end{note}
+
+
 \subsubsection{Szemantikus heurisztikák}
+
+
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{ | m{0.25\textwidth} | m{0.65\textwidth} | }
+%		\hline
+%		\textbf{Phasellus tortor} & \textbf{Aenean consequat} \\
+%		\hline \hline
+%		\emph{Sed malesuada} & Aliquam aliquam velit in convallis ultrices. \\
+%		\hline
+%		\emph{Purus sagittis} &  Quisque lobortis eros vitae urna lacinia euismod. \\
+%		\hline
+%		\emph{Pellentesque} & Curabitur ac lacus pellentesque, eleifend sem ut, placerat enim. Ut auctor tempor odio ut dapibus. \\
+%		\hline
+%	\end{tabular}
+%	\caption{Maecenas tincidunt non justo quis accumsan}
+%	\label{tab:example-1}
+%\end{table}
+
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
 
