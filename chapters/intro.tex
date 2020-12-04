@@ -474,7 +474,18 @@ Láthattuk, hogy Euler-diagramok reprezentálhatók Bézier-görbékkel, körök
 
 \subsubsection{Definíció}
 
-Az általam választott reprezentáció csúcsalapú, amelyben az egyes görbéket a hiperéleket alkotó csúcsok részhalmazainak konvex burka adja. Vegyünk minden csúcs esetén egy háromelemű vektort, amely tartalmazza a csúcs $x$ és $y$ koordinátáit, illetve egy $d$-vel jelölt értéket, azaz egy $X \in \mathcal{R}^{|V| \times 3}$ mátrixot. Minden $e$ hiperélhez rendeljünk egy $G_e$ gráfot, amelynek csúcshalmaza megegyezik a hiperél csúcshalmazával, tetszőleges $u, v, u \neq v$ csúcsa között pedig akkor fut él, ha $distance(u, v) \leq min(u_d, v_d)$, ahol a $distance$ függvény tetszőleges távolságmetrika lehet (én az implementáció során az $L^2$ normát használom). A $G_e$ gráf összefüggő komponensei particionálják a hiperél elemeit. Az egyes partíciók konvex burkát véve egy a hiperél több zárt poligonra bomlik szét, így általánosított Euler-diagramot reprezentál. A reprezentáció előnye, hogy tetszőleges számú nem-üres komponensre bontható vele mindegyik él, illetve az egyes görbék az általuk tartalmazott csúcsok számával arányos komplexitással bírnak.
+Az általam választott reprezentáció csúcsalapú, amelyben az egyes görbéket a hiperéleket alkotó csúcsok részhalmazainak konvex burka adja. Vegyünk minden csúcs esetén egy háromelemű vektort, amely tartalmazza a csúcs $x$ és $y$ koordinátáit, illetve egy $d$-vel jelölt értéket, azaz egy $X \in \mathcal{R}^{|V| \times 3}$ mátrixot. Minden $e$ hiperélhez rendeljünk egy $G_e$ gráfot, amelynek csúcshalmaza megegyezik a hiperél csúcshalmazával, tetszőleges $u, v, u \neq v$ csúcsa között pedig akkor fut él, ha $distance(u, v) \leq min(u_d, v_d)$, ahol a $distance$ függvény tetszőleges távolságmetrika lehet (én az implementáció során az $L^2$ normát használom). A $G_e$ gráf összefüggő komponensei particionálják a hiperél elemeit. Az egyes partíciók - melyeket én a hiperél/görbe \textbf{szegmenseinek} fogok nevezni - konvex burkát véve a hiperél(et reprezentáló görbe) több zárt poligonra bomlik szét, így általánosított Euler-diagramot reprezentál. A reprezentáció előnye, hogy tetszőleges számú nem-üres komponensre bontható vele mindegyik él, illetve az egyes görbék az általuk tartalmazott csúcsok számával arányos komplexitással bírnak.
+
+
+Nem minden esetben előnyös a konvex burok alkalmazása, hiszen egy szegmensben tartalmazott egyetlen csúcs esetén nem jelenne meg az az információ, hogy melyik (ha bármelyik) hiperél tartalmazza azt. A két csúcs esetén előforduló hasonló helyzetben pedig a konvex burok egy egyenest adna, amely feltehetőleg nem látható eléggé. Ebből az okból kifolyólag egy elvárt minimum távolságot, $r$-et is elvárunk a probléma definiálása során. Egy csúcs esetén konvex burok helyett az $r$ sugarú kört, míg két csúcs esetén a két csúcs körüli $r$ sugarú köröket, és azok konvex burkát együttesen tekintjük a szegmenst tartalmazó görbének, ahol $r$ alatt .
+
+\begin{note}
+Nem garantált, hogy az elvárt minimális távolság teljesüljön a végső megoldásban, ekkor átfedő görbéket kapunk, amik szemantikai problémákhoz vezethetnek. Az egyetlen valós alternatíva, hogy $r$-et a konkrét csúcstávolságok minimumaként definiáljuk, azonban ekkor szintúgy problémákba ütközünk, ha több csúcs is egy pontba esik.
+\end{note}
+
+\begin{note}
+Az elfajuló esetet, mikor egy egy vagy két csúcsú szegmens egy nagyobb csúcsszámúból úgy alakul ki, hogy a csúcsok egy pontba esnek, nem kezelem külön. Bár ez valószínűleg előnyös lenne, azonban felvet olyan értelmezési kérdéseket, hogy az adott görbe hány csúcsot tartalmaz pontosan, mi a teendő, ha az egyik egy él egyedüli eleme és így tovább. Mivel ez az eset alapvetően kevéssé valószínű, ezért ezeknek a kérdéseknek a megválaszolását inkább elkerültem, azonban egy későbbi kutatás célja lehet.
+\end{note}
 
 \subsubsection{Futásidő és memóriaigény}
 
@@ -613,6 +624,15 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 \begin{algorithmic}[1]
 \STATE $k = \sqrt{width*height/|V|}$
 \STATE $t = \sqrt{width^2+height^2}$ \COMMENT{lehetséges maximum (a cikkben nem definiált)}
+
+\algstore{fruchterman}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{fruchterman}
+
 \FOR{$i=1 \ldots iterations$}
 	\FOR{$v \in V$} \COMMENT{taszítóerők kiszámítása}
 		\STATE $v.disp = 0$
@@ -631,15 +651,6 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 		\STATE $v.disp = v.disp - (\Delta/|\Delta|*|\Delta|^2/k)$
 		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
 	\ENDFOR
-
-\algstore{fruchterman}
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\begin{algorithmic}[1]
-\algrestore{fruchterman}
-
 	\FOR{$v \in V$}
 		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
 		\STATE $v.pos.x = min(width/2), max(-width/2, v.pos.x)$ \COMMENT{nem engedjük túlfutni a kép szélén}
@@ -696,25 +707,29 @@ A szemfüles olvasónak feltűnhet, hogy a genetikus algoritmust végig úgy tá
 \subsubsection{Szemantikus heurisztikák}
 
 
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{ | m{0.25\textwidth} | m{0.65\textwidth} | }
-%		\hline
-%		\textbf{Phasellus tortor} & \textbf{Aenean consequat} \\
-%		\hline \hline
-%		\emph{Sed malesuada} & Aliquam aliquam velit in convallis ultrices. \\
-%		\hline
-%		\emph{Purus sagittis} &  Quisque lobortis eros vitae urna lacinia euismod. \\
-%		\hline
-%		\emph{Pellentesque} & Curabitur ac lacus pellentesque, eleifend sem ut, placerat enim. Ut auctor tempor odio ut dapibus. \\
-%		\hline
-%	\end{tabular}
-%	\caption{Maecenas tincidunt non justo quis accumsan}
-%	\label{tab:example-1}
-%\end{table}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | m{0.25\textwidth} | m{0.65\textwidth} | }
+		\hline
+		\textbf{Elnevezés} & \textbf{Leírás} \\
+		\hline \hline %\hline
+		\emph{Hamis pozitív tartalmazás} & Amennyiben egy $v$ hipercsúcsnak megfelelő pont\\
+		\hline
+		\emph{Hamis negatív tartalmazás} &  Quisque lobortis eros vitae urna lacinia euismod. \\
+		\hline
+	\end{tabular}
+	\caption{Maecenas tincidunt non justo quis accumsan}
+	\label{tab:example-1}
+\end{table}
 
 \subsubsection{Esztétikai heurisztikák}
 \subsubsection{Futásidő analízis}
+
+\section{Összefoglalás}
+
+Az előző fejezetekben a megoldási módszert részleteiben is áttekintettük, azonban a jobb átláthatóság érdekében úgy gondolom, hasznos egyben is látni, hogy hogy áll össze egésszé.
+
+% TODO bemenetek, költségfüggvény, heurisztikák
 
 \section{Mérések és következtetések}
 
