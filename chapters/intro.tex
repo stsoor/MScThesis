@@ -714,17 +714,18 @@ A szemfüles olvasónak feltűnhet, hogy a genetikus algoritmust végig úgy tá
 		\hline
 		\textbf{Elnevezés} & \textbf{Leírás} \\
 		\hline \hline %\hline
-		\emph{Hamis pozitív tartalmazás} & Egy adott $v$ hipercsúcstól elvárjuk, hogy a neki megfelelő pont az ábrán ne szerepeljen egyetlen olyan hiperélt reprezentáló görbében sem, amely hiperél nem tartalmazza őt. \\
+		\emph{Hamis pozitív tartalmazás} & Egy adott $v$ hipercsúcstól elvárjuk, hogy a neki megfelelő pont az ábrán ne szerepeljen egyetlen olyan hiperélt reprezentáló görbében sem, amely hiperél nem tartalmazza őt. (Hiperélekre értelmezett mérőszám.) \\
 		\hline
-		\emph{Hamis negatív tartalmazás} & Egy adott $v$ hipercsúcstól elvárjuk, hogy a neki megfelelő pont az ábrán szerepeljen minden olyan hiperélt reprezentáló görbében, amely hiperél tartalmazza őt. \\
+		\emph{Hamis negatív tartalmazás} & Egy adott $v$ hipercsúcstól elvárjuk, hogy a neki megfelelő pont az ábrán szerepeljen minden olyan hiperélt reprezentáló görbében, amely hiperél tartalmazza őt. (Konstans szám.) \\
 		\hline
 	\end{tabular}
 	% \label{tab:example-1}
 \end{table}
 
-A hamis pozitív tartalmazást úgy vizsgálom, hogy minden $E_i$ hiperél minden $Seg_j \in E_i$ szegmense esetén egy hibásan tartalmazott csúcs $dist(v, Seg_j) / (|\{v \in V | v \notin Seg_j\}|*min(width_{S_j} / 2, height_{S_j} / 2)*|Seg|)$ mennyiséggel járul hozzá a metrika értékéhez, ahol $dist(v, Seg_j)$ jelöli egy belső csúcs távolságát a poligon széleitől, $width_{S_j}$ és $height_{S_j}$ a szegmenst ábrázoló poligon befoglaló négyzetének megfelelő paraméterei (pixelben), $Seg$ pedig az összes szegmensek halmaza. A nevező tagjai normalizálják a szegmenseken és nem tartalmazott csúcsokon való iterálást, illetve a távolságot a szélektől. Mivel a konvex burok egy belső pontjának a szélektől való legnagyobb lehetséges távolságának meghatározása nem triviális, ezért azt a befoglaló négyzettel közelítjük, amely felülről becsüli azt. Ez természetesen azt jelenti, hogy nem feltétlenül érhető el az (legrosszabb) $1$ veszteségfüggvény-érték, viszont az továbbra is a $[0, 1]$ intervallumból fog kikerülni.
+A hamis pozitív tartalmazást úgy vizsgálom, hogy minden $E_i$ hiperél minden $Seg_j \in E_i$ szegmense esetén egy hibásan tartalmazott csúcs $dist(v, Seg_j) / (|\{v \in V | v \notin Seg_j\}|*min(width_{S_j} / 2, height_{S_j} / 2)*|Seg_{E_i}|)$ mennyiséggel járul hozzá a metrika értékéhez, ahol $dist(v, Seg_j)$ jelöli egy belső csúcs távolságát a poligon széleitől, $width_{S_j}$ és $height_{S_j}$ a szegmenst ábrázoló poligon befoglaló négyzetének megfelelő paraméterei (pixelben), $Seg_{E_i}$ pedig az $E_i$ hiperél összes szegmensének halmaza. A nevező tagjai normalizálják a szegmenseken és nem tartalmazott csúcsokon való iterálást, illetve a távolságot a szélektől. Mivel a konvex burok egy belső pontjának a szélektől való legnagyobb lehetséges távolságának meghatározása nem triviális, ezért azt a befoglaló négyzettel közelítjük, amely felülről becsüli azt. Ez természetesen azt jelenti, hogy nem feltétlenül érhető el az (legrosszabb) $1$ veszteségfüggvény-érték, viszont az továbbra is a $[0, 1]$ intervallumból fog kikerülni.
 
-Hamis negatív tartalmazás a mi esetünkben nem fordulhat elő, hiszen a csúcsok konvex burkait használjuk, amely szükségszerűen tartalmazza az őt kifeszítő pontokat.
+
+Hamis negatív tartalmazás a mi esetünkben nem fordulhat elő, hiszen a csúcsok konvex burkait használjuk, amely szükségszerűen tartalmazza az őt kifeszítő pontokat. Ebből kifolyólag ez a mérőszám csak a teljesség kedvéért (illetve az esetleges modellcsere miatt) került be, azonban esetünkben konstans $0$ értéket kap.
 
 \begin{note}
 Konvex poligonok esetén egy pont tartalmazásának a vizsgálata $\mathcal{O}(log(n))$ időben elvégezhető\cite{point_polygon_test}.
@@ -736,19 +737,21 @@ Konvex poligonok esetén egy pont tartalmazásának a vizsgálata $\mathcal{O}(l
 		\hline
 		\textbf{Elnevezés} & \textbf{Leírás} \\
 		\hline \hline %\hline
-		\emph{Szegmensek száma} &  \\
+		\emph{Szabályosság} & A szimmetriát, speciálisan a körhöz való hasonlóságot értékeli. (Hiperélekre értelmezett mérőszám.) \\
 		\hline
-		\emph{Szabályosság} & \\
+		\emph{Szegmensek száma} & Bünteti a szegmensek számának növelését. (Hiperélekre értelmezett mérőszám.) \\
 		\hline
-		\emph{Fragmentálatlanság} & \\
+		\emph{Fragmentálatlanság} & Az egyetlen csúcsból álló szegmenseket minimalizálja. (Hiperélekre értelmezett mérőszám.) \\
 		\hline
-		\emph{Minimum távolság fenntartása} & \\
+		\emph{Minimum távolság fenntartása} & A csúcsok közti távolságok minimumát igyekszik a célérték fölé tornászni. (Globálisan értelmezett mérőszám.)\\
+		\hline
+		\emph{Minimum távolság előfordulása} & Csökkenti a csúcsok közti legkisebb távolság előfordulásának számát. (Globálisan értelmezett mérőszám.) \\
 		\hline
 		\emph{Területarányosság} &  \\
 		\hline
 		\emph{Univerzum arányosság} & \\
 		\hline
-		\emph{Élmetszet} &\\
+		\emph{Élmetszet} & \\
 		\hline
 		\emph{Legközelebbi szomszéd élszomszéd} & \\
 		\hline
