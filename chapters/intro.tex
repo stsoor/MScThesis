@@ -203,7 +203,7 @@ Gráfok esetében láthattuk, hogy felmerül a síkbarajzolhatóság kérdése. 
 
 Verroust és Viaud bebizonyította\cite{drawability_8_sets}, hogy az általuk használt Euler-diagram definíció 8 halmazig megőrzi a síkbarajzolhatósági tulajdonságot. Simonetto és Auber egy másik struktúrát vizsgált\cite{simonetto_undrawable}, ami megfelel az itt általánosított Euler-diagramként definiált fogalomnak (ők Euler representationnek nevezik), melyről levezették, hogy alkalmas tetszőleges hipergráf síkbarajzolására, görbéknek kizárólag szemantikailag helyes metszeteinek létrehozása mellett. A szuperduális felhasználásával pontos leírása is adható annak, hogy mikor nem rajzolható ki egy hipergráf egyszerű Euler-diagramok használatával\cite{simonetto_undrawable, drawability_8_sets}. (Megjegyzendő, hogy a Sunibetto cikk intersection graphnak nevezi a szuperduálist, miközben az egy másik struktúrát jelöl, de a leírásból, illetve a példákból levezethető, hogy valójából felcserélték a kettőt.)
 
-\subsubsection{Esztétikai mértékek}
+\subsubsection{Esztétikai mértékek} \label{eulerAesthetic}
 
 Természetesen egy adott diagram síkbarajzolása nem feltétlenül szükséges ahhoz, hogy az ábra helyesen képezze le a mögöttes struktúrát (halmazrendszert vagy hipergráfot), azonban minenképpen megkönnyíti az emberi értelmezést. Egy adott ábra ilyen tulajdonságait esztétikai tulajdonságoknak nevezzük, ha pedig számszerűsíthetők (és adott rajtuk egy teljes rendezés), akkor esztétikai metrikáknak hívjuk. Esztétikai metrikák definiálhatók magukon a görbéken, a görbék metszetein, a csúcsok eloszlásán, az ábra színezésén, továbbá - gyakorlatilag - az ábrán megjelenő bármely aspektus fölött \cite{euler_force, which_well_formed, layout_metrics}.
 
@@ -216,13 +216,13 @@ Egy adott Euler-diagram esetén \textbf{kontúr/contour} névvel illetjük az eg
 
 A well-formed tulajdonság hat kritériumból tevődik össze, bár néha csak az első ötöt használják:
 
-\begin{compactenum}
-	\item Minden görbe egyszerű, azaz nem metszi önmagát - WFC1
-	\item Nincs két görbe, amelynek közös határolószakasza van. (Az elfajuló, pontbeli találkozást nem vesszük hozzá - WFC2
-	\item Nincs olyan pont, ahol három görbe érintkezik - WFC3
-	\item Ha két görbe érintkezik, akkor metszik egymást - WFC4
-	\item Minden zóna összefüggő, azaz egyetlen minimális régióból áll - WFC5
-	\item Nem rendelkezik két görbe azonos címkével - WFC6\\
+\begin{compactenum} \label{wfc}
+	\item Minden görbe egyszerű, azaz nem metszi önmagát - WFC1 \label{step:wfc1}
+	\item Nincs két görbe, amelynek közös határolószakasza van. (Az elfajuló, pontbeli találkozást nem vesszük hozzá - WFC2 \label{step:wfc2}
+	\item Nincs olyan pont, ahol három görbe érintkezik - WFC3 \label{step:wfc3}
+	\item Ha két görbe érintkezik, akkor metszik egymást - WFC4 \label{step:wfc4}
+	\item Minden zóna összefüggő, azaz egyetlen minimális régióból áll - WFC5 \label{step:wfc5}
+	\item Nem rendelkezik két görbe azonos címkével - WFC6 \label{step:wfc6}\\
 \end{compactenum}
 
 A well-matched tulajdonság az alábbi négy tulajdonság együttes meglétét fedi:
@@ -234,7 +234,7 @@ A well-matched tulajdonság az alábbi négy tulajdonság együttes meglétét f
 	\item Egy Euler-diagram well-matched a kontúrok szintjén, ha a halmazok közti részhalmaz, metszet és diszjunkció relációk megfelelnek az adott halmazokat reprezentáló kontúrok tartalmazás, átfedés és diszjunkció tulajdonságának. - WMP4
 \end{compactenum}
 
-Szintúgy széles körben vizsgált tulajdonság az area-proportionality, avagy méretarányosság\cite{euler_with_circles, area_proportional_phd, drawing_area_proportional, general_area_proportional}, amely azt mondja ki, hogy minden régió (bizonyos definíciók szerint az univerzumot reprezentáló kivételével) mérete úgy aránylik az ilyenek összegéhez, mint az $\omega$ súlyfüggvényük azok összegéhez. Leggyakrabban a zárt görbe által tartalmazott elemek számát alkalmazzuk súlyfüggvényként. Hibamértékek segítségével könnyen metrika is előállítható a tulajdonságból.
+Szintúgy széles körben vizsgált tulajdonság az area-proportionality, avagy méretarányosság\cite{euler_with_circles, area_proportional_phd, drawing_area_proportional, general_area_proportional}, amely azt mondja ki, hogy minden régió (bizonyos definíciók szerint az univerzumot reprezentáló kivételével) mérete úgy aránylik az ilyenek összegéhez, mint az $\omega$ súlyfüggvényük azok összegéhez. Leggyakrabban a régió által tartalmazott elemek számát alkalmazzuk súlyfüggvényként. Hibamértékek segítségével könnyen metrika is előállítható a tulajdonságból.
 
 
 Egyes szerzők a régiók színezését is hasonlóan fontosnak ismerik el, mint az elhelyezkedésüket\cite{imdb_euler, how_color_euler}.
@@ -755,7 +755,9 @@ Konvex poligonok esetén egy pont tartalmazásának a vizsgálata $\mathcal{O}(l
 		\hline
 		% \emph{Univerzum arányosság} & \\ TODO?
 		% \hline
-		\emph{Élmetszet} & Minimalizálja a metszettel nem rendelkező éleket reprezentáló görbék metszeteit. (Globálisan értelmezett mérőszám.)\\
+		\emph{Szegmensmetszetek száma} & Minimalizálja a görbék metszeteit. (Globálisan értelmezett mérőszám.)\\
+		\hline
+		\emph{Invalid szegmensmetszetek száma} & Minimalizálja a metszettel nem rendelkező éleket reprezentáló görbék metszeteit. (Globálisan értelmezett mérőszám.)\\
 		\hline
 		\emph{Legközelebbi szomszéd élszomszéd} & Támogatja, hogy egy csúcs legközelebbi szomszédja közös élből származzon. (Hiperélekre értelmezett mérőszám.)\\
 		\hline
@@ -772,11 +774,39 @@ Egyik legfőbb célom volt, hogy általánosan alkalmazható Euler-diagram model
 Nem tűnik az sem előnyösnek, hogy a szegmensek mérete nagyban ingadozzon. Amennyiben ezt támogatnánk, akkor a megnövekedhet a kevés csúcsot tartalmazó részhalmazok száma, ami megnehezítheti az egy halmazhoz tartozó görbék áttekintését. Hogy igyekezzünk elkerülni a kis csúcsszámú szegmenseket, minden $e$ hiperélre kiszámítjuk a $\sum_{Seg_j \in Seg_e}((||V_{Seg_j}| / |V_e| - 1 / |Seg_e| |) / |Seg_e|)$ értéket. A belső ($||V_{Seg_j}| / |V_e| - 1 / |Seg_e| |$) szám megadja, hogy egy adott szegmens csúcsainak száma mennyire tér el a célként meghatározott egyenletes eloszlástól, míg a külső osztótényező a szumma normalizálásának feladatát látja el.
 
 
-Egymáshoz túl közel kirajzolt csúcsok összecsúszhatnak a kirajzolás során, akár teljesen el is fedhetik egymást. Elkerülendő ennek az előfordulását, a kirajzoló algoritmus ismeretebén meghatározhatunk egy olyan távolságot, amelyet az optimalizációs algoritmus aztán igyekszik minden csúcspár esetében biztosítani. Erre a célra hoztam létre a \textit{minimum távolság fenntartása} heurisztikát, amelyet $1-min(min_{actual} / min_{target}, 1)$-ként határoztam meg, ahol $min_{actual}$ a csúcsok között ténylegesen előforduló legkisebb távolság, míg $min_{target}$ a bemenetként megadott célszám. Amennyiben $min_{actual}$ nagyobb a célnál, akkor $1-1$-ként értékelődik ki a függvény, azaz minimalizálási feladatban optimálisként. Ellenkező esetben egy lineáris függvényt kapunk $1$ és $0$ között, ahogy a tényleges minimum közelíti a célt.
+Egymáshoz túl közel kirajzolt csúcsok összecsúszhatnak a kirajzolás során, akár teljesen el is fedhetik egymást. Elkerülendő ennek az előfordulását, a kirajzoló algoritmus ismeretebén meghatározhatunk egy olyan távolságot, amelyet az optimalizációs algoritmus aztán igyekszik minden csúcspár esetében biztosítani. Erre a célra hoztam létre a \textit{minimum távolság fenntartása} heurisztikát, amelyet $1-min(min_{actual} / min_{target}, 1)$-ként határoztam meg, ahol $min_{actual}$ a csúcsok között ténylegesen előforduló legkisebb távolság, míg $min_{target}$ a bemenetként megadott célszám. A korábbiakkal ellentétben ez egy globálisan, nem pedig hiperélenként értelmezett heurisztika. Amennyiben $min_{actual}$ nagyobb a célnál, akkor $1-1$-ként értékelődik ki a függvény, azaz minimalizálási feladatban optimálisként. Ellenkező esetben egy lineáris függvényt kapunk $1$ és $0$ között, ahogy a tényleges minimum közelíti a célt. A globális heurisztikák nagyobb súllyal számítódnak a végeredménybe (hiszen nem átlagolódnak), azonban az optimalizációs algoritmus számára kevesebb információt szolgáltatnak, hogy mely irányba lehet érdemes folytatni a keresést.
 
 
-Felmerül a kérdés, hogy mikor nagyszámú csúcspár távolsága van a kitűzött cél alatt, akkor hogyan ismerje fel az optimalizációs algoritmus, hogy ezek számát csökkenteni előnyös. \textit{Minimum távolság előfordulásaként} hivatkozok arra az egyszerű arányszámra, hogy az összes lehetséges páron belül hány kisebb, mint $min_{target}$, azaz $|\{\{u,v\} | u,v \in V, u \neq v, dist(\{u,v\}) < min_{target}\}| / (|V|*(|V|-1)/2)$.
+Felmerül a kérdés, hogy mikor nagyszámú csúcspár távolsága van a kitűzött cél alatt, akkor hogyan ismerje fel az optimalizációs algoritmus, hogy ezek számát csökkenteni előnyös. \textit{Minimum távolság előfordulásaként} hivatkozok arra a globálisan értelmezett arányszámra, hogy az összes lehetséges páron belül hány kisebb, mint $min_{target}$, azaz $|\{\{u,v\} | u,v \in V, u \neq v, dist(\{u,v\}) < min_{target}\}| / (|V|*(|V|-1)/2)$.
 
+
+Az Euler-diagramok ergonómiáját áttekintő \ref{eulerAesthetic} fejezetben láthattuk, hogy a méretarányosság egy gyakran vizsgált tulajdonság a szakirodalomban. A fogalom azt írja le, hogy minden $Region_i$ régió esetén az $Area_{Region_i} / \sum_{Region_j \in Regions}(Area_{Region_j})$ arány azonos a - régiókon értelmezett $\omega$ súlyfüggvény alapján megkapott - $\omega(Region_i) / \sum_{Region_j \in Regions}(\omega(Region_j)$ aránnyal. A $\omega$ függvény gyakran a tartalmazott csúcsok számát írja le. Mivel a régiók száma exponenciális lehet az élek számához képest, ezért csak nagyon kis példákon alkalmazzák közvetlenül ezt a fogalmat, módszerről-módszerre eltérő mérőszámokat alkalmazva. Az általam kialakított heurisztika során - amelyet \textit{területarányosságnak} fogok nevezni - a polinomiális futásidő és a méretarányossági tulajdonság legalább részleges megtartása is a szemem előtt lebegett. Ennek megfelelően régiók helyett minden $e$ hiperél esetén csak az azt alkotó szegmenseket vizsgálom a $\sum_{Seg_i \in Seg_e} (|Area_{Seg_i} / Area_{Canvas} - |V_{Seg_i}| / |V|| / |Seg_e|)$ képlet alapján. A korábbiaknak megfelelően itt is egy célértéktől (a csúcsaránytól) való eltérést igyekszünk minimalizálni, egy normalizációs faktorral ($|Seg_e|$) leosztva. A méretarányossággal ellentétben itt a teljes ábra méretéhez viszonyítom a görbe területét, hogy ne fordulhasson elő, hogy az összes szegmens területarányosan, de az ábrának csak nagyon kis részterületén helyezkedjen el.
+
+
+Ismert, hogy az egymást metsző görbék körül megnehezül az ábra értelmezése (gondoljunk csak gráfok síkbarajzolhatóságára). Érdemes ezért alacsonyan tartani a görbemetszetek számát, amihez a globálisan kiértékelt \textit{szegmensmetszetek számát} minimalizáljuk. Természetesen minden olyan él tudja metszeni egymást, ami nem ugyanazon élből származik (azok közös konvex burkot alkotnának egyébként). Az elérhető metszetek száma $(\sum_{e \in E}(|Seg_e|))*(\sum_{e \in E}(|Seg_e|)-1) / 2 - \sum_{e \in E}(|Seg_e|*(|Seg_e|-1) / 2)$, a különböző élekben lévő szegmensek metszeteinek leszámlálása során ezzel osztunk le.
+
+
+\textit{Invalid szegmensmetszeteknek} fogom nevezni azt az esetet, mikor két görbe úgy metszi egymást, hogy az általuk reprezentált hiperéleknek nincs közös eleme. Ezeknek a számának alacsonyan tartásával csökkenthetjük az üres metszetek létrejöttét az ábrán. A számítás hasonlóan történik az előző esethez, azonban a itt csak akkor számlálunk egy metszéspontot, ha az invalid, illetve normalizációs faktort $(\sum_{e \in E}(|Seg_e|))*(\sum_{e \in E}(|Seg_e|)-1) / 2 - \sum_{e \in E}(|Seg_e|*(|Seg_e|-1) / 2) - \sum_{e, e' \in E, e \neq e', e \cap e' \neq \emptyset}(|Seg_e|*|Seg_{e'}|)$-nak választjuk, hiszen szomszédos élek szegmensei között sem fordulhat elő számlált metszet.
+
+
+Élmetszeteket, így speciálisan a szegmensek metszeteit kiszámítani különösen lassú művelet, melyet hasznos lehet inkább közelíteni. Az invalid szegmensmetszetek közvetlen leszámlálása helyett egy alternatív heurisztikát is bevezettem, amely azt vizsgálja, hogy egy csúcs legközelebbi szomszédja szerepel-e vele közös hiperélben. A feltételezésem, hogy így ez megnehezíti az invalid metszetek létrejöttét, mivel nem hagyja, hogy nem szomszédos csúcsok ékelődjenek egy szegmens csúcsai közé. Ez természetesen csak egy hipotézis, amit a méréseim során külön vizsgálni fogok.
+
+
+\subsubsection{Összehasonlítás a szakirodalommal}
+
+Érdemes megvizsgálni, hogy a modell tulajdonságai, illetve a fenti heurisztikák mennyire felelnek meg a szakirodalomban megjelenő ergonómiai kritériumoknak.
+
+
+Először a \ref{wfc} fejezetben tárgyalt well-formedness, kikötéseit veszem végig. A WFC1 kritérium (a görbék nem metszik önmagukat) mindenképp teljesül, hiszen az egyes görbék konvexek, míg a modellt direkt úgy alkottuk meg, hogy a WFC6 (nem rendelkezik két görbe azonos címkével) ne legyen elvárás (így az sem teljesül). Részben függ a kirajzolástól a WFC2 (nincs görbéknek közös határolószakasza) és WFC4 (két görbe metszi egymást, ha érintkezik). Ezekben az esetekben ugyanis a konvex burkok megnövelhetők a csúcsok közti minimális távolság felével, ami szemantikailag nem változtatja meg az ábrát (hiszen mindegyik görbe ugyanazokat a csúcsokat fogja tartalmazni), viszont minden közös határolószakaszt metszetté alakít. Ezzel szemben sem a modell, sem az alkalmazott heurisztikák nem fedik le a WFC3 (nincs pont, ahol három él érintkezik) és WFC5 (minden zóna egyetlen minimális régióból áll, azaz részhalmazok nem üres metszete pontosan egy összefüggő síkpartícióval van reprezentálva) kritériumokat, bár a szegmensek számának csökkentése áttételesen segítheti a WFC5 kitételt. Jegyezzük meg, hogy bár széleskörűen alkalmazott a well-formedness kritériumrendszer, azonban az empirikus kísérletek nem támasztották alá a hasznosságát.
+
+
+Nem mondható ez el a - ugyanott tárgyalt - well-matched követelményekről, amelyről az állapították meg az ergonómiai kísérletek, hogy segíti a halmazábrák emberi értelmezését. Itt kissé nehezebb dolgunk van, mivel a csúcsok megjelenítésével nem tisztán Euler-diagram alapú reprezentációt kapunk, ami megnehezíti a kritériumok értelmezését. A WMP1 tulajdonság kimondja, hogy nem jelenik meg olyan részhalmazt reprezentáló görbe, amely üres. Az eddig részletezett modellben ez előfordulhat - bár az invalid szegmensmetszetek minimalizálása pont ezt igyekszik elkerülni -, azonban ezek nem fognak csúcsokat tartalmazni. A WMP2 és WMP4 (a halmazok relációi megfelelnek a görbék átfedésének) ugyanettől a problémától szenved; maguk a görbék önmagukban nem feltétlenül teljesítik, de a csúcsok figyelembevételével már igen. Az egyedüli pont, amit kétségtelenül megsért a modell a WMP3, ami a WMP2-n felül előírja, hogy a WFC5 is teljesüljön. Láttuk, hogy ez már az előző paragrafusban sem állt fenn, és heurisztikák sem célozzák közvetlenül. Ennek oka, hogy a minimális régiók bejárása exponenciálissá tenné a futásidőt, amit elkerülni igyekeztem. További kutatások kiemelt célja lehet ennek a WMP3-at célzó, de polinomális futásidejű heurisztika kidolgozása.
+
+
+Az előző kettő esztétikai kritériumrendszeren kívül még a méretarányosságot emeltem ki az irodalmi áttekintés során, azonban annak kapcsolatát a heurisztikákkal már részleteztem a területarányosságot leíró paragrafusban.
+
+
+%TODO well-formed összehasonlítás
 % \subsubsection{Futásidő analízis}
 
 \section{Összefoglalás}
@@ -785,13 +815,20 @@ Az előző fejezetekben a megoldási módszert részleteit fejtettem ki, azonban
 
 % TODO bemenetek, költségfüggvény, heurisztikák
 
-%TODO 5-én eljutni ennek a végéig, min 44 oldal
+%TODO 5-én eljutni ennek a végéig, 42 oldal (jó lenne 44, de nyeh)
 
 \section{Mérések és következtetések}
 
-% különböző méretű problémák (élek, csúcsok, mindkettő változtatása)
+% különböző méretű problémák (élek, csúcsok, mindkettő változtatása, élméretek)
 % tanulás sebessége, változás méretarányosan
-% helyettesítő heurisztikák összehasonlítása (tulajdonságok, kétfa
+% helyettesítő heurisztikák összehasonlítása (tulajdonságok, skálák, helyettesítők) (futásidő)
+% inicializálási módszerek & paraméterek
+% opt módszerek & paraméterek
+% transfer learning
+% distance-ek fixálása (minden egy szegmensből áll) <- modellt kell átírni
+% nem kirajzolható hipergráf
+% evaluator paraméterezés
+
 
 
 % 11-ig - 60
