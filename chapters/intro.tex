@@ -472,7 +472,7 @@ Adott $H=(V,E)$ hipergráf és $X \in \mathcal{R}^{|V|}$, véletlenszámokat tar
 Láthattuk, hogy Euler-diagramok reprezentálhatók Bézier-görbékkel, körökkel, ellipszisekkel és poligonokkal is, azonban bizonyos esztétikai vagy szemantikai kritériumok betartása mellett (lásd well-formed kritériumok) nem minden hipergráf rajzolható ki. A korábbi eredményekkel összhangban ezért itt az 
 Általános megoldás eléréséhez mindenképp egy olyan modell bevezetése szükséges, amely egyszerre képes kezelni az ismert esztétikai metrikákat, így például kompakt módon, egyetlen görbével reprezentálni egy halmazt, azonban mikor ez nem lehetséges, akkor - bár komplexebb diagramok használatával - továbbra is megfelel az elvárt szemantikai követelményeknek. Fogalmi szinten ennek természetesen megfelel az Általánosított Euler-diagram definíció. Ennek a definíciónak a használatával viszont további kérdések merülnek fel. Mivel zárt görbék segítségével írtuk le a fogalmat, ezért kérdéses, hogy magukat a görbéket hogyan ábrázoljuk a memóriában, illetve olyan reprezentációra lenne szükség, ami lehetőleg flexibilis, kevés paraméterrel leírható és tetszőleges számú régióra tud bontani egyetlen görbét, kis számítási igény mellett.
 
-\subsubsection{Definíció}
+\subsubsection{Definíció} \label{eulerSolution}
 
 Az általam választott reprezentáció csúcsalapú, amelyben az egyes görbéket a hiperéleket alkotó csúcsok részhalmazainak konvex burka adja. Vegyünk minden csúcs esetén egy háromelemű vektort, amely tartalmazza a csúcs $x$ és $y$ koordinátáit, illetve egy $d$-vel jelölt értéket, azaz egy $X \in \mathcal{R}^{|V| \times 3}$ mátrixot. Minden $e$ hiperélhez rendeljünk egy $G_e$ gráfot, amelynek csúcshalmaza megegyezik a hiperél csúcshalmazával, tetszőleges $u, v, u \neq v$ csúcsa között pedig akkor fut él, ha $distance(u, v) \leq min(u_d, v_d)$, ahol a $distance$ függvény tetszőleges távolságmetrika lehet (én az implementáció során az $L^2$ normát használom). A $G_e$ gráf összefüggő komponensei particionálják a hiperél elemeit. Az egyes partíciók - melyeket én a hiperél/görbe \textbf{szegmenseinek} fogok nevezni - konvex burkát véve a hiperél(et reprezentáló görbe) több zárt poligonra bomlik szét, így általánosított Euler-diagramot reprezentál. A reprezentáció előnye, hogy tetszőleges számú nem-üres komponensre bontható vele mindegyik él, illetve az egyes görbék az általuk tartalmazott csúcsok számával arányos komplexitással bírnak.
 
@@ -524,7 +524,7 @@ A továbbiakban azt is érdemes lehet megvizsgálni, hogy nem csúcsonkénti, ha
 %to comprehend than ones whose curves have a black outline or a
 %coloured fill with transparency [BSRH14].
 
-\subsection{Optimalizációs módszerek}
+\subsection{Optimalizációs módszerek} \label{optimizationMethods}
 
 A kísérletek során optimalizációs módszerek több kategóriáját hasonlítom össze; a particle swarm optimization (PSO) nevű módszert, illetve a genetikus algoritmus (GA) különböző variánsait. Bár - szigorúan véve - nem optimalizációs módszer, de itt fogom vizsgálni a költségfüggvény neurális hálókkal való közelítését is, amely célból hipergráf konvolúciós hálózatokat (HCNN) próbálok ki.
 
@@ -604,7 +604,7 @@ A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem 
 
 % TODO GA variánsok (alg)
 
-\subsection{Inicializációs módszerek}
+\subsection{Inicializációs módszerek} \label{initializationMethods}
 
 A bemutatott algoritmusok során többször előfordul, hogy új megengedett megoldásokat kell generáljunk. Tekintve, hogy ezeknek a minősége nagyban befolyásolja a futás során elérhetőkét, ezért különösen fontos kérdés, hogy kezdeti értékeket hogyan számítjuk ki. Ebből a célból a dolgozatban több módszert is vizsgálok a megoldások inicialiázására, melyeket ebben a fejezetben részletezek.
 
@@ -807,16 +807,25 @@ Az előző kettő esztétikai kritériumrendszeren kívül még a méretarányos
 
 % \subsubsection{Futásidő analízis}
 
-\section{Összefoglalás}
+\subsection{Összefoglalás}
 
-Az előző fejezetekben a megoldási módszert részleteit fejtettem ki, azonban a jobb átláthatóság érdekében úgy gondolom, hasznos egy helyen is áttekinteni, hogy azok hogyan állnak össze egésszé.
-
-
+Az előző fejezetekben a megoldási módszer részleteit fejtettem ki, azonban a jobb átláthatóság érdekében úgy gondolom, hasznos egy helyen is áttekinteni, hogy azok hogyan állnak össze egésszé.
 
 
-% TODO bemenetek, költségfüggvény, heurisztikák
+A teljes folyamat során egy adott hipergráfhoz generálunk általánosított Euler-diagramot. A diagram a hipercsúcsokhoz rendelt $x,y$ koordinátákkal és egy-egy $d$ küszöbértékkel íródik le. A $d$ értékek alapján az egyes hiperéleket ábrázoló görbék több részre eshetnek szét (részletekért lásd a \ref{eulerSolution} fejezetet), melyek mindegyike az őket alkotó csúcsok konvex burkaként lesz kirajzolva.
 
-%TODO 5-én eljutni ennek a végéig, 42 oldal (jó lenne 44, de nyeh)
+
+Optimalizációs módszereket alkalmazok (\ref{optimizationMethods}), hogy hipergráfokhoz szemantikai és ergonómiai szempontból is megfelelő diagramot társítsunk. Ezek a módszerek magukban foglalják a genetikus algoritmus variánsait, particle swarm optimizationt és egy függvényapproximációs (genetikus algoritmus segítségével tanított hipergráf konvulóciós hálózat) módszert is. Költségfüggvényként tulajdonságok és heurisztikák alapján kialakított mérőszámok (felhasználó által) súlyozott átlagát használom (\ref{heuristics}). A költségfüggvény által lefedett tulajdonságok igyekeznek lefedni a szakirodalom által hatékonynak találtakat.
+
+
+Elkerülhetetlen, hogy az optimalizálási eljárás során új, véletlenszerű megoldásokat legyen szükséges előállítanunk, melyek a további megoldások kiindulópontjaként funkcionálnak. Különböző inicializációs módszerekkel (\ref{initializationMethods}) igyekszem javítani az ilyen, kezdeti megoldások minőségét.
+
+Alkalmazás során a felhasználó nagyfokú szabadsággal élhet a módszerek testreszabása terén. Természetesen ki kell válassza az általa használni kívánt inicializációs és optimalizációs módszereket, utóbbi méghozzá saját paraméterekkel rendelkezik. A költségfüggvény egyes összetevőinek súlyait szintén igény szerint lehet változtatni.
+
+
+Szigorúan véve egyedül a hipergráf kéne leírja a problémát, azonban a költségfüggvény úgy lett kialakítva, hogy az ábra elvárt mérete és a csúcsok távolságára kitűzött alsó korlát is szükséges bemenet.
+
+
 
 \section{Mérések és következtetések}
 
@@ -829,7 +838,7 @@ Az előző fejezetekben a megoldási módszert részleteit fejtettem ki, azonban
 % distance-ek fixálása (minden egy szegmensből áll) <- modellt kell átírni
 % nem kirajzolható hipergráf
 % evaluator paraméterezés
-
+% mean & std a többi megoldásra az optimizer populációjában (mennyire stabil a tanulás, csak véletlen, vagy minden növekszik?)
 
 
 % 11-ig - 60
