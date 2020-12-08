@@ -585,7 +585,7 @@ A $recombine$ (máshol gyakran $crossover$ névvel illetett) függvény a kivál
 Élalapú GA esetében természetesen az egyes egyedkhez nem elég egyetlen fitness értéket nyilvántartani, hanem a - ahol értelmezett úgy - minden egyed minden élére szükséges azt tárolni. Az élalapú megoldás esetén a $recombine$ függvénynek ezek az élalapú fitness értékek is bemenetei, melyeket az $edgewiseFitness \in \mathcal{R}^{|population| \times |E|}$ változó tartalmának tekintünk ($H=(V,E)$ esetén), illetve megkapja a hipergráf incidencia mátrixát is. A szóban forgó eljárás során továbbra is egy $x,y,d$ hármast tekintünk génnek, így ezek csak együtt örökölhetők, azonban egy gén szülőjének kiválasztása a korábbiaktól eltérő módon történik. Az egyes csúcsokhoz mindkét szülő esetén külön-külön meghatározzuk, hogy az adott csúcsot tartalmazó éleknek mennyi az átlagos fitness értéke. Az öröklődés során kiválasztjuk azokat a géneket (azaz csúcsonkénti $x,y,d$ értékhármasokat), amelyeknek ez az átlagolt értéke nagyobb az első szülőben. A kiválasztást úgy módosítjuk, hogy mindig fele-fele arányban örököljünk a két szülőből. Ehhez a két átlagolt érték különbségét vesszük, és azokkal bővítjük/csökkentjük az első szülőből átvett értékeket, amelyek a legkisebb eltérést mutatják. Így elveszíthetjük a legjobb értékek öröklését, azonban csak akkor, ha a másik szülő többi génjében nagyobb lenne a fitness értékben beállt veszteség.
 
 
-A mutációt az új populáción alkalmazott normális eloszlású zajjal modellezzük, amelynek az átlaga nulla, a felső értéke a $mutationRate$ változó.
+A mutációt az új populáción alkalmazott normális eloszlású zajjal modellezzük, amelynek az átlaga nulla, a felső értéke a $mutationRate$ változó. Az én megoldásomban továbbá bevezetek egy $mutationPct$ változót is, amely azt írja le, hogy az összes paraméter mekkora részére alkalmazzuk a mutációt (a többit változatlanul hagyjuk).
 
 
 % TODO futásidő, memóriaigény ?
@@ -845,13 +845,74 @@ A gyakorlati alkalmazhatóság vizsgálatának céljából egy referenciaprogram
 Mielőtt áttekintjük az eredményeket, mindenképp szükséges pár szót ejtenem magáról a programról, illetve a kísérletekről is. Implementáció során - a módszerek nagy száma, illetve a kutatómunka kiterjedtsége okán - sajnos már nem jutott idő a futásidő extenzív optimalizációjára. Az egyes algoritmusok polinomidejű futásidejét nem veszítettem szem elől, azonban valószínűsíthető, hogy további fejlesztésekkel szignifikáns sebességnövekedés is elérhető lenne. Érdemes ezért észben tartani, hogy a látott futásidők nem feltétlenül reprezentatívak egymáshoz viszonyítva. Ennek ellenére úgy gondolom, hogy így is hasznos információt hordozhat a futásidő felső korlátjaként.
 
 
-A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és véletlenszerűen generált hipergráfot foglal magában. A generált hipergráf megadott csúcs- és élszámmal rendelkezik, illetve minden csúcs meghatározott valószínűséggel tartalmazott az egyes hiperélekben (azzal a kikötéssel, hogy minden hiperél tartalmaz legalább egy csúcsot). Ezeket a paramétereket minden kísérlet előtt megadom, továbbá egyazon kísérlet során pontosan ugyanazt a generált hipergráfot alkalmazom az összes módszer esetén. A további alfejezetkben az általam legfontosabbnak vélt aspektusokat vizsgálom, minden ilyen előtt egy rövid leírás a mérés tárgyáról, illetve céljáról. Mivel a hipergráf konvolúciós hálózat egészen más természetű módszer, mint a többi, ezért nem éreztem jól összehasonlíthatónak velük, így egy külön neki dedikált alfejezetben tárgyalom.
+A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és véletlenszerűen generált hipergráfot foglal magában. A generált hipergráf megadott csúcs- és élszámmal rendelkezik, illetve minden csúcs meghatározott valószínűséggel tartalmazott az egyes hiperélekben (azzal a kikötéssel, hogy minden hiperél tartalmaz legalább egy csúcsot). Ezeket a paramétereket minden kísérlet előtt megadom, továbbá egyazon kísérlet során pontosan ugyanazt a generált hipergráfot alkalmazom az összes módszer esetén. Egy olyan generált hipergráfot, amely $N$ csúccsal, $M$ hiperéllel és $C\%$ tartalmazási valószínűséggel bír, $H_{N,M,C}$ módon fogok jelölni. Szintúgy jelezni fogom, hogy melyik inicializációs módszert, illetve milyen paraméterezésű optimalizációs módszert használok. Ezek az információk a kísérletek előtti táblázatban lesznek feltüntetve. A további alfejezetkben az általam legfontosabbnak vélt aspektusokat vizsgálom, minden ilyen előtt egy rövid leírás a mérés tárgyáról, illetve céljáról. Mivel a hipergráf konvolúciós hálózat egészen más természetű módszer, mint a többi, ezért nem éreztem jól összehasonlíthatónak velük, így egy külön neki dedikált alfejezetben tárgyalom.
 
-%Igyekszem az általam legfontosabbnak mért aspektusokat vizsgálni, melyeket a további alfejezetkre bontottam.
 
+Ahol nem jelölöm külön, ott az alábbi súlyokat használom az egyes heurisztikákhoz:
+
+\begin{longtable}{| p{0.45\textwidth} | p{0.25\textwidth} |}
+		\hline
+		\hfil\textbf{Heurisztika} & \hfil\textbf{Érték} \\
+		\hline \hline
+		\emph{Hamis pozitív tartalmazás} & \hfil10.000 \\
+		\hline
+		\emph{Hamis negatív tartalmazás} & \hfil10.000 \\
+		\hline
+		\emph{Körszerűség} & \hfil10 \\
+		\hline
+		\emph{Szegmensek száma} & \hfil1000 \\
+		\hline
+		\emph{Szegmensek mérete} & \hfil100 \\
+		\hline
+		\emph{Minimum távolság fenntartása} & \hfil1000 \\
+		\hline
+		\emph{Minimum távolság előfordulása} &  \hfil10 \\
+		\hline
+		\emph{Területarányosság} & \hfil10 \\
+		\hline
+		\emph{Szegmensmetszetek száma} & \hfil10 \\
+		\hline
+		\emph{Invalid szegmensmetszetek száma} & \hfil1000 \\
+		\hline
+		\emph{Legközelebbi szomszéd élszomszéd} & \hfil0 \\
+		\hline
+		\emph{Fragmentálatlanság} & \hfil100 \\
+		\hline
+\end{longtable}
+
+Ezek az értékek úgy lettek kiválasztva, hogy a szemantikára vett - általam vélt - befolyásuk alapján súlyoztam a heurisztikákat. Természetesen más súlyozás is ugyanennyire megalapozott lehet, azonban túl sok paraméter játszik szerepet az optimalizáció során ahhoz, hogy minden kombinációt vizsgáljak. Ugyanez természetesen fennáll az algoritmusok paraméterei esetén is. Jegyezzük meg, hogy az szegmensmetszetek alternatívájának szántuk annak mérését, hogy egy csúcs legközelebbi szomszédja élszomszédja-e, ezért azt egyelőre teljesen kihagyjuk. Szintén konstans 0 értékkel fog szerepelni a költségfüggvényben a hamis negatív tartalmazás is, hiszen az mindig teljesül. Ennek ellenére hasonló súlyú szemantikai információnak ítélem, mint a hamis pozitív tartalmazást, így egy esetleges modellváltásnál a fönti értéket ajánlanám használni.
 
 \subsection{Érzékenység a probléma méretére}
 
+Értelemszerűen fontos kérdés, hogy a különböző módszerek legfeljebb mekkora hipergráfot képesek kezelni, a paramétertér növelésével hogyan romlik akár a teljesítményük, akár a futásidejük. A kísérlet során különböző méretű és sűrűségű hipergráfokon futtatom ugyanazon optimalizációs algoritmusokat.
+
+\begin{longtable}{| p{0.25\textwidth} | p{0.2\textwidth} | p{0.35\textwidth} |}
+		\hline
+		\textbf{Inicializáció} & \textbf{Algoritmus} & \textbf{Algoritmus paraméterek} \\
+		\hline \hline
+		Egyenletes eloszlás & PSO & $w=c_1=c_2=0.5$, $S=200$\\
+		\hline
+		\vfil \hfil Egyenletes eloszlás & \vfil \hfil csúcsalapú GA & $S=100$,\newline$parentNum=S*0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$\\
+		\hline
+		\vfil \hfil Egyenletes eloszlás & \vfil \hfil élalapú GA & $S=100$,\newline$parentNum=S*0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$ \\
+		\hline
+\end{longtable}
+
+Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok esetében, és 200-at a PSO-éban, amely futásidő alapján körülbelül kétszer olyan gyorsnak bizonyult.
+
+%\subsubsection{Csúcsám növelése}
+%\begin{longtable}{| p{0.25\textwidth} | p{0.15\textwidth} | p{0.40\textwidth} |}
+%		\hline
+%		\textbf{Csúcsszám} & \textbf{Élszám} & \textbf{Csúcs $\in$ él valószínűség} \\
+%		\hline \hline
+%		\hfil20 & \hfil8 & \hfil5 \% \\
+%		\hline
+%\end{longtable}
+
+
+\subsubsection{Élszám növelése}
+\subsubsection{Csúcs- és élszám növelése}
+\subsubsection{Sűrűség növelése}
 
 \subsection{Iterációk száma kontra megoldáspopuláció mérete}
 
@@ -862,7 +923,8 @@ A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és 
 \subsection{Hatékony paraméterezés}
 
 
-\subsection{Rigid heurisztikák}
+\subsection{Alternatív heurisztikák}
+% TODO rigid / property is!!!!
 
 
 \subsection{Változó költségfüggvény}
