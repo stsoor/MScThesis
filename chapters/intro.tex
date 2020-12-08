@@ -2,8 +2,10 @@
 
 \chapter{Absztrakt}
 
-A hipergráfok gyakran alkalmazott matematikai eszközök az informatika számos területén, így a szemantikus web, bioinformatika, szenzorhálózatok, adatbázisrendszerek, szociális hálózatok, gépi látás és egyéb területek számos megoldása épül rájuk.
-Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok, illetve halmazrendszerek vizualizációja. Vizualizáció során egyszerre merül fel igény a mögöttes struktúra tökéletes leképezésére, a könnyű értelmezhetőségre (így esztétikai metrikákra), az általános alkalmazhatóságra, gyors futásidőre, és - ezzel összefüggésben - a megjeleníthető adathalmaz méretének maximalizálására is, továbbá gyakran felmerül a dinamikus környezet - akár a struktúra, akár 
+A hipergráfok gyakran alkalmazott matematikai eszközök az informatika számos területén, így a szemantikus web, bioinformatika, szenzorhálózatok, adatbázisrendszerek, szociális hálózatok, gépi látás és egyéb részterületek számos megoldása épül rájuk.
+Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok, illetve halmazrendszerek ábrázolása. Vizualizáció során egyszerre merül fel igény a mögöttes struktúra tökéletes leképezésére, a könnyű értelmezhetőségre (így esztétikai és ergonómiai metrikákra), az általános alkalmazhatóságra, gyors futásidőre és - ezzel összefüggésben - a megjeleníthető adathalmaz méretének maximalizálására is, továbbá gyakran felmerül a dinamikus környezet feladatok kezelésének problémája is.
+
+
 Mint látható, ez egy felettébb összetett problémát eredményez, amely megoldására számos módszer született már a szakterületi irodalomban, azonban ezek gyakran szenvednek egy - vagy több - tervezési elv sérülésétől, így egyik sem terjedt el a gyakorlatban.
 Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgáljuk a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra és a szemantikailag helyes leképezésre.
 
@@ -845,7 +847,8 @@ A gyakorlati alkalmazhatóság vizsgálatának céljából egy referenciaprogram
 Mielőtt áttekintjük az eredményeket, mindenképp szükséges pár szót ejtenem magáról a programról, illetve a kísérletekről is. Implementáció során - a módszerek nagy száma, illetve a kutatómunka kiterjedtsége okán - sajnos már nem jutott idő a futásidő extenzív optimalizációjára. Az egyes algoritmusok polinomidejű futásidejét nem veszítettem szem elől, azonban valószínűsíthető, hogy további fejlesztésekkel szignifikáns sebességnövekedés is elérhető lenne. Érdemes ezért észben tartani, hogy a látott futásidők nem feltétlenül reprezentatívak egymáshoz viszonyítva. Ennek ellenére úgy gondolom, hogy így is hasznos információt hordozhat a futásidő felső korlátjaként.
 
 
-A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és véletlenszerűen generált hipergráfot foglal magában. A generált hipergráf megadott csúcs- és élszámmal rendelkezik, illetve minden csúcs meghatározott valószínűséggel tartalmazott az egyes hiperélekben (azzal a kikötéssel, hogy minden hiperél tartalmaz legalább egy csúcsot). Ezeket a paramétereket minden kísérlet előtt megadom, továbbá egyazon kísérlet során pontosan ugyanazt a generált hipergráfot alkalmazom az összes módszer esetén. Egy olyan generált hipergráfot, amely $N$ csúccsal, $M$ hiperéllel és $C\%$ tartalmazási valószínűséggel bír, $H_{N,M,C}$ módon fogok jelölni. Szintúgy jelezni fogom, hogy melyik inicializációs módszert, illetve milyen paraméterezésű optimalizációs módszert használok. Ezek az információk a kísérletek előtti táblázatban lesznek feltüntetve. A további alfejezetkben az általam legfontosabbnak vélt aspektusokat vizsgálom, minden ilyen előtt egy rövid leírás a mérés tárgyáról, illetve céljáról. Mivel a hipergráf konvolúciós hálózat egészen más természetű módszer, mint a többi, ezért nem éreztem jól összehasonlíthatónak velük, így egy külön neki dedikált alfejezetben tárgyalom.
+A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és véletlenszerűen generált hipergráfot foglal magában. A generált hipergráf megadott csúcs- és élszámmal rendelkezik, illetve minden csúcs meghatározott valószínűséggel tartalmazott az egyes hiperélekben (azzal a kikötéssel, hogy minden hiperél tartalmaz legalább egy csúcsot). Ezeket a paramétereket minden kísérlet előtt megadom, továbbá egyazon kísérlet során pontosan ugyanazt a generált hipergráfot alkalmazom az összes módszer esetén. Egy olyan generált hipergráfot, amely $N$ csúccsal, $M$ hiperéllel és $C\%$ tartalmazási valószínűséggel bír, $H_{N,M,C}$ módon fogok jelölni. Szintúgy jelezni fogom, hogy melyik inicializációs módszert, illetve milyen paraméterezésű optimalizációs módszert használok. Ezek az információk a kísérletek előtti táblázatban lesznek feltüntetve. A további alfejezetkben az általam legfontosabbnak vélt aspektusokat vizsgálom, minden ilyen előtt egy rövid leírás a mérés tárgyáról, illetve céljáról. A legtöbb esetben
+Mivel a hipergráf konvolúciós hálózat egészen más természetű módszer, mint a többi, ezért nem éreztem jól összehasonlíthatónak velük, így egy külön neki dedikált alfejezetben tárgyalom.
 
 
 Ahol nem jelölöm külön, ott az alábbi súlyokat használom az egyes heurisztikákhoz:
@@ -882,15 +885,17 @@ Ahol nem jelölöm külön, ott az alábbi súlyokat használom az egyes heurisz
 
 Ezek az értékek úgy lettek kiválasztva, hogy a szemantikára vett - általam vélt - befolyásuk alapján súlyoztam a heurisztikákat. Természetesen más súlyozás is ugyanennyire megalapozott lehet, azonban túl sok paraméter játszik szerepet az optimalizáció során ahhoz, hogy minden kombinációt vizsgáljak. Ugyanez természetesen fennáll az algoritmusok paraméterei esetén is. Jegyezzük meg, hogy az szegmensmetszetek alternatívájának szántuk annak mérését, hogy egy csúcs legközelebbi szomszédja élszomszédja-e, ezért azt egyelőre teljesen kihagyjuk. Szintén konstans 0 értékkel fog szerepelni a költségfüggvényben a hamis negatív tartalmazás is, hiszen az mindig teljesül. Ennek ellenére hasonló súlyú szemantikai információnak ítélem, mint a hamis pozitív tartalmazást, így egy esetleges modellváltásnál a fönti értéket ajánlanám használni.
 
+A legtöbb eset
+
 \subsection{Érzékenység a probléma méretére}
 
 Értelemszerűen fontos kérdés, hogy a különböző módszerek legfeljebb mekkora hipergráfot képesek kezelni, a paramétertér növelésével hogyan romlik akár a teljesítményük, akár a futásidejük. A kísérlet során különböző méretű és sűrűségű hipergráfokon futtatom ugyanazon optimalizációs algoritmusokat.
 
 \begin{longtable}{| p{0.25\textwidth} | p{0.2\textwidth} | p{0.35\textwidth} |}
 		\hline
-		\textbf{Inicializáció} & \textbf{Algoritmus} & \textbf{Algoritmus paraméterek} \\
+		\hfil \textbf{Inicializáció} & \hfil \textbf{Algoritmus} & \hfil \textbf{Algoritmus paraméterek} \\
 		\hline \hline
-		Egyenletes eloszlás & PSO & $S=100$, $w=c_1=c_2=0.5$\\
+		\hfil Egyenletes eloszlás & \hfil PSO & $S=100$, $w=c_1=c_2=0.5$\\
 		\hline
 		\vfil \hfil Egyenletes eloszlás & \vfil \hfil csúcsalapú GA & $S=100$,\newline$parentNum=S*0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$\\
 		\hline
