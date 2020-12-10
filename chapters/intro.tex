@@ -29,14 +29,14 @@ Ahhoz, hogy megértsük a megoldandó problémát, számos fogalmat át kell tek
 
 \subsubsection{Gráfok}
 
-A gráf (variációi) alapvető fontosságú adattípus(ok) a modern informatikai megoldások során. Definiálásuk nem csak a dolgozat későbbi részeiben felbukkanó algoritmusok miatt fontos, hanem a - gyakran a gráfok általánosításának tekintett - hipergráfok mélyebb megértését is elősegítik. 
+A gráf (variációi) alapvető fontosságú adattípus(ok) a modern informatikai megoldások során. Definiálásuk nem csak a dolgozat későbbi részeiben felbukkanó algoritmusok miatt fontos, hanem a - gyakran a gráfok általánosításának tekintett - hipergráfok mélyebb megértését is elősegíti. 
 
 \begin{definition}
 \textbf{Irányítatlan gráfnak} nevezünk egy olyan, rendezett $G=(V,E)$ párt, ahol $V$ egy nem-üres halmaz, $E$ pedig egy olyan multihalmaz, amely a $V$ elmeiből képzett kételemű halmazokat tartalmaz. Formálisan $E \subseteq \{\{u,v\} | u,v \in V\}$. A $V$ halmazt \textbf{csúcshalmaznak} is szokás nevezni, elemeit \textbf{csúcsoknak}, míg $E$-t az \textbf{élhalmaz}, elemeit pedig \textbf{él} névvel illetjük. Az élek által tartalmazott elemeket az adott él \textbf{végpontjainak} hívjuk. Két csúcs \textbf{szomszédos}, ha van olyan él $G$-ben, amely őket tartalmazza, míg egy csúcs \textbf{izolált}, ha egyetlen élnek sem végpontja. A $G'=(V',E'), V' \subseteq V, E' \subseteq E$ a $G=(V,E)$ gráf \textbf{részgráfja}.
 \end{definition}
 
 \begin{definition}
-Egy nem-üres halmaz, $V$, és az elemeiből képzett kételemű \textit{rendezett párokat} tartalmazó $A$ multihalmazból képzett rendezett $D=(V,A)$ párt \textbf{irányított gráfnak} hívjuk. Az irányítatlan gráfok nómenklatúrája itt is érvényes, azonban az élek rendezett párjában az első elemet speciálisan \textbf{kiindulópontnak}, a másodikat pedig \textbf{végpontnak} is szokás nevezni. Azt mondjuk, hogy egy $(u, v) \in A$ él az $u$ csúcsnak egy \textbf{kimenő éle}, $v$-nek egy \textbf{bemenő éle}. \textbf{Forrásnak} nevezzük azt a csúcsot, amelynek nincsenek bemenő élei, \textbf{nyelőnek} azt, aminek nincsenek kimenő élei.
+Egy nem-üres halmazból, $V$-ből, és az elemeiből képzett \textit{rendezett párokat} tartalmazó $A$ multihalmazból képzett rendezett $D=(V,A)$ párt \textbf{irányított gráfnak} hívjuk. Az irányítatlan gráfok nómenklatúrája itt is érvényes, azonban az élek rendezett párjában az első elemet speciálisan \textbf{kiindulópontnak}, a másodikat pedig \textbf{végpontnak} is szokás nevezni. Azt mondjuk, hogy egy $(u, v) \in A$ él az $u$ csúcsnak egy \textbf{kimenő éle}, $v$-nek egy \textbf{bemenő éle}. \textbf{Forrásnak} nevezzük azt a csúcsot, amelynek nincsenek bemenő élei, \textbf{nyelőnek} azt, aminek nincsenek kimenő élei.
 \end{definition}
 
 \begin{definition}
@@ -44,7 +44,7 @@ Az $e_i, e_j \in E, i \neq j$ éleket \textbf{párhuzamos éleknek} nevezzük, h
 \end{definition}
 
 \begin{definition}
-Az $v \in V$ él \textbf{fokszámát} $d$-vel jelöljük, és $d=| \{ e | e \in E \land v \in e \}|$. A $G$ gráf \textbf{k-reguláris}, ha minden csúcsának fokszáma $k$. Irányított gráf esetében megkülönbeztetjük a \textbf{befokszámot} és a \textbf{kifokszámot}.
+A $v \in V$ él \textbf{fokszámát} $d$-vel jelöljük, azaz $d=| \{ e | e \in E \land v \in e \}|$. A $G$ gráf \textbf{k-reguláris}, ha minden csúcsának fokszáma $k$. Irányított gráf esetében megkülönbeztetjük a \textbf{befokszámot} és a \textbf{kifokszámot}.
 \end{definition}
 
 \begin{definition}
@@ -56,7 +56,7 @@ Az $v \in V$ él \textbf{fokszámát} $d$-vel jelöljük, és $d=| \{ e | e \in 
 \end{definition}
 
 \begin{definition}
-Irányított gráf esetén élek egy $(u_1, v_1), \ldots, (u_k, v_k)$ sorozatát \textbf{sétának} nevezzük, ha $v_i=u_{i+1}, i=1 \ldots k-1$. Irányítatlan gráfok esetén analóg módon defináljuk a fogalmat, azonban eltekintünk a csúcsok élen belüli sorrendjétől. Ha a séta semelyik két éle nem tartalmazza ugyanazt a csúcsot, akkor a sétát \textbf{útnak} mondjuk. Ha az út kezdőpontja megegyezik a végpontjával, akkor az egy \textbf{kör}. Két csúcs \textbf{távolsága} a köztük lévő legrövidebb útban szereplő élek száma, ha ilyen nincs, akkor végtelen. Egy $v$ csúcs \textbf{elérhető} az $s$ csúcsból, ha a távolsága nem végtelen tőle. \textbf{Összefüggőnek} mondott egy gráf (vagy részgráf), ha abban minden csúcs elérhető mindegyik másikból, míg egy \textbf{összefüggő komponens} a vizsgált gráf csúcsainak egy olyan részhalmaza, amely összefüggő, de nem bővíthető úgy, hogy az maradjon.
+Irányított gráf esetén élek egy $(u_1, v_1), \ldots, (u_k, v_k)$ sorozatát \textbf{sétának} nevezzük, ha $v_i=u_{i+1}, i=1 \ldots k-1$. Irányítatlan gráfok esetén analóg módon defináljuk a fogalmat, azonban eltekintünk a csúcsok élen belüli sorrendjétől. Ha a séta semelyik két éle nem tartalmazza ugyanazt a csúcsot, akkor a sétát \textbf{útnak} mondjuk. Ha egyedül a séta kezdőpontja egyezik meg a végpontjával, akkor az egy \textbf{kör}. Két csúcs \textbf{távolsága} a köztük lévő legrövidebb útban szereplő élek száma, ha ilyen nincs, akkor végtelen. Egy $v$ csúcs \textbf{elérhető} az $s$ csúcsból, ha a távolsága nem végtelen tőle. \textbf{Összefüggőnek} mondott egy gráf (vagy részgráf), ha abban minden csúcs elérhető mindegyik másikból, míg egy \textbf{összefüggő komponens} a vizsgált gráf csúcsainak egy olyan részhalmaza, amely összefüggő, de nem bővíthető úgy, hogy az maradjon.
 \end{definition}
 
 \begin{note}
@@ -69,16 +69,16 @@ $K_n$-nel jelöljük az $n$ csúcsú egyszerű gráfot, amelyben minden csúcsp�
 
 
 \begin{definition}
-\textbf{Topologikus sorrendként} ismert a $D=(V,A)$ irányított gráf csúcsainak egy olyan sorrendje, ahol kisebb sorszámú csúcsból csak nagyobb sorszámúba megy él. A topologikus sorrend megléte ekivivalens azzal, hogy az adott gráfban nincsen kör, így az ilyet \textbf{körmentes gráfnak} nevezzük.
+\textbf{Topologikus sorrendként} ismert a $D=(V,A)$ irányított gráf csúcsainak egy olyan sorrendje, ahol minden csúcsból csak nála nagyobb sorszámúba megy él. A topologikus sorrend megléte ekivivalens azzal, hogy az adott gráfban nincsen kör, így az ilyet \textbf{körmentes gráfnak} nevezzük.
 \end{definition}
 
 \begin{definition}
-Egy $G=(V,E)$ irányítatlan gráf \textbf{line graphja} alatt az $L(G)=(E, \{ \{ e_i, e_j \} | v \in V \land v \in e_i \land v \in e_j, i \neq j \})$ gráfot értjük.
+Egy $G=(V,E)$ irányítatlan gráf \textbf{line graphja} alatt az $L(G)=(E, \{ \{ e_i, e_j \} | \exists v \in V : v \in e_i \land v \in e_j, i \neq j \})$ irányítatlan gráfot értjük.
 \end{definition}
 
 \subsubsection{Halmazrendszerek és hipergráfok}
 
-Mint az absztraktban is említettem, halmazalapú adatreprezentációkkal, így hipergráfokkal és halmazrendszerekkel az informatika számos területén találkozhatunk. Az egyes problématerületek - sőt gyakran egy problématerületet vizsgáló különböző szakcikkek - azonban egymással konkuráló definíciókat alkalmaznak. Gyakran a halmazrendszerek szinonímájának tekintik a fogalmat, míg például - a szakterület egyik alapművének számító - Hypergraphs c. \cite{berge_hypergraphs_book} kötet mind az általunk használt - mindjárt megismertetett - definícióhoz, mind a halmazrendszer alapúhoz képest megszorításokat vezet be.
+Mint az absztraktban is említettem, halmazalapú adatreprezentációkkal, így hipergráfokkal és halmazrendszerekkel az informatika számos területén találkozhatunk. Az egyes problématerületek - sőt, gyakran az egy problématerületet vizsgáló különböző szakcikkek - azonban egymással konkuráló definíciókat alkalmaznak a hipergráfokra. Sokszor a halmazrendszerek szinonímájának tekintik a fogalmat, míg például - a szakterület egyik alapművének számító - Hypergraphs c. \cite{berge_hypergraphs_book} kötet mind az általunk használt - mindjárt megismertetett - definícióhoz, mind a halmazrendszer alapúhoz képest megszorításokat vezet be.
 
 \begin{definition}
 A $H$ halmaz \textbf{hatványhalmaza} $\mathcal{P}(H) = \{x | x \subseteq H\}$, azaz a $H$ halmaz összes részhalmazainak halmaza.
@@ -102,18 +102,18 @@ Egy másik felmerülő kérdés a hipergráfok kapcsán a hiperutak, más szóva
 
 \subsubsection{Gráf- és hipergráf-adatszerkezetek} \label{adsDefinitions}
 
-Gráfok gépi kezelésére köztes gráfreprezentációkra, gráfadatszerkezetekre van szükség. Leggyakrabban az adjacencia mátrix, az incidencia mátrix, az éllista és a ritka reprezentációk általános osztálya használatos. Mivel a megoldások során csak az első kettőt alkalmazzuk, ezért a többit itt nem is definiáljuk.
+Gráfok gépi kezelésére köztes gráfreprezentációkra, gráfadatszerkezetekre van szükség. Leggyakrabban az adjacencia mátrix, az incidencia mátrix, az éllista és a ritka reprezentációk általános osztálya használatos. Mivel a megoldások során csak az első kettőt alkalmazzuk, ezért a többit itt nem is definiálom.
 
 \begin{definition}
-A $G=(V,E)$ gráf \textbf{adjacencia mátrixa} alatt azt a $|V| \times |V|$ méretű $A_G$ mátrixot értjük, amelyben $a_ij=1$, ha $\{v_i, v_j\} \in E$ és 0 egyébként.
+A $G=(V,E)$ gráf \textbf{adjacencia mátrixa} alatt azt a $|V| \times |V|$ méretű $A_G$ mátrixot értjük, amelyben $a_{ij}=1$, ha $\{v_i, v_j\} \in E$, egyébként 0.
 \end{definition}
 
 \begin{definition}
-A $G=(V,E)$ gráf \textbf{incidencia mátrixa} alatt azt a $|V| \times |E|$ méretű $I_G$ mátrixot értjük, amelyben $i_jk=1$, ha $v_j \in e_k$ és 0 egyébként.
+A $G=(V,E)$ gráf \textbf{incidencia mátrixa} alatt azt a $|V| \times |E|$ méretű $I_G$ mátrixot értjük, amelyben $i_{jk}=1$, ha $v_j \in e_k$, egyébként 0.
 \end{definition}
 
 \begin{definition}
-A $H=(V,E)$ hipergráf \textbf{incidencia mátrixát} ugyanúgy definiáljuk, ahogy a gráfokon definált megfelelőjét.
+A $H=(V,E)$ hipergráf \textbf{incidencia mátrixát} ugyanúgy definiáljuk, ahogy a gráfokon értelmezett megfelelőjét.
 \end{definition}
 
 \begin{note}
@@ -122,7 +122,7 @@ Hipergráfok esetében az adjacencia mátrix nem értelmezett.
 \end{note}
 
 \begin{definition}
-A $H=(V,E)$ hipergráf \textbf{line/intersection graphja} az $L(H)=(E, \{ \{ e_i, e_j \} | v \in V \land e_i \cap e_j \neq \emptyset, i \neq j \})$ képlettel kapott egyszerű gráfot fedi. Jól látható, hogy ez általánosíta a gráfok esetében alkalmazott definíciónak.
+A $H=(V,E)$ hipergráf \textbf{line/intersection graphja} az $L(H)=(E, \{ \{ e_i, e_j \} | \exists v \in V : e_i \cap e_j \neq \emptyset, i \neq j \})$ képlettel kapott egyszerű gráfot fedi. Jól látható, hogy ez általánosítása a gráfok esetében alkalmazott definíciónak.
 \end{definition}
 
 \begin{definition}
@@ -254,7 +254,7 @@ A dolgozat későbbi részeiben legfontosabbnak Flower, Rodgers és Mutton munk�
 Láthattuk, hogy az EDGP egy összetett probléma, amely magában foglalja a konkrét ábrázolási mód (Euler-diagram definíció), a vizsgált esztétikai metrikák, az elfogadható futásidő és a megoldható problémaméret meghatározását is. Különösen fontos kitérni arra is, hogy egy adott probléma vizsgálata során nem feltétlenül egyféle szempont szeretnénk ábrázolási módot választani, elképzelhető például, hogy ugyanúgy szeretnénk az előforduló klasztereket vizsgálni, mint a leghosszabb utakat, melyek másféle elrendezést tételeznek fel.
 
 
-Az általam kitűzött célt az egyetemen folyó egyik kutatás igényei szerint tűztem ki, ahol adatbázisrendszerek redundanciáját csökkentjük hipergráfmodellek segítségével. Az itt folyó napi munka során egy olyan eszközre támadt szükség, amely - a jelenleg elérhető programokkal szemben - képes több tucat éllel és pár száz csúcsal bíró hipergráfot többféle esztétikai metrika szerint is kirajzolni, akár hosszabb futási idő (órák) és/vagy egyszeri, kifejezetten hosszú (napok, hetek) tanulási idő után. Különösképp megnehezíti a feladatot, hogy Alsallakh és társai - a halmazábrázolási módszereket áttekintő cikkükben\cite{alsallakah2016_the_state_of_the_art_set_visualization} - az Euler-diagramokat mindössze 10-20 halmazig tartják alkalmazhatónak. A tématerület bonyolultságának és mélységének megfelelően a dolgozat különböző módszerek vizsgálatáról szól, a végső eszközt még nem hivatott létrehozni.
+Az általam kitűzött célt az egyetemen folyó egyik kutatás igényei szerint tűztem ki, ahol adatbázisrendszerek redundanciáját csökkentjük hipergráfmodellek segítségével. Az itt folyó napi munka során egy olyan eszközre támadt szükség, amely - a jelenleg elérhető programokkal szemben - képes tetszőleges, pár tucat éllel és nagyságrendileg száz csúcsal bíró hipergráfot többféle esztétikai metrika szerint is kirajzolni, akár hosszabb futási idő (órák) és/vagy egyszeri, kifejezetten hosszú (napok, hetek) tanulási idő után. Különösképp megnehezíti a feladatot az általános megoldás igénye, illetve Alsallakh és társai (a halmazábrázolási módszereket áttekintő cikkükben\cite{alsallakah2016_the_state_of_the_art_set_visualization} tett) megállapítása, miszerint az Euler-diagramokat mindössze 10-20 halmazig alkalmazható. A tématerület bonyolultságának és mélységének megfelelően a dolgozat különböző módszerek vizsgálatáról szól, a végső eszközt még nem hivatott létrehozni.
 
 
 Mint láthattuk, az általános megoldhatóság érdekében emberi beavatkozás, korlát nélküli paramétertér (például Bézier görbék kontrollpontjai\cite{layout_metrics}) vagy exponenciális futásidő\cite{inductive_euler} lehet szükséges. Mivel tetszőleges esztétikai metrika fölött az optimalizáció, így a legjobb Euler-diagram megtalálása is NP-nehéz, ezért ez egyáltalán nem meglepő. A megoldásom alapjaként választott Flower cikkel\cite{layout_metrics} szemben, az általam használt, bonyolultabb problématér (mind a hipergráf méretében, egy adott halmazt reprezentáló zárt görbék számában és ebből kifolyólag a költségfüggvényként alkalmazott heurisztikák nem-folytonos jellegében) felveti a diagram modell egyszerűsítésének igényét, illetve újabb heurisztikák kidolgozásának szükségességét is.
@@ -882,7 +882,9 @@ Ahol nem jelölöm külön, ott az alábbi súlyokat használom az egyes heurisz
 
 Ezek az értékek úgy lettek kiválasztva, hogy a szemantikára vett - általam vélt - befolyásuk alapján súlyoztam a heurisztikákat. Természetesen más súlyozás is ugyanennyire megalapozott lehet, azonban túl sok paraméter játszik szerepet az optimalizáció során ahhoz, hogy minden kombinációt vizsgáljak. Ugyanez természetesen fennáll az algoritmusok paraméterei esetén is. Jegyezzük meg, hogy az szegmensmetszetek alternatívájának szántuk annak mérését, hogy egy csúcs legközelebbi szomszédja élszomszédja-e, ezért azt egyelőre teljesen kihagyjuk. Szintén konstans 0 értékkel fog szerepelni a költségfüggvényben a hamis negatív tartalmazás is, hiszen az mindig teljesül. Ennek ellenére hasonló súlyú szemantikai információnak ítélem, mint a hamis pozitív tartalmazást, így egy esetleges modellváltásnál a fönti értéket ajánlanám használni.
 
-A legtöbb eset
+Legtöbb esetben azt a kérdést vizsgálom, hogy melyik módszer milyen paraméterek mellett milyen mértékben képes minimalizálni a költségfüggvényt adott iterációszám alatt. Ezen esetekben négy mérőszámot alkalmazok; a költségfüggvény értékét, a referenciaimplementáció által igényelt futásdiőt, illetve a tanulóalgoritmus által vizsgált megoldáspopuláció elemeinek átlagát és szórását. Az első kettő gyakorlati haszna elég magától értetődő, míg a második kettő a tanulás minőségét hivatott reprezentálni. Amennyiben az utóbbiak nem csökkennek konzisztensen, akkor feltehető ugyanis, hogy a tanulás során csak véletlenszerűen bukkanunk kisebb értékű pozíciókra. Ezzel szemben az átlag folyamatos csökkenése azt mutatja, hogy a kereső algoritmus minden számítási kapacitását egy lokális minimumhely köré fókuszálja.
+
+Az ábrán megjelenő jó néhány tulajdonság konkrétan számszerűsíthető is, azonban ezek a költségfüggvényben arányosítva, a $[0,1]$ intervallumba szorítva jelennek meg. A konkrét mérési eredményeken kívül több ilyen tulajdonság eredeti leszámlálását is nyomonkövetem, hogy a heurisztikák eredményességére következtetni lehessen. Ezek a tulajdonságok magukban foglalják a szegmensenkénti hamis pozitív tartalmazások számát, a szegmensmetszetek számát, a nem szomszédos élek szegmeinsmetszeteinek számát, a meghatározott minimum küszöbértéknél közelebbi csúcspárok számát, a szegmensek számát, illetve az olyan szegmensek számát, amely annak ellenére tartalmaz egyetlen csúcsot, hogy maga a hiperél többől áll. Figyeljük meg, hogy a szegmensenkénti hamis pozitív tartalmazás maximum lehetséges értéke akár $(|V|-1)*|E|$ is lehet, mikor egyazon csúcs szerepel csak minden hiperélben, az összes többi pedig az általa kialakított szegmensben. (Egy élen belüli szegmensek nem metszhetik egymást, úgyhogy egy csúcs legfeljebb $|E|$ esetben lehet fals pozitív.)
 
 \subsection{Érzékenység a probléma méretére}
 
@@ -902,7 +904,7 @@ A legtöbb eset
 
 Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok esetében, és 200-at a PSO-éban, amely futásidő alapján körülbelül kétszer olyan gyorsnak bizonyult.
 
-%\subsubsection{Csúcsám növelése}
+\subsubsection{Csúcsám növelése}
 %\begin{longtable}{| p{0.25\textwidth} | p{0.15\textwidth} | p{0.40\textwidth} |}
 %		\hline
 %		\textbf{Csúcsszám} & \textbf{Élszám} & \textbf{Csúcs $\in$ él valószínűség} \\
@@ -911,8 +913,73 @@ Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok es
 %		\hline
 %\end{longtable}
 
+A csúcsszám változtatásának hatását az algoritmusokra a $H_{25,8,20}$, $H_{50,8,10}$ és $H_{100,8,5}$ hipergráfokon vizsgáltam. Fontos kiemelni, hogy a tartalmazási valószínűséget a csúcsszámmal arányosan csökkentettem, így az egyes hiperélek megközelítőleg azonos számú csúcsot tartalmaznak minden kísérlet során.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{50,8,10}$]{
+		\includegraphics[width=0.30\linewidth]{50-8-10-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{100,8,5}$]{
+		\includegraphics[width=0.30\linewidth]{100-8-5-cost}}
+	\caption{Csúcsszám hatása a költségfüggvényre}
+	\label{fig:node_size_cost}
+\end{figure}
+
+Úgy tűnik, hogy a a probléma ezen paraméterének megváltoztatása nagyban eltérően hat az egyes algoritmusokra. Míg az élalapú GA invariánsnak tűnik a csúcsok számához viszonyítva, addig a csúcsalapú GA esetében lassabb konvergenciához vezet, de végül mindketten hasonló minőségű ábrákat generálnak. Ezzel szemben a PSO algoritmus teljesítményét abszolút negatívan befolyásolja, ha további csúcsokat adunk a problémához.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost-mean}}
+	\hspace{5pt}
+	\subfigure[$H_{50,8,10}$]{
+		\includegraphics[width=0.30\linewidth]{50-8-10-cost-mean}}
+	\hspace{5pt}
+	\subfigure[$H_{100,8,5}$]{
+		\includegraphics[width=0.30\linewidth]{100-8-5-cost-mean}}
+	\caption{Csúcsszám hatása a megoldáspopuláció költségfüggvényének átlagára}
+	\label{fig:node_size_cost_mean}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost-std}}
+	\hspace{5pt}
+	\subfigure[$H_{50,8,10}$]{
+		\includegraphics[width=0.30\linewidth]{50-8-10-cost-std}}
+	\hspace{5pt}
+	\subfigure[$H_{100,8,5}$]{
+		\includegraphics[width=0.30\linewidth]{100-8-5-cost-std}}
+	\caption{Csúcsszám hatása a megoldáspopuláció költségfüggvényének szórására}
+	\label{fig:node_size_cost_std}
+\end{figure}
+
+Nem meglepő a korábbiak alapján, hogy az optimalizáció során átlagosan a kettő GA algoritmus megoldáspopulációja hasonlóan jó eredményt ér el, míg a PSO-ról ez már nem mondható el. A szórást vizsgálva azt mondhatjuk el, hogy a PSO során kapott költségfüggvények jóval nagyobb kilengéseket mutatnak, de a csúcsalapú GA is kevésbé stabil, mint az élalapú.
 
 \subsubsection{Élszám növelése}
+
+Élszámok esetén $H_{25,8,20}$-at, $H_{25,16,20}$-at és $H_{25,32,20}$-at vettem górcső alá. A
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{25,16,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-16-20-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{25,32,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-32-20-cost}}
+	\caption{Élszám hatása a költségfüggvényre}
+\end{figure}
+
+Ebben az esetben pontosan a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a PSO-t érinti legkevésbé az élszám növelése, az élalapút GA-t pedig a legnagyobb mértékben. Érdemes megemlíteni, hogy míg a csúcsszám változása esetén az elérhető költségfüggvény nagyságrendje nem változott, ez már nem áll meg az élszám esetén, ahol még a a legjobban eredményt adó módszer teljesítménye is észrevehetően romlik. 
+
 \subsubsection{Csúcs- és élszám növelése}
 \subsubsection{Sűrűség növelése}
 
@@ -927,6 +994,7 @@ Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok es
 
 \subsection{Alternatív heurisztikák}
 % TODO rigid / property is!!!!
+% TODO szemantikai helyesség!!!!
 
 
 \subsection{Változó költségfüggvény}
