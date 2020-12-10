@@ -902,7 +902,7 @@ Az ábrán megjelenő jó néhány tulajdonság konkrétan számszerűsíthető 
 		\hline
 \end{longtable}
 
-Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok esetében, és 200-at a PSO-éban, amely futásidő alapján körülbelül kétszer olyan gyorsnak bizonyult.
+Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok esetében, és 200-at a PSO-éban, amely futásidő alapján körülbelül kétszer olyan gyorsnak bizonyult. Diagramok esetén - az összehasonlíthatóság érdekében - az utóbbinak csak minden második értékét ábrázolom.
 
 \subsubsection{Csúcsám növelése}
 %\begin{longtable}{| p{0.25\textwidth} | p{0.15\textwidth} | p{0.40\textwidth} |}
@@ -978,10 +978,44 @@ Nem meglepő a korábbiak alapján, hogy az optimalizáció során átlagosan a 
 	\caption{Élszám hatása a költségfüggvényre}
 \end{figure}
 
-Ebben az esetben a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a PSO-t érinti legkevésbé az élszám növelése, az élalapú GA-t pedig a legnagyobb mértékben. Érdemes megemlíteni, hogy míg a csúcsszám változása esetén az elérhető költségfüggvény nagyságrendje nem változott, ez már nem áll meg az élszám esetén, ahol még a a legjobban eredményt adó módszer teljesítménye is észrevehetően romlik. 
+Ebben az esetben a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a PSO-t érinti legkevésbé az élszám növelése, az élalapú GA-t pedig a legnagyobb mértékben. Érdemes megemlíteni, hogy míg a csúcsszám változtatásával az elérhető költségfüggvény nagyságrendje nem változott, ez már nem áll meg az élszám esetén, ahol még a a legjobban eredményt adó módszer teljesítménye is észrevehetően romlik. Meglepő módon átlagosan nem a PSO operál a minimális költségfüggvényű (és szórású) populációval, hanem a csúcsalapú GA.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost-mean}}
+	\hspace{5pt}
+	\subfigure[$H_{25,16,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-16-20-cost-mean}}
+	\hspace{5pt}
+	\subfigure[$H_{25,32,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-32-20-cost-mean}}
+	\caption{Élszám hatása a megoldáspopuláció költségfüggvényének átlagára}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost-std}}
+	\hspace{5pt}
+	\subfigure[$H_{25,16,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-16-20-cost-std}}
+	\hspace{5pt}
+	\subfigure[$H_{25,32,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-32-20-cost-std}}
+	\caption{Élszám hatása a megoldáspopuláció költségfüggvényének szórására}
+\end{figure}
 
 \subsubsection{Csúcs- és élszám növelése}
+
+Mivel az előző két mérés során a csúcsszám és az élszám növelésével eltérő módszerek kerültek ki győztesként, ezért felmerül a kérdés, hogy mi történik, mikor mindkettőt egyszerre növeljük. Ehhez a korábbi mérések kombinációjával előálló $H_{25,8,20}$, $H_{50,16,10}$ és $H_{100,32,5}$ hipergráfokat használom fel.
+
 \subsubsection{Sűrűség növelése}
+
+Eddig a véletlen hipergráfok minden paraméterét vizsgáltuk, kivéve az élek tartalmazási valószínűségét. Az alábbiakban 
+
+
+\subsubsection{Összehasonlítás}
 
 \subsection{Iterációk száma kontra megoldáspopuláció mérete}
 
