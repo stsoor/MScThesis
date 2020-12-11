@@ -876,7 +876,7 @@ Ahol nem jelölöm külön, ott az alábbi súlyokat használom az egyes heurisz
 		\hline
 		\emph{Legközelebbi szomszéd élszomszéd} & \hfil0 \\
 		\hline
-		\emph{Fragmentálatlanság} & \hfil100 \\
+		\emph{Fragmentálatlanság} & \hfil1000 \\
 		\hline
 \end{longtable}
 
@@ -886,7 +886,7 @@ Legtöbb esetben azt a kérdést vizsgálom, hogy melyik módszer milyen paramé
 
 Az ábrán megjelenő jó néhány tulajdonság konkrétan számszerűsíthető is, azonban ezek a költségfüggvényben arányosítva, a $[0,1]$ intervallumba szorítva jelennek meg. A konkrét mérési eredményeken kívül több ilyen tulajdonság eredeti leszámlálását is nyomonkövetem, hogy a heurisztikák eredményességére következtetni lehessen. Ezek a tulajdonságok magukban foglalják a szegmensenkénti hamis pozitív tartalmazások számát, a szegmensmetszetek számát, a nem szomszédos élek szegmeinsmetszeteinek számát, a meghatározott minimum küszöbértéknél közelebbi csúcspárok számát, a szegmensek számát, illetve az olyan szegmensek számát, amely annak ellenére tartalmaz egyetlen csúcsot, hogy maga a hiperél többől áll. Figyeljük meg, hogy a szegmensenkénti hamis pozitív tartalmazás maximum lehetséges értéke akár $(|V|-1)*|E|$ is lehet, mikor egyazon csúcs szerepel csak minden hiperélben, az összes többi pedig az általa kialakított szegmensben. (Egy élen belüli szegmensek nem metszhetik egymást, úgyhogy egy csúcs legfeljebb $|E|$ esetben lehet fals pozitív.)
 
-\subsection{Érzékenység a probléma méretére}
+\subsection{Érzékenység a probléma paramétereire}
 
 Értelemszerűen fontos kérdés, hogy a különböző módszerek legfeljebb mekkora hipergráfot képesek kezelni, a paramétertér növelésével hogyan romlik akár a teljesítményük, akár a futásidejük. A kísérlet során különböző méretű és sűrűségű hipergráfokon futtatom ugyanazon optimalizációs algoritmusokat.
 
@@ -929,7 +929,7 @@ A csúcsszám változtatásának hatását az algoritmusokra a $H_{25,8,20}$, $H
 	\label{fig:node_size_cost}
 \end{figure}
 
-Úgy tűnik, hogy a a probléma ezen paraméterének megváltoztatása nagyban eltérően hat az egyes algoritmusokra. Míg az élalapú GA invariánsnak tűnik a csúcsok számához viszonyítva, addig a csúcsalapú GA esetében lassabb konvergenciához vezet, de végül mindketten hasonló minőségű ábrákat generálnak. Ezzel szemben a PSO algoritmus teljesítményét abszolút negatívan befolyásolja, ha további csúcsokat adunk a problémához.
+Úgy tűnik, hogy a a probléma ezen paraméterének megváltoztatása nagyban eltérően hat az egyes algoritmusokra. Míg az élalapú GA invariánsnak tűnik a csúcsszámra, addig a csúcsalapú GA esetében lassabb konvergenciához vezet, de végül mindketten hasonló minőségű ábrákat generálnak. Ezzel szemben a PSO teljesítményét abszolút negatívan befolyásolja, ha további csúcsokat adunk a problémához.
 
 \begin{figure}[H]
 	\centering
@@ -1006,38 +1006,87 @@ Ebben az esetben a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a 
 	\caption{Élszám hatása a megoldáspopuláció költségfüggvényének szórására}
 \end{figure}
 
-\subsubsection{Csúcs- és élszám növelése}
+\subsubsection{Csúcs- és élszám együttes növelése}
 
 Mivel az előző két mérés során a csúcsszám és az élszám növelésével eltérő módszerek kerültek ki győztesként, ezért felmerül a kérdés, hogy mi történik, mikor mindkettőt egyszerre növeljük. Ehhez a korábbi mérések kombinációjával előálló $H_{25,8,20}$, $H_{50,16,10}$ és $H_{100,32,5}$ hipergráfokat használom fel.
 
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{50,16,10}$]{
+		\includegraphics[width=0.30\linewidth]{50-16-10-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{100,32,5}$]{
+		\includegraphics[width=0.30\linewidth]{100-32-5-cost}}
+	\caption{Csúcs- és élszám együttes szám hatása a költségfüggvényre}
+\end{figure}
+
+Jól látható, hogy ekkor minden módszer teljesítménye romlik, azonban, míg a két GA hasonló ütemben konvergálni látszik, a PSO az optimalizáció elején megakad ennél a komplexitásnál.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost-mean}}
+	\hspace{5pt}
+	\subfigure[$H_{50,16,10}$]{
+		\includegraphics[width=0.30\linewidth]{50-16-10-cost-mean}}
+	\hspace{5pt}
+	\subfigure[$H_{100,32,5}$]{
+		\includegraphics[width=0.30\linewidth]{100-32-5-cost-mean}}
+	\caption{Csúcs- és élszám együttes hatása a megoldáspopuláció költségfüggvényének átlagára}
+\end{figure}
+
+Az átlagértéket vizsgálva is azt állapíthatjuk meg, hogy a PSO a $H_{100,32,20}$ esetében már jóval elmarad a másik két módszer mögött. Érdekes összehasonlítani a GA módszereket a kizárólag éleket változtató kísérlettel; 50 csúcs esetén ugyanis jobban teljesítenek, de 100-nál már feltűnően rosszabbul. Kérdéses, hogy ez a komplexitás növekedése miatt van vagy a véletlen hipergráfok harmadik paramétere miatt. 
+
 \subsubsection{Sűrűség növelése}
 
-Eddig a véletlen hipergráfok minden paraméterét vizsgáltuk, kivéve az élek tartalmazási valószínűségét. Az alábbiakban 
+Eddig a véletlen hipergráfok minden paraméterét vizsgáltuk, kivéve az élek tartalmazási valószínűségét, amelyet a hipergráf sűrűségeként is értelmezhetünk. A következő kísérletben a $H_(25,8,20)$, $H_(25,8,40)$ és $H_(25,8,60)$ hipergráfokon keresztül ezek hatását láthatjuk.
 
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{25,8,40}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-40-cost}}
+	\hspace{5pt}
+	\subfigure[$H_{25,8,60}$]{
+		\includegraphics[width=0.30\linewidth]{25-8-60-cost}}
+	\caption{Sűrűség hatása a költségfüggvényre}
+\end{figure}
 
-\subsubsection{Összehasonlítás}
+Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a változtatása során, az élalapú GA teljesítményét láthatóan nagyban rontja. Elképzelhető, hogy ekkora sűrűségek mellett már negatív hatása van annak, hogy az új megoldások mindkét szülőtől fele-fele arányban öröklik a géneket.
 
-\subsection{Iterációk száma kontra megoldáspopuláció mérete}
+% TODO konklúzió : öröklődés fele-fele arányban az élGA-nél
+
+\subsection{Algoritmusok hatékony paraméterezésére}
+
+% TODO grid search a paramétereken
+
+\subsubsection{Iterációk száma kontra megoldáspopuláció mérete}
 
 
 \subsection{Előnyös inicializálási módszerek}
-
-
-\subsection{Hatékony paraméterezés}
 
 
 \subsection{Alternatív heurisztikák}
 % TODO rigid / property is!!!!
 % TODO szemantikai helyesség!!!!
 
+% azok a heurisztikák, amik egy célhoz közelítve csökkenek, kívül kéne legyene a koundaryken
 
-\subsection{Változó költségfüggvény}
+\subsection{Dinamikus költségfüggvény}
 
 
 \subsection{Megoldások átvitele}
 
 
 \subsection{Hipergráf konvolúciós hálózat}
+
+
+\subsection{Futásidők}
 
 
 % különböző méretű problémák (élek, csúcsok, mindkettő változtatása, élméretek)
@@ -1050,6 +1099,9 @@ Eddig a véletlen hipergráfok minden paraméterét vizsgáltuk, kivéve az éle
 % nem kirajzolható hipergráf
 % evaluator paraméterezés
 % mean & std a többi megoldásra az optimizer populációjában (mennyire stabil a tanulás, csak véletlen, vagy minden növekszik?)
+
+\chapter{Összefoglalás}
+
 
 \cleardoublepage
 \chapter{Konklúzió}
