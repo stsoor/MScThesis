@@ -638,13 +638,6 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 \STATE $k = \sqrt{width*height/|V|}$
 \STATE $t = \sqrt{width^2+height^2}$ \COMMENT{lehetséges maximum (a cikkben nem definiált)}
 
-% \algstore{fruchterman}
-% \end{algorithmic}
-% \end{algorithm}
-
-% \begin{algorithm}[H]
-% \begin{algorithmic}[1]
-% \algrestore{fruchterman}
 
 \FOR{$i=1 \ldots iterations$}
 	\FOR{$v \in V$} \COMMENT{taszítóerők kiszámítása}
@@ -664,6 +657,15 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 		\STATE $v.disp = v.disp - (\Delta/|\Delta|*|\Delta|^2/k)$
 		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
 	\ENDFOR
+	
+\algstore{fruchterman}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{fruchterman}
+	
 	\FOR{$v \in V$}
 		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
 		\STATE $v.pos.x = min(width/2), max(-width/2, v.pos.x)$ \COMMENT{nem engedjük túlfutni a kép szélén}
