@@ -686,16 +686,17 @@ Mivel a szuperduális exponenciális méretű az eredeti hipergráfhoz képest, 
 \end{note}
 %Az előző módszerhez hasonló megfontolásból egy fizikai szimulációkon alapuló módszert is bevezettem.
 
-\subsubsection{Hipergráf konvolúciós inicializálás}
-
-A HGCN módszernek megvan az az előnye, hogy tetszőleges - adott méretű - hipergráfon működik, azonban továbbra is csak egyetlen elrendezést rendel hozzájuk, az inicializáláshoz szükséges variácókat nem szolgáltatja. Ez a probléma természetesen fennáll, ha a tanítás során mindössze egyetlen modellt (neurális hálót) optimalizálunk (például SGD esetén), illetve akkor is, ha csak a betanított neurális hálót tartjuk meg. Mivel én genetikus algoritmust használok a tanítási folyamatra, ezért annak a végén a populáció számával megegyező számú különböző modellel is rendelkezésre áll. Ezeket elmentve és felhasználva - a populáció méretéig - a variációs kritériumot is tudjuk teljesíteni, így inicializációs módszerként is tud működni.
+%\subsubsection{Hipergráf konvolúciós inicializálás}
+%
+%A HGCN módszernek megvan az az előnye, hogy tetszőleges - adott méretű - hipergráfon működik, azonban továbbra is csak egyetlen elrendezést rendel hozzájuk, az inicializáláshoz szükséges variácókat nem szolgáltatja. Ez a probléma természetesen fennáll, ha a tanítás során mindössze egyetlen modellt (neurális hálót) optimalizálunk (például SGD esetén), illetve akkor is, ha csak a betanított neurális hálót tartjuk meg. Mivel én genetikus algoritmust használok a tanítási folyamatra, ezért annak a végén a populáció számával megegyező számú különböző modell is rendelkezésre áll. Ezeket elmentve, és felhasználva -- a populáció méretéig -- a variációs kritériumot is tudjuk teljesíteni, így -- egyszeri -- inicializációs módszerként is tud működni.
+%
 
 \subsubsection{Súlyozott inicializálás}
 
 Mikor több, mint egy megoldást inicializálunk - azaz esetünkben mindig -, akkor megtehetjük, hogy az új elemek felét az egyik, felét egy másik inicializálási módszerrel definiáljuk. Ezt a módszert általánosíthatjuk tetszőleges számú inicializációs módszerre (amelyek esetleg csak a paraméterezésükben térnek el), illetve fele-fele bontás helyett tetszőleges súlyozásra is.
 
 
-\subsubsection{Távolságértékek statisztikai inicializálása}
+\subsubsection{Távolságértékek statisztikai inicializálása} \label{initialization_d}
 
 Minden korábbi módszer esetén a csúcsok pozicionálására koncentráltunk, a $d$ értékek háttérbe szorultak. Ezt ellensúlyozandó az egyes módszerek során lehetőség van ezeket különböző módokon számítani. A fönt bevezetett véletlenszerű módszeren kívül - a csúcsok koordinátáinak beállítása után - minden adott $v$ csúcs $d$ értékét beállíthatjuk a legközelebbi, legtávolabbi vagy átlagos szomszéd távolsága alapján, ahol minden csúcsot szomszédnak tekintünk, amellyel $v$ közös hiperélben szerepel.
 
@@ -1080,6 +1081,75 @@ Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a v�
 
 \subsection{Előnyös inicializálási módszerek}
 
+Optimalizációs algoritmusok során létrehozandó új megoldások generálására három különböző módszert vezettem be; az egyenletes eloszláson, éleken, illetve erőalapú gráfelrendezésen alapulót. Felmerül a kérdés, hogy melyik milyen gyors konvergenciához vezet, továbbá milyen költségfüggvény érhető el a használatukkal. Mint a \ref{initialization_d} alfejezetben említettem, a konkrét módszerek főként a csúcsonkénti $x$ és $y$ koordináták pozicionálására fókuszálnak, a $d$ értékek háttérbe szorulnak. Ennek ellensúlyozására a $d$ értékek meghatározása véletlenszerűen, de az adott csúcs élszomszédainak távolságstatisztikái alapján is meghatározhatók. Ezen kísérletek során végig a $H_{25,8,20}$-at használom.
+
+\subsubsection{Véletlenszerű $d$ értékek}
+
+Az előbbi esetben az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni, a 7.4-8.5 sávban. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során az elért optimumhoz közel kerülünk, azonban egyedül az élalapú GA tűnik képesnek fenntartható konvergenciára.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Véletlen inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-rand-none-cost}}
+	\hspace{5pt}
+	\subfigure[Élalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-edge-none-cost}}
+	\hspace{5pt}
+	\subfigure[Erőalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-spring-none-cost}}
+	\caption{Inicializálás véletlen $d$ értékekkel - költségfüggvények}
+\end{figure}
+
+Megerősíti a korábbi megfigyeléseket a megoldáspopuláció átlagainak vizsgálata is, amely során azt láthatjuk, hogy a PSO átlaga elmarad a többitől mind az élalapú, mind az erőalapú megoldás esetén, míg az utóbbinál egyedül az élalapú GA tud javítani a kezdeti értékén.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Véletlen inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-rand-none-cost-mean}}
+	\hspace{5pt}
+	\subfigure[Élalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-edge-none-cost-mean}}
+	\hspace{5pt}
+	\subfigure[Erőalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-spring-none-cost-mean}}
+	\caption{Inicializálás véletlen $d$ értékekkel - költségfüggvények átlaga}
+\end{figure}
+
+\subsubsection{Statisztikák a $d$ paraméteren}
+
+Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás élenként egy szegmenst használ (hiszen 8 halmazig minden hipergráf síkbarajzolható), így a maximum érték kiválasztása egyben a legjobb is kell legyen. Mivel ez több halmaz esetén nem feltétlenül igaz, ezért kérdéses, hogy a szegmensek kialakításához szükséges egyéb stratégiákat ellen tudják-e a súlyozni az egyes algoritmusok.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Véletlen inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-rand-min-cost}}
+	\hspace{5pt}
+	\subfigure[Élalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-edge-min-cost}}
+	\hspace{5pt}
+	\subfigure[Erőalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-spring-min-cost}}
+	\subfigure[Véletlen inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-rand-max-cost}}
+	\hspace{5pt}
+	\subfigure[Élalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-edge-max-cost}}
+	\hspace{5pt}
+	\subfigure[Erőalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-spring-max-cost}}
+	\subfigure[Véletlen inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-rand-mean-cost}}
+	\hspace{5pt}
+	\subfigure[Élalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-edge-mean-cost}}
+	\hspace{5pt}
+	\subfigure[Erőalapú inicializálás]{
+		\includegraphics[width=0.30\linewidth]{init-spring-mean-cost}}
+	\caption{Inicializálás min, max és átlagos $d$ értékekkel - költségfüggvények}
+\end{figure}
+
+
+\subsubsection{Hibrid inicializálási módszerek}
 
 \subsection{Alternatív heurisztikák}
 % TODO rigid / property is!!!!
