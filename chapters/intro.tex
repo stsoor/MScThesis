@@ -614,11 +614,11 @@ A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem 
 
 \subsection{Inicializációs módszerek} \label{initializationMethods}
 
-A bemutatott algoritmusok során többször előfordul, hogy új megengedett megoldásokat kell generáljunk. Tekintve, hogy ezeknek a minősége nagyban befolyásolja a futás során elérhetőkét, ezért különösen fontos kérdés, hogy kezdeti értékeket hogyan számítjuk ki. Ebből a célból a dolgozatban több módszert is vizsgálok a megoldások inicialiázására, melyeket ebben a fejezetben részletezek.
+A bemutatott algoritmusok során többször előfordul, hogy megengedett megoldásokat kell generáljunk. Tekintve, hogy ezeknek a minősége nagyban befolyásolja a futás során elérhetőkét, ezért különösen fontos kérdés, hogy kezdeti értékeket hogyan számítjuk ki. Ebből a célból a dolgozatban több módszert is vizsgálok a megoldások inicialiázására, melyeket ebben a fejezetben részletezek.
 
 \subsubsection{Egyenletes eloszlás alapú inicializálás}
 
-A legegyszerűbb - és az optimalizációs algoritmusok eredeti leírásában általában alkalmazott - módszer, hogy a modell minden dimenziójához megadunk egy alsó és felső értéket, majd az inicializálás soroán a kettő közötti egyenletes eloszlás szerint választunk új értéket. A mi esetünkben az $x$ és $y$ koordináták felső határát az alkalmazott képméret adja meg, míg a $d$ esetében akkor kapjuk a legnagyobb értelmes számot, ha a két átellenes csúcs távolságát nézzük, amely Pitagorasz-tétellel megkapható. Az alsó korlátok természetesen minden esetben nullával egyeznek meg.
+A legegyszerűbb -- és az optimalizációs algoritmusok eredeti leírásában általában alkalmazott -- módszer, hogy a modell minden dimenziójához megadunk egy alsó és felső értéket, majd az inicializálás során a kettő közötti egyenletes eloszlás szerint választunk új értéket. A mi esetünkben az $x$ és $y$ koordináták felső határát az alkalmazott képméret adja meg, míg a $d$ esetében akkor kapjuk a legnagyobb értelmes számot, ha a két átellenes csúcs távolságát nézzük, amely Pitagorasz-tétellel megkapható. Az alsó korlátok természetesen minden esetben nullával egyeznek meg.
 
 \subsubsection{Élenkénti inicializálás}
 
@@ -627,7 +627,7 @@ Ennek az inicializálási módszernek a során először az élek pozícióit ha
 
 \subsubsection{Erőalapú gráfelrendezés szerinti inicializás}
 
-Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \ref{adsDefinitions} fejezetben bevezetett bipartite incidence structure vagy szuperduális segítségével). A hiperélek klikkekre való cserélése első ránézésre ilyennek tűnhet, azonban figyeljük meg, hogy elveszik az az információ, hogy pontosan melyik hiperélből származik a két csúcs közötti él. Amennyiben továbbra is előző módszernél bevezetett megfontolásból indulunk ki (azaz a szomszédok valamiféle átlagolásával elérhető klasztereket szeretnénk), akkor azonban az így elvesző információ egyáltalán nem is szükséges. Tekintsük azt a fizikai szimulációt, amelyben a nem szomszédoscsúcsok taszítják, a szomszédosak pedig vonzzák egymást. Ekkor a rendszer egyensúlyi helyzetei felfoghatók a ilyen átlagolásként is. Az így leírt módszer pontosan a force-directed gráfkirajzolási módszerek (lásd \ref{graphLayout}) egy speciális esetét írja le. Az általam használt konkrét eljárás a Fruchterman-Reingold módszer\cite{graph_layout_fruchterman}, amelyet (a cikkből átemelve) alább láthatunk.
+Egy hipergráfot leírhatunk gráfszerű struktúrákkal is (pl. a \ref{adsDefinitions} fejezetben bevezetett bipartite incidence structure vagy szuperduális segítségével). A hiperélek klikkekre való cserélése első ránézésre ilyennek tűnhet, azonban figyeljük meg, hogy alkalmazásuk során elveszik az az információ, hogy pontosan melyik hiperélből származik a két csúcs közötti él a gráfban. Amennyiben továbbra is az előző módszernél bevezetett megfontolásból indulunk ki (azaz a szomszédok valamiféle átlagolásával elérhető klasztereket szeretnénk kialakítani), akkor azonban az így elvesző információ egyáltalán nem is szükséges. Tekintsük azt a fizikai szimulációt, amelyben a nem szomszédos csúcsok taszítják, a szomszédosak pedig vonzzák egymást. Ekkor a rendszer egyensúlyi helyzetei felfoghatók ilyen átlagolásként is. Az így leírt módszer pontosan a force-directed gráfkirajzolási módszer (lásd \ref{graphLayout}) egy speciális esetét írja le. Az általam használt konkrét eljárás a Fruchterman-Reingold módszer\cite{graph_layout_fruchterman}, amelyet (a cikkből átemelve) alább láthatunk.
 
 %TODO check page break
 
@@ -659,6 +659,12 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 		\STATE $u.disp = u.disp + (\Delta/|\Delta|*|\Delta|^2/k)$
 	\ENDFOR
 	
+	
+	\FOR{$v \in V$}
+		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
+		\STATE $v.pos.x = min(width/2), max(-width/2, v.pos.x)$ \COMMENT{nem engedjük túlfutni a kép szélén}
+		\STATE $v.pos.y = min(height/2), max(-height/2, v.pos.y)$
+	\ENDFOR
 \algstore{fruchterman}
 \end{algorithmic}
 \end{algorithm}
@@ -666,40 +672,35 @@ Egy hipergráfot leírhatunk leírhatunk gráfszerű struktúrákkal is (pl. a \
 \begin{algorithm}[H]
 \begin{algorithmic}[1]
 \algrestore{fruchterman}
-	
-	\FOR{$v \in V$}
-		\STATE $\Delta = v.pos + (v.disp/|v.disp|*min(v.disp,t))$ \COMMENT{$t$ szerint maximáljuk az elmozdulást}
-		\STATE $v.pos.x = min(width/2), max(-width/2, v.pos.x)$ \COMMENT{nem engedjük túlfutni a kép szélén}
-		\STATE $v.pos.y = min(height/2), max(-height/2, v.pos.y)$
-	\ENDFOR
 	\STATE $t = cool(t)$ \COMMENT{csökkentjük a maximális lehetséges elmozdulást}
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
 
-Az algoritmus során kezdetben egyenletes eloszlású véletlen $v.pos$ értékeket tételezünk fel.
+Az algoritmus során kezdetben egyenletes eloszlás szerinti véletlen $v.pos$ értékeket tételezünk fel.
 
 %A gráfalapú reprezentációnak megvan az az előnye, hogy léteznek már rá elrendező algoritmusok, melyeket a \ref{graphLayout} fejezetben tekintettem át.
 %A korábbiakkal szemben (amik vagy speciális szemantikát vezetnek be, vagy minden részhalmazt külön reprezentálnak) leírhatunk 
 
-\begin{note}
-Mivel a szuperduális exponenciális méretű az eredeti hipergráfhoz képest, ezért a használatát a teljes kutatás során kerültem.
-\end{note}
+% \begin{note}
+% Mivel a szuperduális exponenciális méretű az eredeti hipergráfhoz képest, ezért a használatát a teljes kutatás során kerültem.
+% \end{note}
+
 %Az előző módszerhez hasonló megfontolásból egy fizikai szimulációkon alapuló módszert is bevezettem.
 
 %\subsubsection{Hipergráf konvolúciós inicializálás}
 %
-%A HGCN módszernek megvan az az előnye, hogy tetszőleges - adott méretű - hipergráfon működik, azonban továbbra is csak egyetlen elrendezést rendel hozzájuk, az inicializáláshoz szükséges variácókat nem szolgáltatja. Ez a probléma természetesen fennáll, ha a tanítás során mindössze egyetlen modellt (neurális hálót) optimalizálunk (például SGD esetén), illetve akkor is, ha csak a betanított neurális hálót tartjuk meg. Mivel én genetikus algoritmust használok a tanítási folyamatra, ezért annak a végén a populáció számával megegyező számú különböző modell is rendelkezésre áll. Ezeket elmentve, és felhasználva -- a populáció méretéig -- a variációs kritériumot is tudjuk teljesíteni, így -- egyszeri -- inicializációs módszerként is tud működni.
+%A HGCN módszernek megvan az az előnye, hogy tetszőleges -- adott méretű -- hipergráfon működik, azonban továbbra is csak egyetlen elrendezést rendel hozzájuk, az inicializáláshoz szükséges variácókat nem szolgáltatja. Ez a probléma természetesen fennáll, ha a tanítás során mindössze egyetlen modellt (neurális hálót) optimalizálunk (például SGD esetén), illetve akkor is, ha csak a betanított neurális hálót tartjuk meg. Mivel én genetikus algoritmust használok a tanítási folyamatra, ezért annak a végén a populáció számával megegyező számú különböző modell is rendelkezésre áll. Ezeket elmentve, és felhasználva -- a populáció méretéig -- a variációs kritériumot is tudjuk teljesíteni, így -- egyszeri -- inicializációs módszerként is tud működni.
 %
 
 \subsubsection{Súlyozott inicializálás}
 
-Mikor több, mint egy megoldást inicializálunk - azaz esetünkben mindig -, akkor megtehetjük, hogy az új elemek felét az egyik, felét egy másik inicializálási módszerrel definiáljuk. Ezt a módszert általánosíthatjuk tetszőleges számú inicializációs módszerre (amelyek esetleg csak a paraméterezésükben térnek el), illetve fele-fele bontás helyett tetszőleges súlyozásra is.
+Mikor több, mint egy megoldást inicializálunk, akkor megtehetjük, hogy az új elemek felét az egyik, felét egy másik inicializálási módszerrel definiáljuk. Ezt a módszert általánosíthatjuk tetszőleges számú inicializációs módszerre (amelyek esetleg csak a paraméterezésükben térnek el), illetve fele-fele bontás helyett tetszőleges súlyozásra is.
 
 
 \subsubsection{Távolságértékek statisztikai inicializálása} \label{initialization_d}
 
-Minden korábbi módszer esetén a csúcsok pozicionálására koncentráltunk, a $d$ értékek háttérbe szorultak. Ezt ellensúlyozandó az egyes módszerek során lehetőség van ezeket különböző módokon számítani. A fönt bevezetett véletlenszerű módszeren kívül - a csúcsok koordinátáinak beállítása után - minden adott $v$ csúcs $d$ értékét beállíthatjuk a legközelebbi, legtávolabbi vagy átlagos szomszéd távolsága alapján, ahol minden csúcsot szomszédnak tekintünk, amellyel $v$ közös hiperélben szerepel.
+Minden korábbi módszer esetén a csúcsok pozicionálására koncentráltunk, a $d$ értékek háttérbe szorultak. Ezt ellensúlyozandó az egyes módszerek során lehetőség van ezeket különböző módokon számítani. A fönt bevezetett véletlenszerű módszeren kívül -- a csúcsok koordinátáinak beállítása után -- minden adott $v$ csúcs $d$ értékét beállíthatjuk a legközelebbi, legtávolabbi vagy átlagos szomszéd távolsága alapján, ahol minden csúcsot szomszédnak tekintünk, amellyel $v$ közös hiperélben szerepel.
 
 
 
