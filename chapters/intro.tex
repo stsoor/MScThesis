@@ -310,7 +310,7 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \t
 \begin{algorithm}[H]
 \caption{Genetikus algoritmus}
 \label{alg:ga} 
-\textbf{\underline{Function}} GA($populationSize, parentNumber, mutationRate$)
+\textbf{\underline{Function}} GA($populationSize, selectionRate, mutationRate$)
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
 \STATE $t = 0$
 \STATE $population_t$ = generateFeasibleSolutions($populationSize$)
@@ -324,7 +324,7 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \t
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
 \algrestore{ga}
 \WHILE{megállási feltétel nem teljesült}
-	\STATE $parents$ = selectFitnessProportionally($population_t, values, parentNumber$)
+	\STATE $parents$ = selectFitnessProportionally($population_t, values, selectionRate$)
 	\STATE $children$ = recombine($parents$)
 	\STATE $population_t$ = deleteLast($population_t, values, |children|$)
 	\STATE $population_{t+1} = population_t \cup children$
@@ -547,26 +547,27 @@ Az első algoritmus során van a legegyszerűbb dolgunk, mivel az eredeti -- a \
 
 \subsubsection{Genetikus algoritmus}
 
-Emlékezhetünk a \ref{optimization} fejezetből, hogy a GA pszeudokódja (lásd \ref{alg:ga}. pszeudokód) nem teljeskörűen kidolgozott. Bár az egyes lépések - mint szelekció, kereszteződés és mutáció -, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól - amennyiben egy csúcs $x$ és $y$ koordinátáját nincs értelme külön kezelni -, ezért én olyan módon határoztam meg az algoritmus szóban forgó lépéseit, amik ezt a tulajdonságot figyelembe veszik. Mint látni fogjuk a \ref{heuristics} fejezetben, a költségfüggvényt alkotó heurisztikák direkt úgy lettek kialakítva, hogy - amelyik esetében ez lehetséges - hiperélenként számítják a költséget, amelyek aggregációjaként számítjuk a globális költségfüggvényt. Ez a számítási mód lehetővé teszi, hogy a GA során akár tetszőleges értékeket, akár hipercsúcsokat vagy hiperéleket tekintsünk a legkisebb értelmes egységnek, amelyet örökölni lehetséges. Ennek megfelelően három különböző GA variánst hoztam létre, melyeket rendre naív GA, csúcsalapú GA és élalapú GA névvel fogok illetni.
+Emlékezhetünk a \ref{optimization} fejezetből, hogy a GA leírása (lásd \ref{alg:ga}. pszeudokód) nem teljeskörűen kidolgozott. Bár az egyes lépések -- mint szelekció, kereszteződés és mutáció --, meghatározhatók általánosan is, de gyakran inkább problémaspecifikus definíciót alkalmazunk. Mivel a modellben az egyes gének nem függetlenek egymástól -- amennyiben egy csúcs $x$ és $y$ koordinátáját nincs értelme külön kezelni --, ezért én olyan módon határoztam meg az algoritmus szóban forgó lépéseit, amik ezt a tulajdonságot figyelembe veszik. Mint látni fogjuk a \ref{heuristics} fejezetben, a költségfüggvényt alkotó heurisztikák direkt úgy lettek kialakítva, hogy -- amelyik esetében ez lehetséges -- hiperélenként számítják a költséget, melyek aggregációjaként áll elő a globális költségfüggvény. Ez a számítási mód lehetővé teszi, hogy a GA során akár tetszőleges értékeket, akár hipercsúcsokat vagy hiperéleket tekintsünk a legkisebb értelmes egységnek, amelyet örökölni lehetséges. Ennek megfelelően három különböző GA variánst hoztam létre, melyeket rendre naív GA, csúcsalapú GA és élalapú GA névvel fogok illetni.
 
-%\begin{note}
-%Bár a genetikus algoritmus hagyományosan maximalizálási feladatként van megfogalmazva, én - a többi algoritmussal való kompatibilitás érdekében - minimalizációra használtam. Ahogy korábban láttuk, bármelyik visszavezethető a másikra.
-%\end{note}
+% \begin{note}
+% Bár a genetikus algoritmus hagyományosan maximalizálási feladatként van megfogalmazva, én -- a többi algoritmussal való kompatibilitás érdekében -- minimalizációként használtam. Ahogy korábban láttuk, bármelyik visszavezethető a másikra.
+% \end{note}
 
-A születést/halált modellező szelekciós függvényt és a szülők kiválasztását (melyek az erdeti leírásban együttesen $selectFitnessProportionally$ néven, $population,fitnessValues,parentNumber$ paraméterekkel szerepeltek) két lépésre bontottam.
+A születést/halált modellező szelekciós függvényt és a szülők kiválasztását (melyek az erdeti leírásban együttesen $selectFitnessProportionally$ néven, $population,fitnessValues,selectionRate$ paraméterekkel szerepeltek) két lépésre bontottam.
 
-%Először az utolsó kiértékelés szerinti $parentNumber$ db. legrosszabb értékkel bíró egyedet lecseréljük teljesen újakra, melyeknek kiszámítjuk a fitness értékeit is. Ezután a frissítés után a legjobb $parentNumber$ db. egyedet kiválasztjuk a következő iterációban való megőrzésre.
+%Először az utolsó kiértékelés szerinti $selectionRate$ db. legrosszabb értékkel bíró egyedet lecseréljük teljesen újakra, melyeknek kiszámítjuk a fitness értékeit is. Ezután a frissítés után a legjobb $selectionRate$ db. egyedet kiválasztjuk a következő iterációban való megőrzésre.
 
 \begin{algorithm}[H]
 \caption{Szelekció}
 \label{alg:selection} 
-\textbf{\underline{Function}} selection($population,fitnessValues,parentNumber$)
+\textbf{\underline{Function}} selection($population,fitnessValues,selectionRate$)
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-\STATE $worstIndividuals =$ $parentNumber$ db. legrosszabb értékkel bíró egyed \COMMENT{lecseréljük új egyedekre}
+\STATE $selectionSize =$ $|population|*selectionRate$
+\STATE $worstIndividuals =$ $selectionSize$ db. legrosszabb értékkel bíró egyed  \COMMENT{(lecseréljük új egyedekre)}
 \STATE $population = population \setminus worstIndividuals$
-\STATE $population = population \cup generateFeasibleSolutions($parentNumber$)$
+\STATE $population = population \cup generateFeasibleSolutions($selectionSize$)$
 \STATE $fitnessValues$ = evaluateFitness($population$)
-\STATE $bestIndividuals =$ $parentNumber$ db. legjobb értékkel bíró egyed \COMMENT{kiválasztjuk a következő iterációban való megőrzésre}
+\STATE $bestIndividuals =$ $selectionSize$ db. legjobb értékkel bíró egyed \COMMENT{(kiválasztjuk a következő iterációban való megőrzésre)}
 \STATE \textbf{return} $bestIndividuals$
 \end{algorithmic}
 \end{algorithm}
@@ -574,10 +575,10 @@ A születést/halált modellező szelekciós függvényt és a szülők kiválas
 \begin{algorithm}[H]
 \caption{Szülők kiválasztása}
 \label{alg:selectParents} 
-\textbf{\underline{Function}} selectParents($population,fitnessValues,parentNumber$)
+\textbf{\underline{Function}} selectParents($population,fitnessValues,selectionRate$)
 \begin{algorithmic}[1]
 \STATE $fitnessImpliedProbabilities = (fitnessValues - min(fitnessValues)) / sum(fitnessValues)$
-\FOR{$i=1 \ldots parentNumber$}
+\FOR{$i=1 \ldots |population|*selectionRate$}
 	\STATE $parentIndices = fitnessImpliedProbabilities$ alapú eloszlásból visszatevés nélkül kettő minta vétele
 	\STATE $parentsRow = population[parentIndices]$
 	\STATE $parents_i = parentsRow$
@@ -586,13 +587,13 @@ A születést/halált modellező szelekciós függvényt és a szülők kiválas
 \end{algorithmic}
 \end{algorithm}
 
-A $recombine$ (máshol gyakran $crossover$ névvel illetett) függvény a kiválasztott szülőket kapja meg paraméterként, és kombinálja a génállományukat. Az itt tárgyaltak közül ez a legfontosabb függvény, mivel ez különbözteti meg a három variáns működését. A naív GA esetében nem is részletezem pszeudokódban a működést, mivel a leszármazottak összeállítása mindössze annyiból áll, hogy egyenletes eloszlás szerint kiválasztjuk a gének felét, melyeket az első szülő génállományából másolunk le, a többit pedig a másodikéból. Csúcsalapú GA-nél mindössze annyiban térünk el ettől, hogy az $x,y$ és $d$ értékeket közösen tekintjük egy génnek, így ezek mindig együttesen öröklődnek egy szülőtől (továbbra is fele-fele arányban).
+A $recombine$ (máshol gyakran $crossover$ névvel illetett) függvény a kiválasztott szülőket kapja meg paraméterként, és kombinálja a génállományukat. Az itt tárgyaltak közül ez a legfontosabb függvény, mivel ez különbözteti meg a három variáns működését. A naív GA esetében a leszármazottak összeállítása mindössze annyiból áll, hogy egyenletes eloszlás szerint kiválasztjuk a gének felét, melyeket az első szülő génállományából másolunk le, a többit pedig a másodikéból. Csúcsalapú GA-nél annyiban térünk el ettől, hogy az $x,y$ és $d$ értékeket közösen tekintjük egy génnek, így ezek mindig együttesen öröklődnek egy szülőtől (továbbra is fele-fele arányban).
 
 
-Élalapú GA esetében természetesen az egyes egyedkhez nem elég egyetlen fitness értéket nyilvántartani, hanem a - ahol értelmezett úgy - minden egyed minden élére szükséges azt tárolni. Az élalapú megoldás esetén a $recombine$ függvénynek ezek az élalapú fitness értékek is bemenetei, melyeket az $edgewiseFitness \in \mathcal{R}^{|population| \times |E|}$ változó tartalmának tekintünk ($H=(V,E)$ esetén), illetve megkapja a hipergráf incidencia mátrixát is. A szóban forgó eljárás során továbbra is egy $x,y,d$ hármast tekintünk génnek, így ezek csak együtt örökölhetők, azonban egy gén szülőjének kiválasztása a korábbiaktól eltérő módon történik. Az egyes csúcsokhoz mindkét szülő esetén külön-külön meghatározzuk, hogy az adott csúcsot tartalmazó éleknek mennyi az átlagos fitness értéke. Az öröklődés során kiválasztjuk azokat a géneket (azaz csúcsonkénti $x,y,d$ értékhármasokat), amelyeknek ez az átlagolt értéke nagyobb az első szülőben. A kiválasztást úgy módosítjuk, hogy mindig fele-fele arányban örököljünk a két szülőből. Ehhez a két átlagolt érték különbségét vesszük, és azokkal bővítjük/csökkentjük az első szülőből átvett értékeket, amelyek a legkisebb eltérést mutatják. Így elveszíthetjük a legjobb értékek öröklését, azonban csak akkor, ha a másik szülő többi génjében nagyobb lenne a fitness értékben beállt veszteség.
+Élalapú GA esetében természetesen az egyes egyedkhez nem elég egyetlen fitness értéket nyilvántartani, hanem minden egyed minden élére szükséges azt tárolni. Az élalapú megoldás esetén a $recombine$ függvénynek ezek az élalapú fitness értékek is bemenetei, melyeket az $edgewiseFitness \in \mathcal{R}^{|population| \times |E|}$ változó tartalmának tekintünk ($H=(V,E)$ esetén), továbbá a függvény megkapja a hipergráf incidencia mátrixát is. A szóban forgó eljárás során továbbra is egy $x,y,d$ hármast tekintünk génnek, így ezek csak együtt örökölhetők, azonban egy gén szülőjének kiválasztása a korábbiaktól eltérő módon történik. Az egyes csúcsokhoz mindkét szülő esetén külön-külön meghatározzuk, hogy az adott csúcsot tartalmazó éleknek mennyi az átlagos fitness értéke. Az öröklődés során kiválasztjuk azokat a géneket (azaz csúcsonkénti $x,y,d$ értékhármasokat), amelyeknek ez az átlagolt értéke nagyobb az egyik rögzített (mondjuk első) szülőben. A kiválasztást úgy módosítjuk, hogy mindig fele-fele arányban örököljünk a két szülőből. Ehhez a két átlagolt fitness érték különbségét vesszük, és azokkal bővítjük/csökkentjük a kiválasztott szülőből átvett értékeket, amelyek a legkisebb eltérést mutatják. Így elveszíthetjük a legjobb értékek öröklését, azonban csak akkor, ha a másik szülő többi génjében nagyobb lenne a fitness értékben beállt veszteség.
 
 
-A mutációt az új populáción alkalmazott normális eloszlású zajjal modellezzük, amelynek az átlaga nulla, a felső értéke a $mutationRate$ változó. Az én megoldásomban továbbá bevezetek egy $mutationPct$ változót is, amely azt írja le, hogy az összes paraméter mekkora részére alkalmazzuk a mutációt (a többit változatlanul hagyjuk).
+A mutációt az új populáción alkalmazott normális eloszlású zajjal modellezzük, amelynek az átlaga nulla, a felső értéke a $mutationRate$ változó. Az én megoldásomban továbbá bevezetek egy $mutationPct$ változót is, amely azt írja le, hogy az egyes paraméterekre milyen valószínűséggel alkalmazzuk a mutációt.
 
 
 % TODO futásidő, memóriaigény ?
@@ -601,13 +602,13 @@ A mutációt az új populáción alkalmazott normális eloszlású zajjal modell
 
 \subsubsection{Hipergráf konvolúciós hálózat}
 
-A neurális hálózaton alapuló megoldás esetében fontos felismernünk, hogy nem egy direkt optimalizációs megoldásról beszélünk. Függvényapproximációs módszerként itt nem egyetlen hipergráf legjobb elrendezését szeretnénk megkapni, hanem hipergráfok egy egész - azonos csúcs- és élszámú - családját szeretnénk leképezni (problémapéldányonként) különböző megoldásokra. Ez  sajnos (nagyságrendekkel) lassabb tanulási idővel jár, és elkerülhetetlen a vizsgálandó hipergráfok köréből minél több legenerálása, amely alapján a hálózat betanítható. A hátrányok mellett a módszer természetesen előnyökkel is rendelkezik; a modellt elég egyszer betanítani, onnantól közvetlenül alkalmazható tetszőleges hipergráf Laplace-mátrixára.
+A neurális hálózaton alapuló megoldás esetében fontos felismernünk, hogy nem egy direkt optimalizációs megoldásról beszélünk. Függvényapproximációs módszerként itt nem egyetlen hipergráf legjobb elrendezését szeretnénk megkapni, hanem hipergráfok egy egész -- azonos csúcs- és élszámú -- családját szeretnénk leképezni (problémapéldányonként) különböző megoldásokra. Ez  sajnos (nagyságrendekkel) lassabb tanulási idővel jár, és elkerülhetetlen a vizsgálandó hipergráfok köréből minél több legenerálása, amely alapján a hálózat betanítható. A hátrányok mellett a módszer természetesen előnyökkel is rendelkezik; a modellt elég egyszer betanítani, onnantól közvetlenül alkalmazható tetszőleges hipergráf Laplace-mátrixára.
 
 
 A korábbiakban már bevezettük mind a hipergráf Laplaciant (\ref{hypergraphLaplacian} fejezet), mind a gráf konvolúciós neurális hálózatokat (\ref{GCNN} fejezet). Ahogy láttuk, több módszer is definiált hipergráf konvolúciós hálózatokra létrehozására. A kísérleteim során egy egyszerű variánst választottam ezek közül, amely megegyezik a GCN számításával, azonban a Laplace-mátrixot lecseréljük a hipergráf Laplacianjára. A módszer nem csak intuíción alapuló kísérlet, Yadatiék cikkében\cite{hgcn} a FastHyperGCN nagy hasonlóságot mutat vele, mindössze én nem alkalmazok mediátorokat (máshogy súlyozom a Laplacian éleit).
 
 
-A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem várjuk el, hogy deriválható legyen, így a naív GA eljárást választottam a neurális háló betanítására. Mivel a gráf és hipergráf konvolúciós hálózatokkal foglalkozó cikkek jellemzően kettő rétegű architektúrát alkalmaznak\cite{base_gcnn, hgcn}, ezért én sem fogok mély hálózatokkal kísérletezni. Az egyes rétegekhez relu ($f(x)=max(0,x)$), sigmoid ($f(x)=e^x/(e^x+1)$) vagy softmax ($f_i(x)=e^x/\sum_{i=1}^{n}(e^x)$) aktiválási használok (ahol emlékezzünk, hogy az aktiválási függvény minden neuron kimeneti értékére külön-külön számítódik), azzal a kikötéssel, hogy az utolsó réteg nem lehet relu (mivel nem szorítaná az értékeket 0 és 1 közé). Neurális hálók tanítása során kevésbé látható át, hogy az egyes paraméterek hogyan befolyásolják a végeredményt, azonban közismert, hogy a paraméterek nagyságrendjének mövekedése negatívan befolyásolja a hálózat tanulásának sebességét\cite{nn_regularization}. Ebből az okból kifolyólag a paramétereket kis értékekkel ($mean=0,\sigma^2\in(0,1], \theta = (mean,var)$ paraméterű normális eloszlással) inicializálom, ami után a hálózat sekélysége biztosítja, hogy relu esetén se kapjunk nagy értékeket (ezért regularizációt nem alkalmaztam).
+A tanítás természetesen nem SGD alapú, hiszen a költségfüggvénytől nem várjuk el, hogy deriválható legyen, így a naív GA eljárást választottam a neurális háló betanítására. Mivel a gráf és hipergráf konvolúciós hálózatokkal foglalkozó cikkek jellemzően kettő rétegű architektúrát alkalmaznak\cite{base_gcnn, hgcn}, ezért én sem fogok mély hálózatokkal kísérletezni. Az egyes rétegekhez relu ($f(x)=max(0,x)$), sigmoid ($f(x)=e^x/(e^x+1)$) vagy softmax ($f_i(x)=e^x/\sum_{i=1}^{n}(e^x)$) aktiválási függvényt használok (ahol emlékezzünk, hogy az aktiválási függvény minden neuron kimeneti értékére külön-külön számítódik), azzal a kikötéssel, hogy az utolsó réteg nem lehet relu (mivel nem szorítaná az értékeket egy előre meghatározható, korlátos intervallumba). Neurális hálók tanítása során kevésbé látható át, hogy az egyes paraméterek hogyan befolyásolják a végeredményt, azonban közismert, hogy a paraméterek nagyságrendjének növekedése negatívan befolyásolja a hálózat tanulásának sebességét\cite{nn_regularization}. Ebből az okból kifolyólag a paramétereket kis értékekkel ($mean=0,\sigma^2\in(0,1], \theta = (mean,var)$ paraméterű normális eloszlással) inicializálom, ami után a hálózat sekélysége biztosítja, hogy relu esetén se kapjunk nagy értékeket (ezért közvetlen regularizációt nem alkalmaztam).
 
 % TODO GA variánsok (alg)
 
