@@ -308,7 +308,7 @@ Egy ilyen, természet ihlette algoritmus, a természetes szelekción alapuló \t
 %Az algoritmus pszeudokódja alább látható, azonban nem térünk ki minden részletére.
 
 \begin{algorithm}[H]
-\caption{Genetikus algoritmus}
+\caption{Genetikus algoritmus (saját szerkesztés)}
 \label{alg:ga} 
 \textbf{\underline{Function}} GA($populationSize, selectionRate, mutationRate$)
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
@@ -346,43 +346,41 @@ A \textbf{particle swarm optimization} (PSO) egy másik biológiailag inspirált
 %TODO check final page break
 
 \begin{algorithm}[H]
-\caption{Particle swarm initialization}
-\label{alg:pso_init} 
-\textbf{\underline{Function}} InitializePSO($S, lowerBounds, upperBounds$)
+\caption{Particle swarm optimization (Clerc alapján\cite{pso_alg})}
+\label{alg:pso} 
+\textbf{\underline{Function}} InitializePSO($S, lowerBounds, upperBounds, f$)
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-\STATE $bestPosition_{global} = \infty$
+\STATE $bestPosition_{global} = \emptyset$
+\STATE $bestValue = \infty$
+\STATE $bestValues[S] =$ empty array
 \FOR{$i=1 \ldots S$}
 	\STATE $bestPosition_i = particlePosition_i \sim U(lowerBounds, upperBounds)$
+	\STATE $bestValues_i = f(bestPosition_i)$
 	\STATE $velocityRange = |upperBounds-lowerBounds|$
 	\STATE $velocity_i \sim U(-velocityRange, velocityRange)$
-	\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
+	\IF{$bestValues_i < bestValue$}
 		\STATE $bestPosition_{global} = bestPosition_i$
+		\STATE $bestValue = bestValues_i$
 	\ENDIF
 \ENDFOR
-\STATE \textbf{return} $bestPosition_{global}, particlePosition_{1 \ldots S}, bestPosition_{1 \ldots S}, velocity_{1 \ldots S}$
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\caption{Particle swarm optimization}
-\label{alg:pso} 
-\textbf{\underline{Function}} PSO($S, w, c_1, c_2, lowerBounds, upperBounds$)
-\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-\STATE $bestPosition_{global}, particlePosition_{1 \ldots S}, bestPosition_{1 \ldots S}, velocity_{1 \ldots S} = InitializePSO(S, lowerBounds, upperBounds)$
 \WHILE{megállási feltétel nem teljesült}
 	\FOR{$i=1 \ldots S$}
 		\STATE $random_1, random_2 \sim U([0,1]^{dim(lowerBounds)})$
 		\STATE $velocity_i = w*velocity_i + c_1*random_1*(bestPosition_i-particlePosition_i) + c_2*random_2*(bestPosition_{global}-particlePosition_i)$
 		\STATE $particlePosition_i = particlePosition_i + velocity_i$ \COMMENT{néha $\ldots + \alpha * velocity_i$}
-		\IF{$f(particlePosition_i) < f(bestPosition_i)$}
+		\STATE $particleValue = f(particlePosition_i)$
+		
+		\IF{$particleValue < bestValues_i$}
 			\STATE $bestPosition_i = particlePosition_i$
-			\IF{$f(bestPosition_i) < f(bestPosition_{global})$}
+			\STATE $bestValues_i = particleValue$
+			\IF{$bestValues_i < bestValue$}
 				\STATE $bestPosition_{global} = bestPosition_i$
+				\STATE $bestValue = bestValues_i$
 			\ENDIF
 		\ENDIF
 	\ENDFOR
 \ENDWHILE
-\STATE \textbf{return} $f(bestPosition_{global}), bestPosition_{global}$
+\STATE \textbf{return} $bestValue, bestPosition_{global}$
 \end{algorithmic}
 \end{algorithm}
 
@@ -558,7 +556,7 @@ A születést/halált modellező szelekciós függvényt és a szülők kiválas
 %Először az utolsó kiértékelés szerinti $selectionRate$ db. legrosszabb értékkel bíró egyedet lecseréljük teljesen újakra, melyeknek kiszámítjuk a fitness értékeit is. Ezután a frissítés után a legjobb $selectionRate$ db. egyedet kiválasztjuk a következő iterációban való megőrzésre.
 
 \begin{algorithm}[H]
-\caption{Szelekció}
+\caption{Szelekció (saját szerkesztés)}
 \label{alg:selection} 
 \textbf{\underline{Function}} selection($population,fitnessValues,selectionRate$)
 \begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
@@ -573,7 +571,7 @@ A születést/halált modellező szelekciós függvényt és a szülők kiválas
 \end{algorithm}
 
 \begin{algorithm}[H]
-\caption{Szülők kiválasztása}
+\caption{Szülők kiválasztása (saját szerkesztés)}
 \label{alg:selectParents} 
 \textbf{\underline{Function}} selectParents($population,fitnessValues,selectionRate$)
 \begin{algorithmic}[1]
@@ -632,7 +630,7 @@ Egy hipergráfot leírhatunk gráfszerű struktúrákkal is (pl. a \ref{adsDefin
 %TODO check page break
 
 \begin{algorithm}[H]
-\caption{Fruchterman-Reingold}
+\caption{Fruchterman-Reingold (Fruchterman alapján\cite{graph_layout_fruchterman})}
 \label{alg:fruchterman} 
 \textbf{\underline{Function}} layout($Canvas=(width, height), G=(V,E), iterations$)
 \begin{algorithmic}[1]
