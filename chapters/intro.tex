@@ -1085,7 +1085,7 @@ Optimalizációs algoritmusok során létrehozandó új megoldások generálás�
 
 \subsubsection{Véletlenszerű $d$ értékek}
 
-Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni, a 7.4-8.5 sávban. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során az elért optimumhoz közel kerülünk, azonban ekkor egyedül az élalapú GA tűnik képesnek fenntartható konvergenciára.
+Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során az elért optimumhoz közel kerülünk, azonban ekkor egyedül az élalapú GA tűnik képesnek fenntartható konvergenciára.
 
 \begin{figure}[H]
 	\centering
@@ -1097,7 +1097,7 @@ Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető m
 	\hspace{5pt}
 	\subfigure[Erőalapú inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-spring-none-cost}}
-	\caption{Inicializálás véletlen $d$ értékekkel - költségfüggvények}
+	\caption{Inicializálás véletlen $d$ értékekkel - költségfüggvény}
 \end{figure}
 
 Megerősíti a korábbi megfigyeléseket a megoldáspopuláció átlagainak vizsgálata is, amely során azt láthatjuk, hogy a PSO átlaga elmarad a többitől mind az élalapú, mind az erőalapú megoldás esetén, míg az utóbbinál egyedül az élalapú GA tud javítani a kezdeti értékén.
@@ -1117,7 +1117,7 @@ Megerősíti a korábbi megfigyeléseket a megoldáspopuláció átlagainak vizs
 
 \subsubsection{Statisztikák a $d$ paraméteren}
 
-Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás élenként egy szegmenst használ (hiszen 8 halmazig minden hipergráf síkbarajzolható), így a maximum érték kiválasztása egyben a legjobb is kell legyen. Mivel ez több halmaz esetén nem feltétlenül igaz, ezért kérdéses, hogy a nagyobb számú szegmens kialakításához szükséges egyéb stratégiákat ellen tudják-e a súlyozni az egyes algoritmusok.
+Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás élenként egy szegmenst használ (hiszen 8 halmazig minden hipergráf síkbarajzolható), így a maximum érték kiválasztása egyben a legjobb is kell legyen. Mivel ez több halmaz esetén nem feltétlenül igaz, ezért kérdéses, hogy a nagyobb számú szegmens kialakításához szükséges egyéb stratégiákat ellen tudják-e a súlyozni az optimalizációs módszerek.
 
 \begin{figure}[H]
 	\centering
@@ -1145,11 +1145,66 @@ Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás �
 	\hspace{5pt}
 	\subfigure[Erőalapú inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-spring-mean-cost}}
-	\caption{Inicializálás, rendre min, max és átlagos $d$ értékekkel - költségfüggvények}
+	\caption{Inicializálás, rendre min, max és átlagos $d$ értékekkel - költségfüggvény}
 \end{figure}
+
+Az eredmények alapján ekkora hipergráfnál minden esetben körülbelül azonos eredményt érnek el az algoritmusok a minimum statisztika kivételével. Ezutóbbi nem befolyásolja a PSO hatásfokát azonban a két GA-ét nagyban rontja. Véletlenszerű inicializálás esetén a PSO eredménye is romlani látszik (6 körüli költségfüggvény helyett 11-et ér el), azonban a szegmensek számának vizsgálatával megállapíthatjuk, hogy ez az inicializálási módszertől függetlenül történt (hiszen az továbbra is az elérhető minimum).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.30\linewidth]{init-segment-nums}
+	\caption{Szegmensek száma véletlenszerű, élalapú és erőalapú inicializálás esetén, min statisztikával}
+\end{figure}
+
+Természetesen tudjuk, hogy a szegmensek számának közvetlen hatása van a költségfüggvényre, azonban a mérések szerint ezt az algoritmusok nem is tudják ellensúlyozni; a kiugróan rosszul teljesítő megoldások (azaz a minimum statisztikák segítségével inicializált GA-k) egyben az egyedüliek, amelyek több, mint 8 szegmenst használnak a végső elrendezés során.
 
 
 \subsubsection{Hibrid inicializálási módszerek}
+
+Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$ értékek mellett vizsgálom, hogy kevert inicializálási megoldások jobban teljesítenek-e, mint a kizárólagosak. Ebben a kísérletben két különböző inicializációs megközelítés fele-fele arányban generálja az új megoldásokat.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Véletlen - élalapú]{
+		\includegraphics[width=0.30\linewidth]{init-rand-edge-cost}}
+	\hspace{5pt}
+	\subfigure[Véletlen - erőalapú]{
+		\includegraphics[width=0.30\linewidth]{init-rand-spring-cost}}
+	\hspace{5pt}
+	\subfigure[Élalapú - erőalapú]{
+		\includegraphics[width=0.30\linewidth]{init-edge-spring-cost}}
+	\caption{Inicializálás kevert módszerekkel - költségfüggvény}
+\end{figure}
+
+Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel rögtön látszik, hogy -- még az ott elért legjobb eredményekhez képest is -- az összes kevert módszer jobban teljesít valamivel. Az eredeti módszerek 7.25-8.5 intervallumban mozgó értékeihez képest minden most vizsgált 6.7 alatt tud maradni, a legjobb a 6.18-as költségfüggvényt is eléri. Bár nagy különbségek nincsenek, úgy látszik, hogy az erőalapú módszereket magukban foglaló megközelítések a leghatékonyabbak. Nincsenek komoly eltérések az optimalizációs algoritmusok között sem, azonban az erőalapú módszerek esetén hatékony élalapú GA végeredményben szintúgy jobban teljesít egy hajszállal, míg a költségfüggvények átlagában már feltűnő az előnye.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Véletlen - élalapú]{
+		\includegraphics[width=0.30\linewidth]{init-rand-edge-cost-mean}}
+	\hspace{5pt}
+	\subfigure[Véletlen - erőalapú]{
+		\includegraphics[width=0.30\linewidth]{init-rand-spring-cost-mean}}
+	\hspace{5pt}
+	\subfigure[Élalapú - erőalapú]{
+		\includegraphics[width=0.30\linewidth]{init-edge-spring-cost-mean}}
+	\caption{Inicializálás kevert módszerekkel - költségfüggvények átlaga}
+\end{figure}
+
+Érdemes megfigyelni, hogy a kevert véletlenszerű-élalapú inicializáció esetén érte el -- a kísérleteim során először -- a PSO a teljes konvergenciát a 200 iterációs lépése alatt. (Ez talán nem látszik annyira a költségfüggvényből -- bár az is ellaposodik --, de a részecskék költségfüggvényeinek szórása már meggyőzhet minket róla.)
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Véletlen - élalapú]{
+		\includegraphics[width=0.30\linewidth]{init-rand-edge-cost-std}}
+	\hspace{5pt}
+	\subfigure[Véletlen - erőalapú]{
+		\includegraphics[width=0.30\linewidth]{init-rand-spring-cost-std}}
+	\hspace{5pt}
+	\subfigure[Élalapú - erőalapú]{
+		\includegraphics[width=0.30\linewidth]{init-edge-spring-cost-std}}
+	\caption{Inicializálás kevert módszerekkel - költségfüggvények szórása}
+\end{figure}
 
 \subsection{Alternatív heurisztikák}
 % TODO rigid / property is!!!!
