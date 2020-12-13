@@ -913,7 +913,7 @@ Az ábrán megjelenő jó néhány tulajdonság konkrétan számszerűsíthető 
 		\hline
 \end{longtable}
 
-Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok esetében, és 200-at a PSO-éban, amely futásidő alapján körülbelül kétszer olyan gyorsnak bizonyult. Diagramok esetén - az összehasonlíthatóság érdekében - az utóbbinak csak minden második értékét ábrázolom.
+Méretfüggetlenül 100 iterációs lépést végzek a genetikus algoritmusok esetében, és 200-at a PSO-éban, amely futásidő alapján körülbelül kétszer olyan gyorsnak bizonyult. Diagramok esetén -- az összehasonlíthatóság érdekében -- az utóbbinak csak minden második értékét ábrázolom.
 
 \subsubsection{Csúcsám növelése}
 %\begin{longtable}{| p{0.25\textwidth} | p{0.15\textwidth} | p{0.40\textwidth} |}
@@ -970,7 +970,7 @@ A csúcsszám változtatásának hatását az algoritmusokra a $H_{25,8,20}$, $H
 	\label{fig:node_size_cost_std}
 \end{figure}
 
-Nem meglepő a korábbiak alapján, hogy az optimalizáció során átlagosan a kettő GA algoritmus megoldáspopulációja hasonlóan jó eredményt ér el, míg a PSO-ról ez már nem mondható el. A szórást vizsgálva azt mondhatjuk el, hogy a PSO során kapott költségfüggvények jóval nagyobb kilengéseket mutatnak, de a csúcsalapú GA is kevésbé stabil, mint az élalapú.
+Nem meglepő a korábbiak alapján, hogy az optimalizáció során átlagosan a kettő GA algoritmus megoldáspopulációja hasonlóan jó eredményt ér el, míg a PSO-ról ez már nem mondható el. A szórást vizsgálva azt figyelhetjük meg, hogy a PSO során kapott költségfüggvények jóval nagyobb kilengéseket mutatnak, de a csúcsalapú GA is kevésbé stabil, mint az élalapú.
 
 \subsubsection{Élszám növelése}
 
@@ -989,7 +989,7 @@ Nem meglepő a korábbiak alapján, hogy az optimalizáció során átlagosan a 
 	\caption{Élszám hatása a költségfüggvényre}
 \end{figure}
 
-Ebben az esetben a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a PSO-t érinti legkevésbé az élszám növelése, az élalapú GA-t pedig a legnagyobb mértékben. Érdemes megemlíteni, hogy míg a csúcsszám változtatásával az elérhető költségfüggvény nagyságrendje nem változott, ez már nem áll meg az élszám esetén, ahol még a a legjobban eredményt adó módszer teljesítménye is észrevehetően romlik. Meglepő módon átlagosan nem a PSO operál a minimális költségfüggvényű (és szórású) populációval, hanem a csúcsalapú GA.
+Ebben az esetben a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a PSO-t érinti legkevésbé az élszám növelése, az élalapú GA-t pedig a legnagyobb mértékben. Érdemes megemlíteni, hogy míg a csúcsszám változtatásával az elérhető költségfüggvény nagyságrendje nem változott, ez már nem áll meg az élszám esetén, ahol még a legjobb eredményt adó módszer teljesítménye is észrevehetően romlik. Meglepő módon átlagosan nem a PSO operál a minimális költségfüggvényű (és szórású) populációval, hanem a csúcsalapú GA.
 
 \begin{figure}[H]
 	\centering
@@ -1019,7 +1019,7 @@ Ebben az esetben a csúcsszámokkal pont ellentétes konklúzióra juthatunk, a 
 
 \subsubsection{Csúcs- és élszám együttes növelése}
 
-Mivel az előző két mérés során a csúcsszám és az élszám növelésével eltérő módszerek kerültek ki győztesként, ezért felmerül a kérdés, hogy mi történik, mikor mindkettőt egyszerre növeljük. Ehhez a korábbi mérések kombinációjával előálló $H_{25,8,20}$, $H_{50,16,10}$ és $H_{100,32,5}$ hipergráfokat használom fel.
+Mivel az előző két mérés során -- a csúcsszám és az élszám növelésével -- eltérő módszerek kerültek ki győztesként, ezért felmerül a kérdés, hogy mi történik, mikor mindkettőt egyszerre növeljük. Ehhez a korábbi mérések kombinációjával előálló $H_{25,8,20}$, $H_{50,16,10}$ és $H_{100,32,5}$ hipergráfokat használom fel.
 
 \begin{figure}[H]
 	\centering
@@ -1049,11 +1049,11 @@ Jól látható, hogy ekkor minden módszer teljesítménye romlik, azonban, míg
 	\caption{Csúcs- és élszám együttes hatása a megoldáspopuláció költségfüggvényének átlagára}
 \end{figure}
 
-Az átlagértéket vizsgálva is azt állapíthatjuk meg, hogy a PSO a $H_{100,32,20}$ esetében már jóval elmarad a másik két módszer mögött. Érdekes összehasonlítani a GA módszereket a kizárólag éleket változtató kísérlettel; 50 csúcs esetén ugyanis jobban teljesítenek, de 100-nál már feltűnően rosszabbul. Kérdéses, hogy ez a komplexitás növekedése miatt van vagy a véletlen hipergráfok harmadik paramétere miatt. 
+Az átlagértéket vizsgálva is azt állapíthatjuk meg, hogy a PSO a $H_{100,32,20}$ esetében már jóval elmarad a másik két módszer mögött. Érdekes összehasonlítani a GA módszereket a kizárólag éleket változtató kísérlettel; 50 csúcs esetén ugyanis hasonlóan teljesítenek, mint 25-nél, de a legnagyobb példán már feltűnően rosszabbul. Kérdéses, hogy ez a komplexitás növekedése miatt van vagy a véletlen hipergráfok harmadik paramétere miatt. 
 
 \subsubsection{Sűrűség növelése}
 
-Eddig a véletlen hipergráfok minden paraméterét vizsgáltuk, kivéve az élek tartalmazási valószínűségét, amelyet a hipergráf sűrűségeként is értelmezhetünk. A következő kísérletben a $H_(25,8,20)$, $H_(25,8,40)$ és $H_(25,8,60)$ hipergráfokon keresztül ezek hatását láthatjuk.
+Eddig a véletlen hipergráfok minden paraméterét vizsgáltuk, kivéve az élek tartalmazási valószínűségét, amelyet a hipergráf sűrűségeként is értelmezhetünk. A következő kísérletben a $H_{25,8,20}$, $H_{25,8,40}$ és $H_{25,8,60}$ hipergráfokon keresztül ezek hatását láthatjuk.
 
 \begin{figure}[H]
 	\centering
