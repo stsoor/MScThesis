@@ -1081,11 +1081,11 @@ Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a v�
 
 \subsection{Előnyös inicializálási módszerek}
 
-Optimalizációs algoritmusok során létrehozandó új megoldások generálására három különböző módszert vezettem be; az egyenletes eloszláson, éleken, illetve erőalapú gráfelrendezésen alapulót. Felmerül a kérdés, hogy melyik milyen gyors konvergenciához vezet, továbbá milyen költségfüggvény érhető el a használatukkal. Mint a \ref{initialization_d} alfejezetben említettem, a konkrét módszerek főként a csúcsonkénti $x$ és $y$ koordináták pozicionálására fókuszálnak, a $d$ értékek háttérbe szorulnak. Ennek ellensúlyozására a $d$ értékek meghatározása véletlenszerűen, de az adott csúcs élszomszédainak távolságstatisztikái alapján is meghatározhatók. Ezen kísérletek során végig a $H_{25,8,20}$-at használom.
+Optimalizációs algoritmusok során létrehozandó új megoldások generálására három különböző módszert vezettem be; az egyenletes eloszláson, éleken, illetve erőalapú gráfelrendezésen alapulót. Felmerül a kérdés, hogy melyik milyen gyors konvergenciához vezet, továbbá milyen költségfüggvény érhető el a használatukkal. Mint a \ref{initialization_d} alfejezetben említettem, a konkrét módszerek főként a csúcsonkénti $x$ és $y$ koordináták pozicionálására fókuszálnak, a $d$ értékek háttérbe szorulnak. Ennek ellensúlyozására a $d$ értékek meghatározása véletlenszerűen, de az adott csúcs élszomszédainak távolságstatisztikái alapján is meghatározhatók. A különböző módszereket a $H_{25,8,20}$-on nyújtott teljesítményük alapján elemzem.
 
 \subsubsection{Véletlenszerű $d$ értékek}
 
-Az előbbi esetben az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni, a 7.4-8.5 sávban. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során az elért optimumhoz közel kerülünk, azonban egyedül az élalapú GA tűnik képesnek fenntartható konvergenciára.
+Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni, a 7.4-8.5 sávban. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során az elért optimumhoz közel kerülünk, azonban ekkor egyedül az élalapú GA tűnik képesnek fenntartható konvergenciára.
 
 \begin{figure}[H]
 	\centering
@@ -1117,7 +1117,7 @@ Megerősíti a korábbi megfigyeléseket a megoldáspopuláció átlagainak vizs
 
 \subsubsection{Statisztikák a $d$ paraméteren}
 
-Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás élenként egy szegmenst használ (hiszen 8 halmazig minden hipergráf síkbarajzolható), így a maximum érték kiválasztása egyben a legjobb is kell legyen. Mivel ez több halmaz esetén nem feltétlenül igaz, ezért kérdéses, hogy a szegmensek kialakításához szükséges egyéb stratégiákat ellen tudják-e a súlyozni az egyes algoritmusok.
+Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás élenként egy szegmenst használ (hiszen 8 halmazig minden hipergráf síkbarajzolható), így a maximum érték kiválasztása egyben a legjobb is kell legyen. Mivel ez több halmaz esetén nem feltétlenül igaz, ezért kérdéses, hogy a nagyobb számú szegmens kialakításához szükséges egyéb stratégiákat ellen tudják-e a súlyozni az egyes algoritmusok.
 
 \begin{figure}[H]
 	\centering
@@ -1145,7 +1145,7 @@ Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás �
 	\hspace{5pt}
 	\subfigure[Erőalapú inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-spring-mean-cost}}
-	\caption{Inicializálás min, max és átlagos $d$ értékekkel - költségfüggvények}
+	\caption{Inicializálás, rendre min, max és átlagos $d$ értékekkel - költségfüggvények}
 \end{figure}
 
 
@@ -1160,7 +1160,7 @@ Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás �
 \subsection{Dinamikus költségfüggvény}
 
 
-\subsection{Megoldások átvitele}
+% \subsection{Megoldások átvitele}
 
 
 \subsection{Hipergráf konvolúciós hálózat}
