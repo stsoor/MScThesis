@@ -859,7 +859,7 @@ Mivel a hipergráf konvolúciós hálózat egészen más természetű módszer, 
 
 
 Ahol nem jelölöm külön, ott az alábbi súlyokat használom az egyes heurisztikákhoz:
-\newline
+%\newpage
 
 \begin{longtable}{| p{0.45\textwidth} | p{0.25\textwidth} |}
 		\hline
@@ -1077,13 +1077,44 @@ Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a v�
 Az optimalizációs algoritmusok számára legmegfelelőbb hiperparamétereket $H_{25,8,20}$-on futtatott kereséssel igyekeztem kijelölni.
 
 
-Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind a túl nagy (50, de egy esetben már 10) $mutationrate$, mind a magas (0.4-es) $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban $0.2-es selectionRate$ mellett gyorsabban konvergál. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
+Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind az 50-es $mutationRate$ érték, mind a 0.4-es $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban $0.2-es selectionRate$ mellett gyorsabban konvergál. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
 
 
 Hasonlóan jártam el a PSO esetében is, ahol minden hiperparaméter a $\{0.1,0.5,1,2\}$ értékeket vehette fel. A kapott eredmények még szorosabbak lettek, mint a genetikus algoritmus esetében, jellemzően a $[6.35,8.7]$ intervallum alján elhelyezkedő eredményekkel. Az egyetlen egyértelmű negatív hatást az fejtette ki, mikor a $c_1$ paraméter legalább 0.9-cel nagyobb volt a $w$ paraméternél, ami nem meglepő tekintve, hogy az utóbbi paraméter határozza meg, hogy a részecskék mennyire preferálják az korábban látott globális optimum pozíciójának közelítését.
 
 \subsubsection{Iterációk száma kontra megoldáspopuláció mérete}
 
+Feltehető, hogy az optimalizációs algoritmus legköltségesebb lépése a költségfüggvény kiértékelése. Amennyiben az iterációk és a megoldáspopuláció méretének szorzatát konstans értéken tartjuk, akkor kiértékelések száma nem változik, azonban elképzelhető, hogy valamely érték növelése előnyösebb a konvergencia szempontjából. Az alábbiakban $H_{25,8,20}$-on, 10000 kiértékelés mellett vizsgálom, hogy érdemes-e valamely paramétert előnyben részesíteni.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Populáció: 10, iteráció: 1000]{
+		\includegraphics[width=0.30\linewidth]{iter-1000-10-cost}}
+	\hspace{5pt}
+	\subfigure[Populáció: 100, iteráció: 100]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost}}
+	\hspace{5pt}
+	\subfigure[Populáció: 1000, iteráció: 10]{
+		\includegraphics[width=0.30\linewidth]{iter-10-1000-cost}}
+	\caption{Költségfüggvény azonos számú kiértékelés mellett}
+\end{figure}
+
+Alacsony iterációs szám mellett egyedül a csúcsalapú GA nem ért el hasonlóan jó eredményt, az -- eredetileg alkalmazott -- 100-100 bontású futtatásához, azonban a költségfüggvények átlagai minden algoritmus esetében jóval elmaradtak attól. A skála másik szélén, 1000 iteráció mellett a PSO teljesen elbukott, amennyiben a futásának az elején konvergált egy adott -- nem túl jó -- ponthoz. A másik két algoritmus jobban teljesített, azonban az átlagok itt sem meggyőzőek, elég nagy ugrásokkal operálnak.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Populáció: 10, iteráció: 1000]{
+		\includegraphics[width=0.30\linewidth]{iter-1000-10-cost-mean}}
+	\hspace{5pt}
+	\subfigure[Populáció: 100, iteráció: 100]{
+		\includegraphics[width=0.30\linewidth]{25-8-20-cost-mean}}
+	\hspace{5pt}
+	\subfigure[Populáció: 1000, iteráció: 10]{
+		\includegraphics[width=0.30\linewidth]{iter-10-1000-cost-mean}}
+	\caption{Költségfüggvények átlaga azonos számú kiértékelés mellett}
+\end{figure}
+
+Összességében levonható az a következtetés, hogy az iterációs számot érdemes a populációval arányosnak megtartani.
 
 \subsection{Előnyös inicializálási módszerek}
 
@@ -1143,10 +1174,10 @@ Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás �
 	\hspace{5pt}
 	\subfigure[Erőalapú inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-spring-max-cost}}
-\end{figure}
-\begin{figure}[H]
-	\ContinuedFloat
-	\centering
+% \end{figure}
+% \begin{figure}[H]
+	% \ContinuedFloat
+	% \centering
 	\subfigure[Véletlen inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-rand-mean-cost}}
 	\hspace{5pt}
@@ -1220,22 +1251,28 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 
 \subsubsection{Tulajdonságok, mint mérőszámok}
 
-%Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják annak hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjön ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
+Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják annak hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjön ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
 
 \begin{figure}[H]
 	\centering
-	\subfigure[költségfüggvény]{
+	\includegraphics[width=0.30\linewidth]{properties-orig-cost}
+	\caption{Végeredmény az eredeti költségfüggvényben}
+\end{figure}
+
+Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye romlik. Konvergencia tekintetében egyedül a PSO megoldáspopulációja látszik javulni, azonban az is olyan lassan, hogy a konvergencia nem megfigyelhető az optimumértékben.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Módosított költségfüggvény]{
 		\includegraphics[width=0.30\linewidth]{properties-cost}}
 	\hspace{5pt}
-	\subfigure[költségfüggvények átlaga]{
+	\subfigure[Módosított költségfüggvények átlaga]{
 		\includegraphics[width=0.30\linewidth]{properties-cost-mean}}
 	\hspace{5pt}
-	\subfigure[költségfüggvények szórása]{
+	\subfigure[Módosított költségfüggvények szórása]{
 		\includegraphics[width=0.30\linewidth]{properties-cost-std}}
 	\caption{Tulajdonság alapú heurisztikák}
 \end{figure}
-
-% Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye nagyságrendeket romlik a tulajdonság alapú heurisztikák használata mellett. Bár a PSO némileg jobban teljesít, mint a genetikus módszerek, a költségfüggvények átlagából rögtön látszik, hogy ez nem fenntartható konvergenciából fakad. Természetesen elképzelhető, hogy a magasabb költségfüggvény kerekítési hibából keletkezik, maga az eredmény valójából összehasonlítható, de 
 
 \subsubsection{Alternatív heurisztikák}
 
@@ -1276,7 +1313,7 @@ Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyo
 
 % azok a heurisztikák, amik egy célhoz közelítve csökkenek, kívül kéne legyene a koundaryken
 
-\subsection{Dinamikus költségfüggvény}
+%\subsection{Dinamikus költségfüggvény}
 
 
 % \subsection{Megoldások átvitele}
