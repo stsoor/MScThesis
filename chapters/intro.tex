@@ -1077,7 +1077,7 @@ Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a v�
 Az optimalizációs algoritmusok számára legmegfelelőbb hiperparamétereket $H_{25,8,20}$-on futtatott kereséssel igyekeztem kijelölni.
 
 
-Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind az 50-es $mutationRate$ érték, mind a 0.4-es $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban 0.2-es $selectionRate$ mellett gyorsabban konvergál. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
+Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind az 50-es $mutationRate$ érték, mind a 0.4-es $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban 0.2-es $selectionRate$ mellett gyorsabban csökken a költségfüggvénye. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
 
 
 Hasonlóan jártam el a PSO esetében is, ahol minden hiperparaméter a $\{0.1,0.5,1,2\}$ értékeket vehette fel. A kapott eredmények még szorosabbak lettek, mint a genetikus algoritmus esetében, jellemzően a $[6.35,8.7]$ intervallum alján elhelyezkedő eredményekkel. Az egyetlen egyértelmű negatív hatást az fejtette ki, mikor a $c_1$ paraméter legalább 0.9-cel nagyobb volt a $w$ paraméternél, ami nem meglepő tekintve, hogy az utóbbi paraméter határozza meg, hogy a részecskék mennyire preferálják az korábban látott globális optimum pozíciójának közelítését.
@@ -1122,7 +1122,7 @@ Optimalizációs algoritmusok során létrehozandó új megoldások generálás�
 
 \subsubsection{Véletlenszerű $d$ értékek}
 
-Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során közel kerülünk a futás során optimumhoz, azonban egyedül az élalapú GA tűnik képesnek további konvergenciára.
+Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során közel kerülünk a futás során optimumhoz, azonban egyedül az élalapú GA tűnik képesnek a költségfüggvény további csökkentésére.
 
 \begin{figure}[H]
 	\centering
@@ -1137,7 +1137,7 @@ Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető m
 	\caption{Inicializálás véletlen $d$ értékekkel - költségfüggvény}
 \end{figure}
 
-Megerősíti a korábbi megfigyeléseket a megoldáspopuláció átlagainak vizsgálata is, amely során azt láthatjuk, hogy a PSO átlaga elmarad a többitől mind az élalapú, mind az erőalapú megoldás esetén, míg az utóbbinál egyedül az élalapú GA tud javítani a kezdeti értékén.
+Megfigyelhető, hogy a PSO költségfüggvényeinek átlagos értéke kisebb ingadozást mutat a genetikus algoritmusoknál, az élalapú inicializáció esetében, azonban az erőalapú megoldás esetén messze elmarad tőlük. Érdekes, hogy az utóbbi esetén inkább a csúcsalapú GA átlagértékében látszik javulás, az optimum mégis inkább csak az élalapú genetikus algoritmusnál látszik monoton csökkenőnek.
 
 \begin{figure}[H]
 	\centering
@@ -1217,7 +1217,7 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 	\caption{Inicializálás kevert módszerekkel - költségfüggvény}
 \end{figure}
 
-Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel nem látszik, hogy a kevert módszerek különösebb előnnyel járnának. Kiemelendő tulajdonság azonban, hogy amennyiben az erőalapú módszert a véletlenszerűvel kombináljuk, akkor -- az élalapú GA-hez hasonlóan -- a PSO is képessé válik a kezdőértékeken túli konvergenciára.
+Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel nem látszik, hogy a kevert módszerek különösebb előnnyel járnának. Kiemelendő tulajdonság azonban, hogy amennyiben az erőalapú módszert a véletlenszerűvel kombináljuk, akkor -- az élalapú GA-hez hasonlóan -- a PSO is képessé válik a kezdőértékeken túl folytatni a költségfüggvény csökkentését.
 
 \begin{figure}[H]
 	\centering
@@ -1259,7 +1259,7 @@ Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél 
 	\caption{Végeredmény az eredeti költségfüggvényben}
 \end{figure}
 
-Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye romlik. Konvergencia tekintetében egyedül a PSO megoldáspopulációja látszik javulni, azonban az is olyan lassan, hogy a konvergencia nem megfigyelhető az optimumértékben.
+Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye romlik. Költségfüggvény tekintetében egyedül a PSO megoldáspopulációja látszik javulni, azonban az is olyan lassan, hogy a konvergencia nem megfigyelhető az optimumértékben.
 
 \begin{figure}[H]
 	\centering
@@ -1369,7 +1369,7 @@ Validációként betanítottam ugyanezt a relu alapú neurális hálót 100 frag
 
 Szintúgy megpróbáltam a hipergráf Laplacian teljes kiszámítása helyett (\ref{hypergraphLaplacian}) csak a harmadik lépésben látott $G_X$-et alkalmazni. Bár a tanítás hasonlóan eredményes volt, a nem látott mintán alkalmazva 8000 körüli költségfüggvényt kaptam.
 
-Az előző megfigyelésekből levezethető, hogy a HGCN igenis alkalmas (a tanítás során elért költségfüggvénnyel arányos minőségű) Euler-diagramok generálására nem látott példák esetén is, azonban kellő eszközpark hiányában jelenleg nem lehet megmondani, hogy a költséfüggvény mennyire szorítható le. Az is látszik, hogy a fragmentálatlansági tulajdonság szükséges a konvolúciós hálózat tanításához.
+Az előző megfigyelésekből levezethető, hogy a HGCN igenis alkalmas (a tanítás során elért költségfüggvénnyel arányos minőségű) Euler-diagramok generálására nem látott példák esetén is, azonban kellő eszközpark hiányában jelenleg nem lehet megmondani, hogy a költségfüggvény mennyire szorítható le. Az is látszik, hogy a fragmentálatlansági tulajdonság szükséges a konvolúciós hálózat tanításához.
 
 \subsection{Futásidők}
 
