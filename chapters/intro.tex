@@ -854,7 +854,7 @@ A gyakorlati alkalmazhatóság vizsgálatának céljából egy referenciaprogram
 Mielőtt áttekintjük az eredményeket, mindenképp szükséges pár szót ejtenem magáról a programról, illetve a kísérletekről is. Implementáció során -- a módszerek nagy száma, illetve a kutatómunka kiterjedtsége okán -- sajnos már nem jutott idő a futásidő extenzív optimalizációjára. Az egyes algoritmusok polinomidejű futásidejét nem veszítettem szem elől, azonban valószínűsíthető, hogy további fejlesztésekkel szignifikáns sebességnövekedés is elérhető lenne. Érdemes ezért észben tartani, hogy a látott futásidők nem feltétlenül reprezentatívak egymáshoz viszonyítva. Ennek ellenére úgy gondolom, hogy így is hasznos információt hordozhatnak a futásidő felső korlátjaként.
 
 
-A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és véletlenszerűen generált hipergráfot foglal magában. A generált hipergráf megadott csúcs- és élszámmal rendelkezik, illetve minden csúcs meghatározott valószínűséggel tartalmazott az egyes hiperélekben (azzal a kikötéssel, hogy minden hiperél tartalmaz legalább egy csúcsot). Ezeket a paramétereket minden kísérlet előtt megadom, továbbá egyazon kísérlet során pontosan ugyanazt a generált hipergráfot alkalmazom az összes módszer esetén. Egy olyan generált hipergráfot, amely $N$ csúccsal, $M$ hiperéllel és $C\%$ tartalmazási valószínűséggel bír, $H_{N,M,C}$ módon fogok jelölni. Szintúgy jelezni fogom, hogy melyik inicializációs módszert, illetve milyen paraméterezésű optimalizációs módszert használok. Ezek az információk a kísérletek előtti táblázatban lesznek feltüntetve. A további alfejezetkben az általam legfontosabbnak vélt aspektusokat vizsgálom, minden ilyen előtt egy rövid leírás a mérés tárgyáról, illetve céljáról.
+A mérések során a bemenet fixen $1080 \times 720$ pixel méretű ábrát és véletlenszerűen generált hipergráfot foglal magában. A generált hipergráf megadott csúcs- és élszámmal rendelkezik, illetve minden csúcs meghatározott valószínűséggel tartalmazott az egyes hiperélekben (azzal a kikötéssel, hogy minden hiperél tartalmaz legalább egy csúcsot). Ezeket a paramétereket minden kísérlet előtt megadom, továbbá egyazon kísérlet során pontosan ugyanazt a generált hipergráfot alkalmazom az összes módszer esetén. Egy olyan generált hipergráfot, amely $N$ csúccsal, $M$ hiperéllel és $C\%$ tartalmazási valószínűséggel bír, $H_{N,M,C}$ módon fogok jelölni. Szintúgy jelezni fogom, hogy melyik inicializációs módszert, illetve milyen paraméterezésű optimalizációs módszert használok. A további alfejezetkben az általam legfontosabbnak vélt aspektusokat vizsgálom, minden ilyen előtt egy rövid leírás a mérés tárgyáról, illetve céljáról.
 Mivel a hipergráf konvolúciós hálózat egészen más természetű módszer, mint a többi, ezért nem éreztem jól összehasonlíthatónak velük, így egy külön neki dedikált alfejezetben tárgyalom.
 
 
@@ -907,9 +907,9 @@ Az ábrán megjelenő jó néhány tulajdonság konkrétan számszerűsíthető 
 		\hline \hline
 		\hfil Egyenletes eloszlás & \hfil PSO & $S=100$, $w=c_1=c_2=0.5$\\
 		\hline
-		\vfil \hfil Egyenletes eloszlás & \vfil \hfil csúcsalapú GA & $S=100$,\newline$parentNum=S*0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$\\
+		\vfil \hfil Egyenletes eloszlás & \vfil \hfil csúcsalapú GA & $S=100$,\newline$selectionRate=0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$\\
 		\hline
-		\vfil \hfil Egyenletes eloszlás & \vfil \hfil élalapú GA & $S=100$,\newline$parentNum=S*0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$ \\
+		\vfil \hfil Egyenletes eloszlás & \vfil \hfil élalapú GA & $S=100$,\newline$selectionRate=0.2$,\newline$mutationPct=0.3$,\newline$mutationRate=3$ \\
 		\hline
 \end{longtable}
 
@@ -1074,7 +1074,13 @@ Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a v�
 
 \subsection{Algoritmusok hatékony paraméterezésére}
 
-% TODO grid search a paramétereken
+Az optimalizációs algoritmusok számára legmegfelelőbb hiperparamétereket $H_{25,8,20}$-on futtatott kereséssel igyekeztem kijelölni.
+
+
+Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind a túl nagy (50, de egy esetben már 10) $mutationrate$, mind a magas (0.4-es) $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban $0.2-es selectionRate$ mellett gyorsabban konvergál. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
+
+
+Hasonlóan jártam el a PSO esetében is, ahol minden hiperparaméter a $\{0.1,0.5,1,2\}$ értékeket vehette fel. A kapott eredmények még szorosabbak lettek, mint a genetikus algoritmus esetében, jellemzően a $[6.35,8.7]$ intervallum alján elhelyezkedő eredményekkel. Az egyetlen egyértelmű negatív hatást az fejtette ki, mikor a $c_1$ paraméter legalább 0.9-cel nagyobb volt a $w$ paraméternél, ami nem meglepő tekintve, hogy az utóbbi paraméter határozza meg, hogy a részecskék mennyire preferálják az korábban látott globális optimum pozíciójának közelítését.
 
 \subsubsection{Iterációk száma kontra megoldáspopuláció mérete}
 
@@ -1137,6 +1143,10 @@ Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás �
 	\hspace{5pt}
 	\subfigure[Erőalapú inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-spring-max-cost}}
+\end{figure}
+\begin{figure}[H]
+	\ContinuedFloat
+	\centering
 	\subfigure[Véletlen inicializálás]{
 		\includegraphics[width=0.30\linewidth]{init-rand-mean-cost}}
 	\hspace{5pt}
@@ -1206,7 +1216,61 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 	\caption{Inicializálás kevert módszerekkel - költségfüggvények szórása}
 \end{figure}
 
-\subsection{Alternatív heurisztikák}
+\subsection{Heurisztikák}
+
+\subsubsection{Tulajdonságok, mint mérőszámok}
+
+%Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják annak hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjön ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[költségfüggvény]{
+		\includegraphics[width=0.30\linewidth]{properties-cost}}
+	\hspace{5pt}
+	\subfigure[költségfüggvények átlaga]{
+		\includegraphics[width=0.30\linewidth]{properties-cost-mean}}
+	\hspace{5pt}
+	\subfigure[költségfüggvények szórása]{
+		\includegraphics[width=0.30\linewidth]{properties-cost-std}}
+	\caption{Tulajdonság alapú heurisztikák}
+\end{figure}
+
+% Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye nagyságrendeket romlik a tulajdonság alapú heurisztikák használata mellett. Bár a PSO némileg jobban teljesít, mint a genetikus módszerek, a költségfüggvények átlagából rögtön látszik, hogy ez nem fenntartható konvergenciából fakad. Természetesen elképzelhető, hogy a magasabb költségfüggvény kerekítési hibából keletkezik, maga az eredmény valójából összehasonlítható, de 
+
+\subsubsection{Alternatív heurisztikák}
+
+Másik kérdésként merült fel, hogy a -- rendkívül lassú -- élmetszeteket leszámláló heurisztikák lecserélhetők-e egy gyorsabb alternatívára. Helyettesítő módszerként egy olyan ajánlottam vizsgálni (legközelebbi szomszéd élszomszéd), amely a feltevésem szerint alkalmas lehet erre. Ebben a kísérletben a szegmensmetszetek számának és az invalid szegmensmetszetek számának súlyozását 0-ra állítottam, míg a legközelebbi szomszéd élszomszéd heurisztika súlyát 1000-re. Mivel az implementáció ezt nem teszi lehetővé, ezért itt nem közvetlenül a költségfüggvényeket hasonlítom össze, hanem a szegmensenkénti hamis pozitív csúcsok valós számát (nem a heurisztikáját) vetem össze az eredeti súlyozás esetén előállóval. Még egyszer fontosnak tartom kiemelni, hogy ez a mérőszám legfeljebb $(|V|-1)*|E|$ értéket tud felvenni. A vizsgálatot a $H_{25,8,20}$, $H_{25,16,20}$ és $H_{50,16,10}$ körében folytatom le.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Eredeti heurisztika]{
+		\includegraphics[width=0.30\linewidth]{alternative-miscontained-old}}
+	\hspace{5pt}
+	\subfigure[Alternatív heurisztika]{
+		\includegraphics[width=0.30\linewidth]{alternative-miscontained-new}}
+	\caption{Szegmensenkénti hibásan tartalmazott csúcsok száma}
+\end{figure}
+
+Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyors, de a vizsgált aspektusból még helyesebb megoldást is kaptunk. Az egymáshoz viszonyított költségfüggvények alapján a PSO valamivel rosszabbul teljesített, mint a másik két módszer, melyek egymáshoz hasonló eredményt adtak. Külön lefutattam az algoritmust egy nagyobb sűrűségű hipergráfra, $H_{50,16,40}$-re is, amely esetében azonban az élalapú GA teljesítménye nagyban elmaradt a csúcsalapúétól.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[$H_{25,8,20}$]{
+		\includegraphics[width=0.30\linewidth]{alter-25-8-20-cost}}
+	\hspace{10pt}
+	\subfigure[$H_{25,16,20}$]{
+		\includegraphics[width=0.30\linewidth]{alter-25-16-20-cost}}
+	\hspace{10pt}
+	\subfigure[$H_{50,16,10}$]{
+		\includegraphics[width=0.30\linewidth]{alter-50-16-10-cost}}
+	\hspace{10pt}
+	\subfigure[$H_{50,16,40}$]{
+		\includegraphics[width=0.30\linewidth]{alter-50-16-40-cost}}
+	\caption{Költségfüggvény alternatív heurisztika esetén}
+\end{figure}
+
+\subsubsection{Heurisztikák teljesítménye}
+
 % TODO rigid / property is!!!!
 % TODO szemantikai helyesség!!!!
 
