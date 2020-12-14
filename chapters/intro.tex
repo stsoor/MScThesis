@@ -1077,7 +1077,7 @@ Bár a csúcsalapú GA és a PSO hasonlóan teljesít ennek a paraméternek a v�
 Az optimalizációs algoritmusok számára legmegfelelőbb hiperparamétereket $H_{25,8,20}$-on futtatott kereséssel igyekeztem kijelölni.
 
 
-Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind az 50-es $mutationRate$ érték, mind a 0.4-es $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban $0.2-es selectionRate$ mellett gyorsabban konvergál. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
+Genetikus algoritmusok esetében a $selectionRate \in \{0.1,0.3,0.4\}$, $mutationPct \in \{0,0.3,0.6,1\}$ és $mutationRate \in \{3, 10, 50\}$ értékek mellett futtattam az algoritmusokat. A kombinációk nagy száma miatt itt nem közlöm az összes kapott költségfüggvényt, csak a levont következtetéseket. Az eredmények között nincs nagy különbség, mind a $[6.15,8.6]$ intervallumba esik, jellemzően ennek is az alsó-középső tartományába. Élalapú GA esetén mind az 50-es $mutationRate$ érték, mind a 0.4-es $selectionRate$ negatívan befolyásolja a teljesítményt. A csúcsalapú GA esetén nincsenek kiugróan negatív eredmények, azonban 0.2-es $selectionRate$ mellett gyorsabban konvergál. A legjobb eredményt, $6.16$-ot a $0.2,0.6,10$ paraméterezésű csúcsalapú GA adta, azonban a közeli eredmények miatt nem jelenthető ki, hogy tényleg kiemelkedő lenne.
 
 
 Hasonlóan jártam el a PSO esetében is, ahol minden hiperparaméter a $\{0.1,0.5,1,2\}$ értékeket vehette fel. A kapott eredmények még szorosabbak lettek, mint a genetikus algoritmus esetében, jellemzően a $[6.35,8.7]$ intervallum alján elhelyezkedő eredményekkel. Az egyetlen egyértelmű negatív hatást az fejtette ki, mikor a $c_1$ paraméter legalább 0.9-cel nagyobb volt a $w$ paraméternél, ami nem meglepő tekintve, hogy az utóbbi paraméter határozza meg, hogy a részecskék mennyire preferálják az korábban látott globális optimum pozíciójának közelítését.
@@ -1122,7 +1122,7 @@ Optimalizációs algoritmusok során létrehozandó új megoldások generálás�
 
 \subsubsection{Véletlenszerű $d$ értékek}
 
-Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során az elért optimumhoz közel kerülünk, azonban ekkor egyedül az élalapú GA tűnik képesnek fenntartható konvergenciára.
+Az első esetben, véletlenszerű $d$ értékek használatával az figyelhető meg, hogy a különböző módszerek végül mind hasonlóan jó költségfüggvényt képesek elérni. Az egyedüli kivételt a PSO/élalapú inicializálás képezi, amely egy nagyságrenddel elmarad ettől. Érdemes megfigyelni, hogy a konvergencia sokkal gyorsabb az erőalapú módszer esetén, ahol már az első iteráció során közel kerülünk a futás során optimumhoz, azonban egyedül az élalapú GA tűnik képesnek további konvergenciára.
 
 \begin{figure}[H]
 	\centering
@@ -1189,7 +1189,7 @@ Fontos kiemelni, hogy a vizsgált hipergráf esetén az optimális kirajzolás �
 	\caption{Inicializálás, rendre min, max és átlagos $d$ értékekkel - költségfüggvény}
 \end{figure}
 
-Az eredmények alapján ekkora hipergráfnál minden esetben körülbelül azonos eredményt érnek el az algoritmusok a minimum statisztika kivételével. Ezutóbbi nem befolyásolja a PSO hatásfokát azonban a két GA-ét nagyban rontja. Véletlenszerű inicializálás esetén a PSO eredménye is romlani látszik (6 körüli költségfüggvény helyett 11-et ér el), azonban a szegmensek számának vizsgálatával megállapíthatjuk, hogy ez az inicializálási módszertől függetlenül történt (hiszen az továbbra is az elérhető minimum).
+Az eredmények alapján ekkora hipergráfnál minden esetben körülbelül azonos eredményt érnek el az algoritmusok, a minimum statisztika kivételével. Ezutóbbi nem befolyásolja a PSO hatásfokát azonban a két GA-ét nagyban rontja. Véletlenszerű inicializálás esetén a PSO eredménye is romlani látszik (6 körüli költségfüggvény helyett 11-et ér el), azonban a szegmensek számának vizsgálatával megállapíthatjuk, hogy ez az inicializálási módszertől függetlenül történt (hiszen az továbbra is az elérhető minimum).
 
 \begin{figure}[H]
 	\centering
@@ -1217,7 +1217,7 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 	\caption{Inicializálás kevert módszerekkel - költségfüggvény}
 \end{figure}
 
-Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel rögtön látszik, hogy -- még az ott elért legjobb eredményekhez képest is -- az összes kevert módszer jobban teljesít valamivel. Az eredeti módszerek 7.25-8.5 intervallumban mozgó értékeihez képest minden most vizsgált 6.7 alatt tud maradni, a legjobb a 6.18-as költségfüggvényt is eléri. Bár nagy különbségek nincsenek, úgy látszik, hogy az erőalapú módszereket magukban foglaló megközelítések a leghatékonyabbak. Nincsenek komoly eltérések az optimalizációs algoritmusok között sem, azonban az erőalapú módszerek esetén hatékony élalapú GA végeredményben szintúgy jobban teljesít egy hajszállal, míg a költségfüggvények átlagában már feltűnő az előnye.
+Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel nem látszik, hogy a kevert módszerek különösebb előnnyel járnának. Kiemelendő tulajdonság azonban, hogy amennyiben az erőalapú módszert a véletlenszerűvel kombináljuk, akkor -- az élalapú GA-hez hasonlóan -- a PSO is képessé válik a kezdőértékeken túli konvergenciára.
 
 \begin{figure}[H]
 	\centering
@@ -1251,7 +1251,7 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 
 \subsubsection{Tulajdonságok, mint mérőszámok}
 
-Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják annak hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjön ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
+Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják az algoritmusok hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjön ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
 
 \begin{figure}[H]
 	\centering
@@ -1276,7 +1276,7 @@ Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algori
 
 \subsubsection{Alternatív heurisztikák}
 
-Másik kérdésként merült fel, hogy a -- rendkívül lassú -- élmetszeteket leszámláló heurisztikák lecserélhetők-e egy gyorsabb alternatívára. Helyettesítő módszerként egy olyan ajánlottam vizsgálni (legközelebbi szomszéd élszomszéd), amely a feltevésem szerint alkalmas lehet erre. Ebben a kísérletben a szegmensmetszetek számának és az invalid szegmensmetszetek számának súlyozását 0-ra állítottam, míg a legközelebbi szomszéd élszomszéd heurisztika súlyát 1000-re. Mivel az implementáció ezt nem teszi lehetővé, ezért itt nem közvetlenül a költségfüggvényeket hasonlítom össze, hanem a szegmensenkénti hamis pozitív csúcsok valós számát (nem a heurisztikáját) vetem össze az eredeti súlyozás esetén előállóval. Még egyszer fontosnak tartom kiemelni, hogy ez a mérőszám legfeljebb $(|V|-1)*|E|$ értéket tud felvenni. A vizsgálatot a $H_{25,8,20}$, $H_{25,16,20}$ és $H_{50,16,10}$ körében folytatom le.
+Másik kérdésként merült fel, hogy a -- rendkívül lassú -- élmetszeteket leszámláló heurisztikák lecserélhetők-e egy gyorsabb alternatívára. Helyettesítő módszerként egy olyan helyettesítőt ajánlottam vizsgálni (legközelebbi szomszéd élszomszéd), amely a feltevésem szerint alkalmas lehet erre. Ebben a kísérletben a szegmensmetszetek számának és az invalid szegmensmetszetek számának súlyozását 0-ra állítottam, míg a legközelebbi szomszéd élszomszéd heurisztika súlyát 1000-re. Mivel az implementáció ezt nem teszi lehetővé, ezért itt nem közvetlenül a költségfüggvényeket hasonlítom össze, hanem a szegmensenkénti hamis pozitív csúcsok valós számát (nem a heurisztikáját) vetem össze az eredeti súlyozás esetén előállóval. Még egyszer fontosnak tartom kiemelni, hogy ez a mérőszám legfeljebb $(|V|-1)*|E|$ értéket tud felvenni. A vizsgálatot a $H_{25,8,20}$, $H_{25,16,20}$ és $H_{50,16,10}$ körében folytatom le.
 
 \begin{figure}[H]
 	\centering
@@ -1308,6 +1308,19 @@ Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyo
 
 \subsubsection{Heurisztikák teljesítménye}
 
+Meglehetősen nehéz értékelni, hogy egy adott ábrázolás mennyire tér el esztétikai kritériumrendszerektől (például a well-formed követelményektől), azonban szemantikai szempontból ez a probléma nem áll fenn. Az alkalmazott heurisztikák természetesen csak akkor megfelelőek, ha alkalmasak a hipergráf helyes leképezésére. 
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Szegmensenkénti hamis pozitív tartalmazás]{
+		\includegraphics[width=0.30\linewidth]{false-positives}}
+	\hspace{5pt}
+	\subfigure[Invalid szegmensmetszetek száma]{
+		\includegraphics[width=0.30\linewidth]{invalid-intersections}}
+	\caption{Szemantikai hibák}
+\end{figure}
+
+
 % TODO rigid / property is!!!!
 % TODO szemantikai helyesség!!!!
 
@@ -1320,6 +1333,7 @@ Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyo
 
 
 \subsection{Hipergráf konvolúciós hálózat}
+
 
 
 \subsection{Futásidők}
@@ -1340,6 +1354,7 @@ Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyo
 
 \cleardoublepage
 \chapter{Konklúzió}
+
 
 % 11-ig - 60
 % 11-ig öf - 2-5
