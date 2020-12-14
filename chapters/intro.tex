@@ -1116,7 +1116,7 @@ Alacsony iterációs szám mellett egyedül a csúcsalapú GA nem ért el hasonl
 
 Összességében levonható az a következtetés, hogy az iterációs számot érdemes a populációval arányosnak megtartani.
 
-\subsection{Előnyös inicializálási módszerek}
+\subsection{Inicializálási módszerek}
 
 Optimalizációs algoritmusok során létrehozandó új megoldások generálására három különböző módszert vezettem be; az egyenletes eloszláson, éleken, illetve erőalapú gráfelrendezésen alapulót. Felmerül a kérdés, hogy melyik milyen gyors konvergenciához vezet, továbbá milyen költségfüggvény érhető el a használatukkal. Mint a \ref{initialization_d} alfejezetben említettem, a konkrét módszerek főként a csúcsonkénti $x$ és $y$ koordináták pozicionálására fókuszálnak, a $d$ értékek háttérbe szorulnak. Ennek ellensúlyozására a $d$ értékek meghatározása véletlenszerűen, de az adott csúcs élszomszédainak távolságstatisztikái alapján is meghatározhatók. A különböző módszereket a $H_{25,8,20}$-on nyújtott teljesítményük alapján elemzem.
 
@@ -1288,7 +1288,7 @@ Másik kérdésként merült fel, hogy a -- rendkívül lassú -- élmetszeteket
 	\caption{Szegmensenkénti hibásan tartalmazott csúcsok száma}
 \end{figure}
 
-Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyors, de a vizsgált aspektusból még helyesebb megoldást is kaptunk. Az egymáshoz viszonyított költségfüggvények alapján a PSO valamivel rosszabbul teljesített, mint a másik két módszer, melyek egymáshoz hasonló eredményt adtak. Külön lefutattam az algoritmust egy nagyobb sűrűségű hipergráfra, $H_{50,16,40}$-re is, amely esetében azonban az élalapú GA teljesítménye nagyban elmaradt a csúcsalapúétól.
+Meglepő módon nem csak a program futása lett nagyjából kétszer olyan gyors, de a vizsgált aspektusból még helyesebb megoldást is kaptunk. Az egymáshoz viszonyított költségfüggvények alapján a PSO valamivel rosszabbul teljesített, mint a másik két módszer, melyek egymáshoz hasonló eredményt adtak. Külön lefutattam az algoritmust egy nagyobb sűrűségű hipergráfra, $H_{50,16,40}$-re is, amely esetében azonban az élalapú GA teljesítménye nagyban elmaradt a csúcsalapúétól.
 
 \begin{figure}[H]
 	\centering
@@ -1305,6 +1305,10 @@ Meglepő módon nem csak a program futása lett nagyjából háromszor olyan gyo
 		\includegraphics[width=0.30\linewidth]{alter-50-16-40-cost}}
 	\caption{Költségfüggvény alternatív heurisztika esetén}
 \end{figure}
+
+\begin{note}
+Ugyan a hamis pozitív tartalmazások száma csökkent, azonban az invalid szegmensmetszetek száma feltehetőleg nőtt. A kettő heurisztika közös alkalmazásával azonban ezek száma egyszerre is minimimalizálható.
+\end{note}
 
 \subsubsection{Heurisztikák teljesítménye}
 
@@ -1348,7 +1352,7 @@ Mindkét esetben a $H_{25,8,20}$ egy-egy újabb példányára alkalmaztam a már
 
 \begin{longtable}{| p{0.40\textwidth} | p{0.25\textwidth} | p{0.25\textwidth} |}
 		\hline
-		& \hfil\textbf{relu,softmax} & \hfil\textbf{sigmoid,sigmoid} \\
+		& \hfil\textbf{relu, softmax} & \hfil\textbf{sigmoid, sigmoid} \\
 		\hline \hline
 		\emph{Költségfüggvény} & \hfil1320.79 & \hfil1220.38 \\
 		\hline
@@ -1373,8 +1377,19 @@ Az előző megfigyelésekből levezethető, hogy a HGCN igenis alkalmas (a taní
 
 \subsection{Futásidők}
 
+Viszonyítási alapként közlöm a probléma méretének függvényében kapott futásidőket, azonban -- a fejezet elején mondottaknak megfelelően -- ezek leginkább felső korlátként kezelendők.
 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.50\linewidth]{runtimes}
+\end{figure}
+
+Látható, hogy nagyjából ugyanúgy befolyásolják az egyes paraméterek a különböző algoritmusok futásidejét. Elsősorban a élszám tűnik meghatározónak a sűrűséggel vagy csúcsszámmal szemben.
+
+\begin{note}
+A látott neurális hálók tanítása nagyságrendileg 6-7 órát vesz igénybe.
+\end{note}
 
 % különböző méretű problémák (élek, csúcsok, mindkettő változtatása, élméretek)
 % tanulás sebessége, változás méretarányosan
@@ -1389,27 +1404,25 @@ Az előző megfigyelésekből levezethető, hogy a HGCN igenis alkalmas (a taní
 
 \subsection{Összefoglalás}
 
+Ebben a fejezetben áttekintettük, hogy a kidolgozott módszerek milyen paraméterek mellett hogyan teljesítenek. Kiderült, hogy optimalizációs algoritmus tekintetében helyzetfüggő, hogy melyik alkalmazása előnyös. Kis hipergráfoknál, gyors kirajzoláshoz használható az élalapú GA, erőalapú inicializálással vagy a PSO kevert, erőalapú-élalapú módszerrel. Utóbbi algoritmus kizárólag kis csúcsszám esetén működik jól, azonban ekkor több éllel is boldogul, mint a többi. A legjobb tulajdonságokkal talán a csúcsalapú GA rendelkezett, amely az előző két esetet kivéve stabil tanulás mellet produkált jó végeredményt.
+
+Az egyes algoritmusok megoldáspopulációját érdemes az iterációk számával nagyságrendileg arányosnak beállítani. PSO esetén fontos a $c_1$ paraméter magasra állításának kerülése, míg GA esetén ugyenez mondható el a $selectionRate$ és $mutationRate$ hiperparaméterekről.
 
 
+Szemantikailag jól teljesítettek a kidolgozott heurisztikák, kisebb hipergráfokon biztosítják az elvárt tulajdonságokat. Az szegmensmetszeteket leszorító mérőszám alternatívájaként állított módszer nem csak gyorsabb, de hamis pozitív tartalmazások számát is hatékonyabban minimalizálja, ezért érdemes lehet akkor is megtartani, ha a metszetek számát direkt módon is szeretnénk minimalizálni.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Bár az optimalizációs algoritmusoktól jócskán elmaradt a teljesítménye, a HGCN módszerről bebizonyosodott, hgoy alkalmas nem látott példák esetén Euler-diagramot generálni, azonban a fragmentálatlansági heurisztika egy fontos eleme az alkalmazhatóságának.
 
 
 \cleardoublepage
 \chapter{Konklúzió}
 
-A korábbiak során Euler-diagramok egy általam kidolgozott, általános modelljének, a hozzá létrehozott különböző optimalizációs/függvényapproximációs algoritmusok, illetve költségfüggvény alkalmazhatóságát vizsgáltam szintetikus példákon. 
+A korábbiak során kidolgoztam egy általános modellt Euler-diagramokra, továbbá különböző optimalizációs/függvényapproximációs algoritmusokat, illetve költségfüggvényt hoztam létre, hogy azokat szintetikus mintákon értékeljem ki.
+
+Vizsgálataim során sikerült kijelölni, hogy melyik algoritmus milyen paraméterek mellett működik hatékonyan, illetve bebizonyítani, hogy a kidolgozott heurisztikák -- kis hipergráfok esetén -- elérik a célul kitűzött szemantikai tulajdonságokat. Végül ajánlásokat adtam tetszőleges problémához megfelelő módszer kiválasztására.
+
+Bár a kidolgozott algoritmusok jól működnek -- a szakterületen gyakran alkalmazott -- 8 hiperélnél kevesebbet tartalmazó hipergráfok osztályának esetén, továbbá van olyan algoritmus, amely közel 20 élig is -- kis számú  szemantikai hiba bevezetésével -- képes ábrát generálni, azonban jól látható, hogy a módszer nem tolta ki érdemben a kirajzolható hipergráfok méretét.
+
+Bevezettem továbbá -- a szakirodalomban először -- a hipergráf konvolúciós hálózatok használatát Euler-diagramok generálásának céljából, amelynek működőképességét sikerült validálnom. Ugyan a módszer segítségével általános megoldás generálható, de továbbra is kérdéses, hogy az gyakorlatban megfelelő minőségű ábrát is képes-e produkálni.
 
