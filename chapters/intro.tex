@@ -1339,7 +1339,7 @@ A probléma paramétereire való érzékenység vizsgálata során eltárolt sze
 
 \subsection{Hipergráf konvolúciós hálózat}
 
-Mivel a szakirodalomban egyáltalán nincsen példa Euler-diagramok konvolúciós hálókkal való generálása, viszont neurális hálózatok tanítása lassú, számításigényes feladat (amihez sajnos nincsenek meg a megfelelő eszközeim), ezért ebben a kísérletben mindössze csak azt vizsgálom, hogy tud-e a hálózat még nem látott példákra általánosítani. Az elemzéshez két hálózatot tanítottam be, mindkettőt 3-3 réteggel, melyek rendre 25, 4 és 3 neuront tartalmaztak. Tanítás során bemenetkénta $H_{25,8,20}$-at 100 különböző példányát használom. Az alkalmazott algoritmus a batch alapú naív GA, 0.3 $selectionRate$, 0.05 $mutationPct$ és 3 $mutationRate$ paraméterekkel, 100 iterációs lépéssel. Két architektúrával is kísérleteztem, mindkettő 25, 4, 3 neuronból álló szekvenciális rétegekkel rendelkezik, azonban az egyik sigmoid aktiválási függvényt használ, a másik relu-t és softmaxot. (Ezutóbbi különösen népszerű mind gráf, mind hipergráf konvolúciós szakcikkekben.)
+Mivel a szakirodalomban egyáltalán nincsen példa Euler-diagramok konvolúciós hálókkal való generálása, viszont neurális hálózatok tanítása lassú, számításigényes feladat, ezért ebben a kísérletben mindössze csak azt vizsgálom, hogy tud-e a hálózat még nem látott példákra általánosítani. Az elemzéshez két hálózatot tanítottam be (részlegesen), mindkettőt a bemenetin felül 2-2 réteggel, melyek rendre 25, 4 és 3 neuront tartalmaztak. Tanítás során bemenetként a $H_{25,8,20}$ 100 különböző példányát használom. Az alkalmazott algoritmus a batch alapú naív GA, 0.3 $selectionRate$, 0.05 $mutationPct$ és 3 $mutationRate$ paraméterekkel, 100 iterációs lépéssel. Két architektúrával is kísérleteztem, szekvenciális rétegekkel rendelkezik, azonban az egyik sigmoid aktiválási függvényt használ, a másik relu-t és softmaxot. (Ezutóbbi különösen népszerű mind gráf, mind hipergráf konvolúciós szakcikkekben.)
 
 
 \begin{figure}[H]
@@ -1406,10 +1406,10 @@ A látott neurális hálók tanítása nagyságrendileg 6-7 órát vesz igénybe
 
 Ebben a fejezetben áttekintettük, hogy a kidolgozott módszerek milyen paraméterek mellett hogyan teljesítenek. Kiderült, hogy optimalizációs algoritmus tekintetében helyzetfüggő, hogy melyik alkalmazása előnyös. Kis hipergráfoknál, gyors kirajzoláshoz használható az élalapú GA, erőalapú inicializálással vagy a PSO kevert, erőalapú-élalapú módszerrel. Utóbbi algoritmus kizárólag kis csúcsszám esetén működik jól, azonban ekkor több éllel is boldogul, mint a többi. A legjobb tulajdonságokkal talán a csúcsalapú GA rendelkezett, amely az előző két esetet kivéve stabil tanulás mellet produkált jó végeredményt.
 
-Az egyes algoritmusok megoldáspopulációját érdemes az iterációk számával nagyságrendileg arányosnak beállítani. PSO esetén fontos a $c_1$ paraméter magasra állításának kerülése, míg GA esetén ugyenez mondható el a $selectionRate$ és $mutationRate$ hiperparaméterekről.
+Az egyes algoritmusok megoldáspopulációjának méretét érdemes az iterációk számával nagyságrendileg arányosnak beállítani. PSO esetén fontos a $c_1$ paraméter magasra állításának kerülése, míg GA esetén ugyenez mondható el a $selectionRate$ és $mutationRate$ hiperparaméterekről.
 
 
-Szemantikailag jól teljesítettek a kidolgozott heurisztikák, kisebb hipergráfokon biztosítják az elvárt tulajdonságokat. Az szegmensmetszeteket leszorító mérőszám alternatívájaként állított módszer nem csak gyorsabb, de hamis pozitív tartalmazások számát is hatékonyabban minimalizálja, ezért érdemes lehet akkor is megtartani, ha a metszetek számát direkt módon is szeretnénk minimalizálni.
+Szemantikailag jól teljesítettek a kidolgozott heurisztikák, kisebb hipergráfokon biztosítják az elvárt tulajdonságokat. A szegmensmetszeteket leszorító mérőszám alternatívájaként állított módszer nem csak gyorsabb, de hamis pozitív tartalmazások számát is hatékonyabban minimalizálja, ezért érdemes lehet akkor is megtartani, ha a metszetek számát direkt módon is szeretnénk csökkenteni.
 
 
 Bár az optimalizációs algoritmusoktól jócskán elmaradt a teljesítménye, a HGCN módszerről bebizonyosodott, hgoy alkalmas nem látott példák esetén Euler-diagramot generálni, azonban a fragmentálatlansági heurisztika egy fontos eleme az alkalmazhatóságának.
