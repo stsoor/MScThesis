@@ -442,7 +442,7 @@ Bár a neurális hálók gráfjellegű adatokra való adaptációjára már kor�
 
 A GCN különösen alkalmas gráfcímkézési és klaszterezési problémák megoldására, akár alig néhány réteg használatával is.
 
-\subsection{Hipergráf konvolúciós neurális hálózatok} 
+\subsection{Hipergráf konvolúciós neurális hálózatok} \label{hgcn_ch}
 Hipergráfok esetén már régóta vizsgált probléma, hogy hogyan lehet úgy általánosítani a gráfokon alkalmazott Laplaciant, hogy az minél több tulajdonságát megőrizze. Régebbi eredmények mindössze a hipergráfok speciális részosztályain voltak képesek ezt megvalósítani\cite{old_spectral_hypergraph, spectra}, azonban egy 2015-ös cikkben\cite{base_hypergraph_laplacian} sikerült áttörést elérni, és egy általánosan alkalmazható definíciót bevezetni. A konstrukciós módszer bizonyos hiányosságait aztán 2018-ban Chan és társasi tárták fel, illetve javították\cite{base_hypergraph_laplacian_refinement}.
 
 
@@ -1335,9 +1335,45 @@ A probléma paramétereire való érzékenység vizsgálata során eltárolt sze
 
 \subsection{Hipergráf konvolúciós hálózat}
 
+Mivel a szakirodalomban egyáltalán nincsen példa Euler-diagramok konvolúciós hálókkal való generálása, viszont neurális hálózatok tanítása lassú, számításigényes feladat (amihez sajnos nincsenek meg a megfelelő eszközeim), ezért ebben a kísérletben mindössze csak azt vizsgálom, hogy tud-e a hálózat még nem látott példákra általánosítani. Az elemzéshez két hálózatot tanítottam be, mindkettőt 3-3 réteggel, melyek rendre 25, 4 és 3 neuront tartalmaztak. Tanítás során bemenetkénta $H_{25,8,20}$-at 100 különböző példányát használom. Az alkalmazott algoritmus a batch alapú naív GA, 0.3 $selectionRate$, 0.05 $mutationPct$ és 3 $mutationRate$ paraméterekkel, 100 iterációs lépéssel. Két architektúrával is kísérleteztem, mindkettő 25, 4, 3 neuronból álló szekvenciális rétegekkel rendelkezik, azonban az egyik sigmoid aktiválási függvényt használ, a másik relu-t és softmaxot. (Ezutóbbi különösen népszerű mind gráf, mind hipergráf konvolúciós szakcikkekben.)
 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.30\linewidth]{hgcnn}
+	\caption{Költségfüggvény a tanulás során}
+\end{figure}
+
+Mindkét esetben a $H_{25,8,20}$ egy-egy újabb példányára alkalmaztam a már betanított neurális hálót, a kimeneti eredmények alább láthatók.
+
+\begin{longtable}{| p{0.40\textwidth} | p{0.25\textwidth} | p{0.25\textwidth} |}
+		\hline
+		& \hfil\textbf{relu,softmax} & \hfil\textbf{sigmoid,sigmoid} \\
+		\hline \hline
+		\emph{Költségfüggvény} & \hfil1320.79 & \hfil1220.38 \\
+		\hline
+		\emph{Szegmensenkénti hamis pozitív tartalmazás} & \vfil\hfil0 & \vfil\hfil31 \\
+		\hline
+		\emph{Szegmensmetszetek száma} & \hfil28 & \hfil21 \\
+		\hline
+		\emph{Invalid szegmensmetszetek száma} & \hfil0 & \hfil5 \\
+		\hline
+		\emph{Szegmensek száma} & \hfil33 & \hfil8 \\
+		\hline
+		\emph{Fragmentált szegmensek száma} & \hfil3 & \hfil0 \\
+		\hline
+\end{longtable}
+
+Validációként betanítottam ugyanezt a relu alapú neurális hálót 100 fragmentálatlansági súllyal, amely esetben jóval alacsonyabb költségfüggvényt is képes volt elérni, azonban új példán gyakorlatilag csak egyelemű szegmenseket hozott létre.
+
+
+Szintúgy megpróbáltam a hipergráf Laplacian teljes kiszámítása helyett (\ref{hypergraphLaplacian}) csak a harmadik lépésben látott $G_X$-et alkalmazni. Bár a tanítás hasonlóan eredményes volt, a nem látott mintán alkalmazva 8000 körüli költségfüggvényt kaptam.
+
+Az előző megfigyelésekből levezethető, hogy a HGCN igenis alkalmas (a tanítás során elért költségfüggvénnyel arányos minőségű) Euler-diagramok generálására nem látott példák esetén is, azonban kellő eszközpark hiányában jelenleg nem lehet megmondani, hogy a költséfüggvény mennyire szorítható le. Az is látszik, hogy a fragmentálatlansági tulajdonság szükséges a konvolúciós hálózat tanításához.
 
 \subsection{Futásidők}
+
+
 
 
 % különböző méretű problémák (élek, csúcsok, mindkettő változtatása, élméretek)
@@ -1353,9 +1389,27 @@ A probléma paramétereire való érzékenység vizsgálata során eltárolt sze
 
 \subsection{Összefoglalás}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \cleardoublepage
 \chapter{Konklúzió}
 
+A korábbiak során Euler-diagramok egy általam kidolgozott, általános modelljének, a hozzá létrehozott különböző optimalizációs/függvényapproximációs algoritmusok, illetve költségfüggvény alkalmazhatóságát vizsgáltam szintetikus példákon. 
 
-% 11-ig - 60
-% 11-ig öf - 2-5
