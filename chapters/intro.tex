@@ -3,11 +3,11 @@
 \chapter{Absztrakt}
 
 A hipergráfok gyakran alkalmazott matematikai eszközök az informatika számos területén, így a szemantikus web, bioinformatika, szenzorhálózatok, adatbázisrendszerek, szociális hálózatok, gépi látás és egyéb részterületek számos megoldása épül rájuk.
-Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok ábrázolása. Vizualizáció során egyszerre merül fel igény a mögöttes struktúra tökéletes leképezésére, a könnyű értelmezhetőségre (így esztétikai és ergonómiai metrikákra), az általános alkalmazhatóságra, gyors futásidőre és - ezzel összefüggésben - a megjeleníthető adathalmaz méretének maximalizálására is, továbbá gyakran felmerül a dinamikus környezet feladatok kezelésének problémája is.
+Ezen feladatok vizsgálata során különösen hasznos lehet a hipergráfok ábrázolása. Vizualizáció során egyszerre merül fel igény a mögöttes struktúra tökéletes leképezésére, a könnyű értelmezhetőségre (így esztétikai és ergonómiai metrikákra), az általános alkalmazhatóságra, gyors futásidőre és -- ezzel összefüggésben -- a megjeleníthető adathalmaz méretének maximalizálására is, továbbá gyakran felmerül a dinamikus környezet feladatok kezelésének problémája is.
 
 
 Mint látható, ez egy felettébb összetett problémát eredményez, amely megoldására számos módszer született már a szakterületi irodalomban, azonban ezek gyakran szenvednek egy -- vagy több -- tervezési elv sérülésétől, így egyik sem terjedt el a gyakorlatban.
-Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgáljuk a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra és a szemantikailag helyes leképezésre.
+Jelen dolgozatban különböző optimalizációs módszerek, illetve heurisztikák teljesítményét vizsgálom a fenti szempontok alapján, különös tekintettel az általános alkalmazhatóságra, és a szemantikailag helyes leképezésre.
 
 %\cleardoublepage
 \chapter{Elméleti alapok}
@@ -1217,7 +1217,7 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 	\caption{Inicializálás kevert módszerekkel - költségfüggvény}
 \end{figure}
 
-Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel nem látszik, hogy a kevert módszerek különösebb előnnyel járnának. Kiemelendő tulajdonság azonban, hogy amennyiben az erőalapú módszert a véletlenszerűvel kombináljuk, akkor -- az élalapú GA-hez hasonlóan -- a PSO is képessé válik a kezdőértékeken túl folytatni a költségfüggvény csökkentését.
+Összehasonlítva a tisztán egy módszert alkalmazó eredményekkel nem látszik, hogy a kevert módszerek különösebb előnnyel járnának. Kiemelendő tulajdonság azonban, hogy amennyiben az erőalapú módszert a véletlenszerűvel kombináljuk, akkor -- az élalapú GA-hez hasonlóan -- a PSO is képessé válik a kezdőértékeken túl is folytatni a költségfüggvény csökkentését.
 
 \begin{figure}[H]
 	\centering
@@ -1232,7 +1232,7 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 	\caption{Inicializálás kevert módszerekkel - költségfüggvények átlaga}
 \end{figure}
 
-Érdemes megfigyelni, hogy a kevert véletlenszerű-élalapú inicializáció esetén érte el -- a kísérleteim során először -- a PSO a teljes konvergenciát a 200 iterációs lépése alatt. (Ez talán nem látszik annyira a költségfüggvényből -- bár az is ellaposodik --, de a részecskék költségfüggvényeinek szórása már meggyőzhet minket róla.)
+Érdemes megfigyelni, hogy a PSO -- kísérleteim során először -- a kevert, véletlenszerű-élalapú inicializáció esetén érte el a teljes konvergenciát a 200 iterációs lépése alatt. (Ez talán nem látszik annyira a költségfüggvényből -- bár az is ellaposodik --, de a részecskék költségfüggvényeinek szórása már meggyőzhet minket róla.)
 
 \begin{figure}[H]
 	\centering
@@ -1251,7 +1251,7 @@ Továbbra is a $H_{25,8,20}$ segítségével, de kizárólag véletlenszerű $d$
 
 \subsubsection{Tulajdonságok, mint mérőszámok}
 
-Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják az algoritmusok hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjön ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
+Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél kisebb ugrások a költségfüggvényben javíthatják az algoritmusok hatásfokát. Ezt az állítást ellenőrizendő számos metrikát átfogalmaztam, hogy csak az optimális esetben értékelődjenek ki nullára, minden más esetben egyre. Az ilyen -- tulajdonságként kezelt metrikák -- magukban foglalják a hamis pozitív tartalmazás, minimum távolság fenntartása, invalid szegmensmetszetek száma, legközelebbi szomszéd élszomszéd és fragmentálatlanság heurisztikákat. Következő kísérletként ezeknek a -- kizárólag erre az egy esetre -- átfogalmazott tulajdonságoknak a használatával vizsgálom, hogy ténylegesen romlik-e tőlük az algoritmusok teljesítménye. Az összehasonlíthatóság végett a kapott megoldásokat kiértékelem az eredeti mérőszámok szerint is.
 
 \begin{figure}[H]
 	\centering
@@ -1259,7 +1259,7 @@ Említettem a heurisztikák kidolgozása során (\ref{heuristics}), hogy minél 
 	\caption{Végeredmény az eredeti költségfüggvényben}
 \end{figure}
 
-Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye romlik. Költségfüggvény tekintetében egyedül a PSO megoldáspopulációja látszik javulni, azonban az is olyan lassan, hogy a konvergencia nem megfigyelhető az optimumértékben.
+Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algoritmus teljesítménye romlik. A költségfüggvény átlagának tekintetében egyedül a PSO megoldáspopulációja látszik javulni, azonban az is olyan lassan, hogy a konvergencia nem megfigyelhető az optimumértékben.
 
 \begin{figure}[H]
 	\centering
@@ -1276,7 +1276,7 @@ Megfelelően az előzetes feltevéseknek, megfigyelhető, hogy az összes algori
 
 \subsubsection{Alternatív heurisztikák}
 
-Másik kérdésként merült fel, hogy a -- rendkívül lassú -- élmetszeteket leszámláló heurisztikák lecserélhetők-e egy gyorsabb alternatívára. Helyettesítő módszerként egy olyan helyettesítőt ajánlottam vizsgálni (legközelebbi szomszéd élszomszéd), amely a feltevésem szerint alkalmas lehet erre. Ebben a kísérletben a szegmensmetszetek számának és az invalid szegmensmetszetek számának súlyozását 0-ra állítottam, míg a legközelebbi szomszéd élszomszéd heurisztika súlyát 1000-re. Mivel az implementáció ezt nem teszi lehetővé, ezért itt nem közvetlenül a költségfüggvényeket hasonlítom össze, hanem a szegmensenkénti hamis pozitív csúcsok valós számát (nem a heurisztikáját) vetem össze az eredeti súlyozás esetén előállóval. Még egyszer fontosnak tartom kiemelni, hogy ez a mérőszám legfeljebb $(|V|-1)*|E|$ értéket tud felvenni. A vizsgálatot a $H_{25,8,20}$, $H_{25,16,20}$ és $H_{50,16,10}$ körében folytatom le.
+Másik kérdésként merült fel, hogy a -- rendkívül lassú -- élmetszeteket leszámláló heurisztikák lecserélhetők-e egy gyorsabb alternatívára. Helyettesítő módszerként egy olyan alternatívát ajánlottam vizsgálni (legközelebbi szomszéd élszomszéd), amely a feltevésem szerint alkalmas lehet erre. Ebben a kísérletben a szegmensmetszetek számának és az invalid szegmensmetszetek számának súlyozását 0-ra állítottam, míg a legközelebbi szomszéd élszomszéd heurisztika súlyát 1000-re. Mivel az implementáció ezt nem teszi lehetővé, ezért itt nem közvetlenül a költségfüggvényeket hasonlítom össze, hanem a szegmensenkénti hamis pozitív csúcsok valós számát (nem a heurisztikáját) vetem össze az eredeti súlyozás esetén előállóval. Még egyszer fontosnak tartom kiemelni, hogy ez a mérőszám legfeljebb $(|V|-1)*|E|$ értéket tud felvenni. A vizsgálatot a $H_{25,8,20}$, $H_{25,16,20}$ és $H_{50,16,10}$ körében folytatom le.
 
 \begin{figure}[H]
 	\centering
